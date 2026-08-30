@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
@@ -549,6 +549,29 @@
               </label>
             </div>
             <span class="error-msg" id="termError">필수 약관에 모두 동의해주세요.</span>
+
+            <!-- Customer Digital Signature Pad (고객 자필 전자서명 영역) -->
+            <div class="signature-section" style="margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--border-color);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="font-size: 0.88rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="pen-tool" style="width: 15px; height: 15px; color: var(--accent);"></i>
+                  고객 자필 전자서명 <span class="req">*</span>
+                </label>
+                <button type="button" id="clearSignatureBtn" class="btn btn-outline btn-xs" style="padding: 4px 10px; font-size: 0.75rem;">
+                  <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i> 서명 지우기
+                </button>
+              </div>
+              <div class="signature-pad-container" style="position: relative; background: #FFFFFF; border: 2px dashed rgba(14, 165, 233, 0.4); border-radius: var(--radius-md); height: 140px; overflow: hidden; touch-action: none; cursor: crosshair;">
+                <canvas id="signatureCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
+                <div id="signaturePlaceholder" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #94A3B8; font-size: 0.84rem; pointer-events: none; text-align: center; width: 100%; user-select: none;">
+                  마우스 또는 손가락으로 이곳에 정자로 서명해 주세요
+                </div>
+              </div>
+              <p style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
+                ※ 본 자필 전자서명은 상기 이용약관 동의 및 신청서 제출에 대한 법적 동의 효력을 가집니다.
+              </p>
+              <span class="error-msg" id="signatureError">이용약관 동의 확인을 위해 서명을 입력해 주세요.</span>
+            </div>
           </div>
 
           <!-- Submit Button -->
@@ -933,6 +956,30 @@
     </div>
   </div>
 
+  <!-- Customer Detail & Agreement/Signature Verification Modal (고객 약관동의 및 서명 확인 모달) -->
+  <div id="customerDetailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 620px; width: 94%; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="file-check-2" style="color: var(--accent); width: 22px; height: 22px;"></i>
+          <h3 class="modal-title">고객 가입신청서 및 전자서명 확인서</h3>
+        </div>
+        <button id="closeCustomerDetailBtn" class="close-btn" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" id="customerDetailContent" style="padding: 20px 22px;">
+        <!-- Populated dynamically via JS -->
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px;">
+        <button id="printCustomerDetailBtn" class="btn btn-outline btn-sm">
+          <i data-lucide="printer"></i> 확인서 인쇄
+        </button>
+        <button id="closeCustomerDetailFooterBtn" class="btn btn-primary btn-sm">
+          확인 완료
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Success Notification Toast -->
   <div id="toastNotification" class="toast hidden">
     <i data-lucide="check-circle" class="toast-icon"></i>
@@ -952,6 +999,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

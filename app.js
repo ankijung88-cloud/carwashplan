@@ -15,8 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize UI Subsystems
   initVideoPlayerBox();
   initGalleryCarousel();
+  initSignaturePad();
   initFormValidationAndSubmit();
   initAdminManager();
+  initCustomerDetailModal();
   initEditGalleryModalLogic();
   initIntegrationSettings();
 
@@ -298,6 +300,114 @@ function initGalleryCarousel() {
 /* ==========================================================================
    4. Customer Registration Form Validation & Submission
    ========================================================================== */
+/* ==========================================================================
+   4. Customer Digital Signature Pad & Sign-Up Registration Logic
+   ========================================================================== */
+let isSignatureDrawn = false;
+
+function initSignaturePad() {
+  const canvas = document.getElementById('signatureCanvas');
+  const clearBtn = document.getElementById('clearSignatureBtn');
+  const placeholder = document.getElementById('signaturePlaceholder');
+  const container = document.querySelector('.signature-pad-container');
+
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = '#0F172A';
+  }
+
+  resizeCanvas();
+  window.addEventListener('resize', () => {
+    if (!isSignatureDrawn) resizeCanvas();
+  });
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches && e.touches.length > 0) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    }
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  function startDrawing(e) {
+    if (e.cancelable) e.preventDefault();
+    isDrawing = true;
+    const pos = getPos(e);
+    lastX = pos.x;
+    lastY = pos.y;
+    if (placeholder) placeholder.style.display = 'none';
+    if (container) {
+      container.classList.add('active');
+      container.classList.remove('invalid');
+    }
+    const sigErr = document.getElementById('signatureError');
+    if (sigErr) sigErr.style.display = 'none';
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+    if (e.cancelable) e.preventDefault();
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastX = pos.x;
+    lastY = pos.y;
+    isSignatureDrawn = true;
+  }
+
+  function stopDrawing() {
+    if (isDrawing) {
+      isDrawing = false;
+    }
+  }
+
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseleave', stopDrawing);
+
+  canvas.addEventListener('touchstart', startDrawing, { passive: false });
+  canvas.addEventListener('touchmove', draw, { passive: false });
+  canvas.addEventListener('touchend', stopDrawing);
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      isSignatureDrawn = false;
+      if (placeholder) placeholder.style.display = 'block';
+      if (container) {
+        container.classList.remove('active');
+        container.classList.remove('invalid');
+      }
+    });
+  }
+}
+
 function initFormValidationAndSubmit() {
   const form = document.getElementById('signupForm');
   const phoneInput = document.getElementById('memberPhone');
@@ -338,6 +448,8 @@ function initFormValidationAndSubmit() {
     document.querySelectorAll('.input-group').forEach(grp => grp.classList.remove('invalid'));
     const termErr = document.getElementById('termError');
     if (termErr) termErr.style.display = 'none';
+    const sigErr = document.getElementById('signatureError');
+    if (sigErr) sigErr.style.display = 'none';
 
     // 1. Name Check
     const nameVal = document.getElementById('memberName').value.trim();
@@ -404,8 +516,16 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
+    // 8. Digital Signature Validation
+    const sigContainer = document.querySelector('.signature-pad-container');
+    if (!isSignatureDrawn) {
+      if (sigErr) sigErr.style.display = 'block';
+      if (sigContainer) sigContainer.classList.add('invalid');
+      isValid = false;
+    }
+
     if (!isValid) {
-      showToast('입력 확인 필요', '필수 입력 항목 및 약관 동의를 다시 확인해 주세요.');
+      showToast('입력 확인 필요', '필수 입력 항목, 약관 동의 및 자필 전자서명을 확인해 주세요.');
       return;
     }
 
@@ -429,10 +549,15 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // Build New Customer Registration Record
+    // Extract Signature Canvas Image
+    const signatureCanvas = document.getElementById('signatureCanvas');
+    const signatureDataUrl = isSignatureDrawn && signatureCanvas ? signatureCanvas.toDataURL('image/png') : '';
+
+    // Build New Customer Registration Record with Terms & Signature
+    const formattedNow = formatNowDate();
     const newRecord = {
       id: 'CUST-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 900 + 100)),
-      createdAt: formatNowDate(),
+      createdAt: formattedNow,
       name: nameVal,
       phone: phoneVal,
       email: emailVal,
@@ -443,6 +568,15 @@ function initFormValidationAndSubmit() {
       days: selectedDaysStr,
       specialNotes: specialNotesList,
       paymentMethod: paymentMethodVal,
+      termsAgreed: {
+        service: document.getElementById('termService')?.checked || true,
+        privacy: document.getElementById('termPrivacy')?.checked || true,
+        financial: document.getElementById('termFinancial')?.checked || true,
+        marketing: document.getElementById('termMarketing')?.checked || false,
+        allAgreed: true,
+        agreedAt: formattedNow
+      },
+      signature: signatureDataUrl,
       status: 'PENDING'
     };
 
@@ -454,10 +588,19 @@ function initFormValidationAndSubmit() {
     // Sync to Google Sheets & Telegram Notification in Real-time
     syncSubmissionToCloud(newRecord);
 
-    // Form Reset & Feedback
+    // Form & Signature Reset
     form.reset();
     if (checkAll) checkAll.checked = false;
-    showToast('신청 완료!', `${nameVal} 고객님의 신청이 완료되었습니다. 담당 매니저가 곧 연락드리고 결제링크를 보내드립니다.`);
+    if (signatureCanvas) {
+      const ctx = signatureCanvas.getContext('2d');
+      ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+      isSignatureDrawn = false;
+      const placeholder = document.getElementById('signaturePlaceholder');
+      if (placeholder) placeholder.style.display = 'block';
+      if (sigContainer) sigContainer.classList.remove('active');
+    }
+
+    showToast('신청 완료!', `${nameVal} 고객님의 신청 및 약관 서명이 완료되었습니다. 담당 매니저가 곧 연락드립니다.`);
 
     // Refresh Admin Table View if open
     renderAdminTable();
@@ -878,8 +1021,8 @@ function renderAdminTable(filter = 'ALL') {
     return `
       <tr>
         <td>
-          <span style="font-size: 0.78rem; color: var(--text-muted); display: block;">${item.createdAt}</span>
-          <span style="font-size: 0.72rem; color: var(--accent);">${item.id}</span>
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block;">${item.createdAt}</span>
+          <span style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">${item.id}</span>
         </td>
         <td>
           <div class="member-name">${escapeHtml(item.name)}</div>
@@ -897,6 +1040,9 @@ function renderAdminTable(filter = 'ALL') {
         <td>${statusTag}</td>
         <td>
           <div class="table-actions">
+            <button onclick="openCustomerDetailModal('${item.id}')" class="action-btn-detail" title="약관동의 및 서명확인">
+              <i data-lucide="file-check" style="width:13px;height:13px;"></i> 상세/서명
+            </button>
             ${item.status !== 'APPROVED' ? `<button onclick="updateStatus('${item.id}', 'APPROVED')" class="action-btn-approve">승인</button>` : ''}
             ${item.status !== 'REJECTED' ? `<button onclick="updateStatus('${item.id}', 'REJECTED')" class="action-btn-reject">반려</button>` : ''}
             <button onclick="deleteSubmission('${item.id}')" class="action-btn-delete" title="삭제"><i data-lucide="trash-2" style="width:15px;height:15px;"></i></button>
@@ -910,6 +1056,118 @@ function renderAdminTable(filter = 'ALL') {
     lucide.createIcons();
   }
 }
+
+/* ==========================================================================
+   Customer Detail & Agreement / Signature Verification Modal
+   ========================================================================== */
+function initCustomerDetailModal() {
+  const modal = document.getElementById('customerDetailModal');
+  const closeBtn = document.getElementById('closeCustomerDetailBtn');
+  const footerCloseBtn = document.getElementById('closeCustomerDetailFooterBtn');
+  const printBtn = document.getElementById('printCustomerDetailBtn');
+
+  if (closeBtn) closeBtn.onclick = () => window.closeCustomerDetailModal();
+  if (footerCloseBtn) footerCloseBtn.onclick = () => window.closeCustomerDetailModal();
+  if (printBtn) {
+    printBtn.onclick = () => {
+      window.print();
+    };
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) window.closeCustomerDetailModal();
+    });
+  }
+}
+
+window.openCustomerDetailModal = function(id) {
+  const modal = document.getElementById('customerDetailModal');
+  const content = document.getElementById('customerDetailContent');
+  if (!modal || !content) return;
+
+  const data = getSubmissions();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  const terms = item.termsAgreed || {
+    service: true,
+    privacy: true,
+    financial: true,
+    marketing: false,
+    agreedAt: item.createdAt
+  };
+
+  content.innerHTML = `
+    <!-- 1. Customer Basic & Order Details -->
+    <div class="detail-box-group">
+      <div class="detail-section-title">
+        <i data-lucide="user-check" style="width:16px;height:16px;"></i> 고객 기본 정보 및 신청 내역
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="detail-lbl">신청 번호</span><span class="detail-val" style="color:var(--accent);">${escapeHtml(item.id)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">신청 일시 (접수시간)</span><span class="detail-val" style="color:#FFF;">${escapeHtml(item.createdAt)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">고객 성함</span><span class="detail-val">${escapeHtml(item.name)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">연락처</span><span class="detail-val">${escapeHtml(item.phone)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">이메일</span><span class="detail-val">${escapeHtml(item.email)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">세차 장소 (주소)</span><span class="detail-val">${escapeHtml(item.region)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">차종 및 차량번호</span><span class="detail-val">${escapeHtml(item.car)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">신청 플랜</span><span class="detail-val" style="color:#F43F5E;">${escapeHtml(item.experience)}</span></div>
+        <div class="detail-item"><span class="detail-lbl">희망 세차 요일</span><span class="detail-val">${escapeHtml(item.days || '미선택')}</span></div>
+        <div class="detail-item"><span class="detail-lbl">결제 방식</span><span class="detail-val">${escapeHtml(item.paymentMethod || '카드')}</span></div>
+        ${item.specialNotes ? `<div class="detail-item" style="grid-column: 1 / -1;"><span class="detail-lbl">특이사항</span><span class="detail-val" style="font-size:0.8rem;color:#CBD5E1;">${escapeHtml(item.specialNotes)}</span></div>` : ''}
+      </div>
+    </div>
+
+    <!-- 2. Terms Agreement Verification -->
+    <div class="detail-box-group">
+      <div class="detail-section-title">
+        <i data-lucide="shield-check" style="width:16px;height:16px;"></i> 이용약관 동의 확인 내역 (동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)})
+      </div>
+      <div class="detail-terms-list">
+        <div class="detail-term-row">
+          <span>(필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의</span>
+          <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
+        </div>
+        <div class="detail-term-row">
+          <span>(필수) 출장세차 서비스 개인정보 수집 및 이용 동의</span>
+          <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
+        </div>
+        <div class="detail-term-row">
+          <span>(필수) 세차 이용료 결제 정보 처리 동의</span>
+          <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
+        </div>
+        <div class="detail-term-row">
+          <span>(선택) 세차 완료 알림 및 이벤트 쿠폰 수신 동의</span>
+          <span class="term-badge-agreed" style="${terms.marketing ? '' : 'background:rgba(148,163,184,0.15);color:#94A3B8;border-color:rgba(148,163,184,0.3);'}">
+            <i data-lucide="${terms.marketing ? 'check' : 'minus'}" style="width:12px;height:12px;"></i> ${terms.marketing ? '수신 동의' : '미동의'}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Customer Signature Display -->
+    <div class="detail-box-group" style="margin-bottom: 0;">
+      <div class="detail-section-title">
+        <i data-lucide="pen-tool" style="width:16px;height:16px;"></i> 고객 자필 전자서명 원본
+      </div>
+      <div class="signature-display-box">
+        ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span style="color:#94A3B8;font-size:0.85rem;">등록된 자필 서명이 없습니다.</span>'}
+      </div>
+      <p style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; text-align: center;">
+        위 본인(<strong>${escapeHtml(item.name)}</strong>)은 상기 세차 서비스 이용약관 및 결제 규정에 자필 서명으로 정식 동의하였습니다.
+      </p>
+    </div>
+  `;
+
+  modal.classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
+};
+
+window.closeCustomerDetailModal = function() {
+  const modal = document.getElementById('customerDetailModal');
+  if (modal) modal.classList.add('hidden');
+};
 
 // Global Admin Action Functions
 window.updateStatus = function(id, newStatus) {
