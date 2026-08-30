@@ -2752,52 +2752,225 @@ a:hover {
 .signature-display-box img {
   max-width: 100%;
   max-height: 110px;
-  object-fit: contain;
+/* Print Document Header (Hidden on Screen, Shown on Print) */
+.print-doc-header {
+  display: none;
 }
 
-/* Print Specific Optimization for Customer Detail Verification Modal */
+.signature-box-print-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signature-statement {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 8mm 10mm 8mm 10mm;
+}
+
 @media print {
-  body > *:not(#customerDetailModal) {
+  /* Hide all website layout completely */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+    overflow: visible !important;
+  }
+
+  /* Hide entire body contents by default */
+  body > * {
     display: none !important;
   }
-  #customerDetailModal {
+
+  /* Exclusively display customerDetailModal */
+  body > #customerDetailModal {
     display: block !important;
     position: static !important;
-    background: #FFF !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  #customerDetailModal .modal-container {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #0F172A !important;
+    overflow: visible !important;
+  }
+
+  #customerDetailModal .modal-body {
     padding: 0 !important;
   }
-  #customerDetailModal .modal-container {
-    box-shadow: none !important;
-    border: none !important;
-    background: #FFF !important;
-    color: #000 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
+
   #customerDetailModal .modal-header,
   #customerDetailModal .modal-footer {
     display: none !important;
   }
+
+  .print-doc-header {
+    display: block !important;
+    text-align: center !important;
+    border-bottom: 2px solid #0F172A !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .print-doc-header h2 {
+    font-size: 13pt !important;
+    font-weight: 900 !important;
+    color: #0F172A !important;
+    margin: 0 0 2px 0 !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  .print-doc-header p {
+    font-size: 7.5pt !important;
+    color: #64748B !important;
+    margin: 0 !important;
+  }
+
+  .detail-box-group {
+    margin-bottom: 6px !important;
+    page-break-inside: avoid !important;
+  }
+
   .detail-section-title {
+    font-size: 8.5pt !important;
+    font-weight: 800 !important;
     color: #0284C7 !important;
-    border-bottom: 2px solid #0284C7 !important;
+    border-bottom: 1.5px solid #0284C7 !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 4px !important;
   }
-  .detail-grid, .detail-terms-list, .detail-term-card, .detail-term-text {
+
+  .detail-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 3px 6px !important;
     background: #F8FAFC !important;
-    border: 1px solid #E2E8F0 !important;
-    color: #1E293B !important;
+    border: 1px solid #CBD5E1 !important;
+    padding: 4px 6px !important;
+    border-radius: 4px !important;
   }
-  .detail-lbl { color: #64748B !important; }
-  .detail-val { color: #0F172A !important; }
+
+  .detail-lbl {
+    font-size: 6.8pt !important;
+    color: #64748B !important;
+    font-weight: 700 !important;
+  }
+
+  .detail-val {
+    font-size: 7.6pt !important;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+  }
+
+  .detail-terms-list {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    gap: 4px !important;
+  }
+
+  .detail-term-card {
+    background: #F8FAFC !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 4px !important;
+    padding: 4px 6px !important;
+  }
+
+  .detail-term-header {
+    font-size: 7.6pt !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    margin-bottom: 2px !important;
+  }
+
+  .detail-term-text {
+    font-size: 6.8pt !important;
+    line-height: 1.28 !important;
+    color: #334155 !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    padding: 3px 5px !important;
+    border-radius: 3px !important;
+  }
+
+  .detail-term-text ul {
+    padding-left: 10px !important;
+    margin-top: 1px !important;
+  }
+
+  .detail-term-text li {
+    margin-bottom: 0px !important;
+  }
+
   .term-badge-agreed {
+    font-size: 6.5pt !important;
+    padding: 1px 4px !important;
     background: #ECFDF5 !important;
     color: #059669 !important;
     border: 1px solid #A7F3D0 !important;
   }
+
+  /* Single-page compact signature row */
+  .signature-box-print-wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr 140px !important;
+    gap: 8px !important;
+    align-items: center !important;
+    background: #F8FAFC !important;
+    border: 1px solid #CBD5E1 !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+  }
+
+  .signature-statement {
+    font-size: 7.2pt !important;
+    line-height: 1.3 !important;
+    color: #1E293B !important;
+  }
+
   .signature-display-box {
-    border: 1px solid #000 !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #0F172A !important;
+    border-radius: 4px !important;
+    padding: 2px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .signature-display-box img {
+    max-height: 38px !important;
+    max-width: 100% !important;
   }
 }
+
 
 
 

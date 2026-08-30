@@ -1099,6 +1099,12 @@ window.openCustomerDetailModal = function(id) {
   };
 
   content.innerHTML = `
+    <!-- Print Specific Official Document Header -->
+    <div class="print-doc-header">
+      <h2>세차 플랜 (CARWASH PLAN) 고객 가입신청 및 약관동의 확인서</h2>
+      <p>본 확인서는 고객 본인이 온라인을 통해 약관 전체를 숙지하고 자필 전자서명으로 체결한 정식 계약 확인서입니다.</p>
+    </div>
+
     <!-- 1. Customer Basic & Order Details -->
     <div class="detail-box-group">
       <div class="detail-section-title">
@@ -1133,13 +1139,13 @@ window.openCustomerDetailModal = function(id) {
             <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 확인 및 동의 완료</span>
           </div>
           <div class="detail-term-text">
-            <strong style="color:var(--accent);display:block;margin-bottom:4px;">[서비스 안내]</strong>
+            <strong style="color:var(--accent);display:block;margin-bottom:2px;">[서비스 안내]</strong>
             <ul>
               <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
               <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
               <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
             </ul>
-            <strong style="color:#FCD34D;display:block;margin-top:10px;margin-bottom:4px;">[유의사항]</strong>
+            <strong style="color:#FCD34D;display:block;margin-top:6px;margin-bottom:2px;">[유의사항]</strong>
             <ul style="color:#E2E8F0;">
               <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장, 여행 등)</strong>에 한해 가능합니다.</li>
               <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
@@ -1215,14 +1221,17 @@ window.openCustomerDetailModal = function(id) {
     <!-- 3. Customer Signature Display -->
     <div class="detail-box-group" style="margin-bottom: 0;">
       <div class="detail-section-title">
-        <i data-lucide="pen-tool" style="width:16px;height:16px;"></i> 고객 자필 전자서명 원본
+        <i data-lucide="pen-tool" style="width:16px;height:16px;"></i> 고객 자필 전자서명
       </div>
-      <div class="signature-display-box">
-        ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span style="color:#94A3B8;font-size:0.85rem;">등록된 자필 서명이 없습니다.</span>'}
+      <div class="signature-box-print-wrapper">
+        <div class="signature-statement">
+          위 본인(<strong>${escapeHtml(item.name)}</strong>)은 상기 세차 서비스 이용약관, 서비스 안내 및 결제 규정의 모든 내용을 확인하고 이에 정식 동의하여 본 가입신청서를 제출합니다.<br>
+          <span style="font-size:0.75rem;color:#94A3B8;">동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)} | 서명자: <strong>${escapeHtml(item.name)}</strong> (인)</span>
+        </div>
+        <div class="signature-display-box">
+          ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span style="color:#94A3B8;font-size:0.85rem;">등록된 자필 서명이 없습니다.</span>'}
+        </div>
       </div>
-      <p style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; text-align: center;">
-        위 본인(<strong>${escapeHtml(item.name)}</strong>)은 상기 세차 서비스 이용약관 및 결제 규정에 자필 서명으로 정식 동의하였습니다.
-      </p>
     </div>
   `;
 
