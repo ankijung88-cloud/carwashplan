@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>세차 플랜 (CARWASH PLAN) - 찾아가는 프리미엄 출장세차 고객 회원가입</title>
+  <meta name="description" content="아파트, 회사 주차장 어디서나! 지금 고객 회원가입 시 첫 세차 30% 할인 혜택 제공.">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <i data-lucide="sparkles" class="logo-icon"></i>
+        <span class="logo-text">CARWASH<span class="highlight"> PLAN</span></span>
+        <span class="logo-badge">고객 전용</span>
+      </a>
+      <div class="nav-actions">
+        <a href="#register-section" class="nav-btn customer-btn">
+          <i data-lucide="user-check"></i>
+          <span>고객 가입신청</span>
+        </a>
+        <a href="partner-info.html" class="nav-btn partner-btn">
+          <i data-lucide="briefcase"></i>
+          <span>파트너/기사 모집</span>
+        </a>
+        <button id="openAdminBtn" class="admin-btn" title="관리자 가입 확인 센터">
+          <i data-lucide="shield-check"></i>
+          <span>관리자 확인</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <!-- Customer Hero Section -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <i data-lucide="sparkles"></i> 신규 고객 가입 시 앞유리 유막제거 서비스제공(1회)
+      </div>
+      <h1 class="hero-title">
+        바쁜 일상 속, 내 차가 있는 곳으로<br>
+        <span class="gradient-text">찾아가는 프리미엄 출장세차</span>
+      </h1>
+      <p class="hero-subtext">
+        아파트 주차장, 회사 차고지 어디서나! 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.
+      </p>
+
+      <!-- Stat Badges -->
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num">99.2%</div>
+          <div class="stat-label">고객 재이용률</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">95% 이상</div>
+          <div class="stat-label">정기구독률</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">월 31,900원~</div>
+          <div class="stat-label">정기세차 요금</div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Image & Action Buttons -->
+      <div class="hero-visual-wrapper">
+        <img src="assets/car_wash_hero.jpg" alt="프리미엄 출장세차 서비스 시연 모습" class="hero-img">
+        <div class="hero-img-overlay">
+          <div class="hero-btn-group">
+            <a href="#register-section" class="btn btn-primary btn-large glow-btn">
+              <i data-lucide="car"></i> 출장세차 고객 회원가입 신청
+            </a>
+            <a href="partner-info.html" class="btn btn-outline btn-large hero-sub-btn">
+              <i data-lucide="briefcase"></i> 파트너/세차 기사 모집 안내 >
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Customer Features & Photo Gallery Section -->
+    <section class="section gallery-section">
+      <div class="section-header">
+        <span class="section-tag"><i data-lucide="star"></i> 고객 만점 서비스 혜택</span>
+        <h2 class="section-title">왜 세차 플랜 출장세차일까요?</h2>
+        <p class="section-desc">바쁜 당신을 위한 최상의 카케어 서비스. 주차된 차량이 있는 곳으로 세차 마스터가 직접 방문합니다.</p>
+      </div>
+
+      <!-- Feature Grid Cards for Customers -->
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="map-pin"></i></div>
+          <h3>원하는 장소 출동 방문</h3>
+          <p>아파트 지하 주차장, 회사 야외 차고지 등 고객님이 지정하신 장소로 세차 전문 마스터가 찾아갑니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="droplets"></i></div>
+          <h3>도장면 보호 Eco 워터리스</h3>
+          <p>특수 카나우바 왁스 세정제로 차량 표면의 미세 오염물만 안전하게 캡슐화 제거하여 광택을 살립니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="sparkles"></i></div>
+          <h3>맞춤 옵션 추가 케어</h3>
+          <p>기본 출장세차 외에도 실내 클리닝, 유막 제거, 발수 코팅 등 고객님이 원하시는 선택 옵션을 자유롭게 추가하실 수 있습니다.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="repeat"></i></div>
+          <h3>월 정기세차 자동 결제</h3>
+          <p>매월 1회 ~ 4회 정기세차 서비스를 등록된 계좌/카드로 편리하게 자동 결제 및 케어 받으실 수 있습니다.</p>
+        </div>
+      </div>
+
+      <!-- Interactive Horizontal Loop Photo Gallery (30 Photos) -->
+      <div class="gallery-carousel-container" id="galleryCarouselContainer">
+        <div class="gallery-carousel-header">
+          <div class="gallery-header-left">
+            <h3 class="gallery-carousel-title"><i data-lucide="images"></i> 출장세차 프리미엄 케어 갤러리</h3>
+            <p class="gallery-carousel-subtitle">사진을 클릭하시면 시공 원본 고화질 이미지와 케어 설명을 확대하여 확인하실 수 있습니다.</p>
+          </div>
+          <div class="gallery-counter-badge" id="galleryCounterBadge">
+            <i data-lucide="camera"></i> <span id="currentCardIndex">1</span> / <span id="totalCardCount">5</span>
+          </div>
+        </div>
+        
+        <div class="gallery-loop-wrapper">
+          <button class="gallery-nav-btn prev-btn" id="galleryPrevBtn" aria-label="이전 사진"><i data-lucide="chevron-left"></i></button>
+          
+          <div class="gallery-track-container" id="galleryTrackContainer">
+            <div class="gallery-track" id="galleryTrack">
+              <!-- Dynamically populated via app.js with 30 Photos -->
+            </div>
+          </div>
+
+          <button class="gallery-nav-btn next-btn" id="galleryNextBtn" aria-label="다음 사진"><i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Photo Lightbox Modal with 30 Photos Carousel Navigation -->
+    <div id="photoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-container photo-modal-container">
+        <div class="modal-header">
+          <div class="photo-modal-header-info">
+            <h3 class="modal-title" id="photoModalTitle">사진 상세보기</h3>
+            <span class="modal-counter-tag" id="modalPhotoCounter">1 / 30</span>
+          </div>
+          <button id="closePhotoBtn" class="close-btn" aria-label="닫기"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body photo-modal-body">
+          <div class="photo-lightbox-view">
+            <button class="modal-nav-btn modal-prev-btn" id="modalPrevBtn" aria-label="이전 사진"><i data-lucide="chevron-left"></i></button>
+            <img id="photoModalImg" src="" alt="세차 사진 확대보기">
+            <button class="modal-nav-btn modal-next-btn" id="modalNextBtn" aria-label="다음 사진"><i data-lucide="chevron-right"></i></button>
+          </div>
+          <p class="photo-modal-desc" id="photoModalDesc"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Easy Customer Order Step Section -->
+    <section class="section process-section">
+      <div class="section-header">
+        <span class="section-tag"><i data-lucide="check-circle-2"></i> 이용 방법</span>
+        <h2 class="section-title">출장세차 회원가입 및 이용 절차</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h4>고객 회원가입</h4>
+          <p>아래 폼에 성명, 차량 정보 및 주소 입력</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h4>결제 및 일정 안내</h4>
+          <p>담당 매니저 연락 및 결제링크 전송</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h4>현장 출장 세차</h4>
+          <p>지정 장소 방문 세차 & 세차 완료 사진 전송</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <h4>정기 케어 관리</h4>
+          <p>정해진 주기에 따른 안정적인 차량 상태 유지</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Sign-Up & Payment Account Registration Form (고객 회원가입 및 계좌정보 입력) -->
+    <section class="section form-section" id="register-section">
+      <div class="form-container">
+        <div class="form-header">
+          <div class="form-badge"><i data-lucide="user-check"></i> 세차 이용 고객 전용</div>
+          <h2 class="form-title">출장세차 고객 회원가입 및 신청</h2>
+          <p class="form-subtitle">고객 정보를 입력해주시면 확인 후 담당 매니저가 연락드리겠습니다.</p>
+        </div>
+
+        <form id="signupForm" class="signup-form" novalidate>
+          
+          <!-- Form Section 1: Customer Personal & Vehicle Information -->
+          <div class="form-block">
+            <h3 class="block-title"><i data-lucide="user"></i> 1. 고객 및 차량 기본 정보</h3>
+            
+            <div class="input-group">
+              <label for="memberName">고객 성명 (이름) <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i data-lucide="user-round" class="input-icon"></i>
+                <input type="text" id="memberName" name="name" placeholder="홍길동" required>
+              </div>
+              <span class="error-msg" id="nameError">성명을 입력해주세요.</span>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="memberPhone">연락처 (휴대폰 번호) <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i data-lucide="phone" class="input-icon"></i>
+                  <input type="tel" id="memberPhone" name="phone" placeholder="010-1234-5678" maxlength="13" required>
+                </div>
+                <span class="error-msg" id="phoneError">올바른 휴대폰 번호를 입력해주세요.</span>
+              </div>
+
+              <div class="input-group">
+                <label for="memberEmail">이메일 주소 <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i data-lucide="mail" class="input-icon"></i>
+                  <input type="email" id="memberEmail" name="email" placeholder="customer@example.com" required>
+                </div>
+                <span class="error-msg" id="emailError">올바른 이메일 주소를 입력해주세요.</span>
+              </div>
+            </div>
+
+            <!-- Full-width Address Input -->
+            <div class="input-group">
+              <label for="serviceRegion">세차 희망 주소/장소 <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i data-lucide="map-pin" class="input-icon"></i>
+                <input type="text" id="serviceRegion" name="region" placeholder="예: 서울 강남구 테헤란로 123 OO아파트 101동 지하 2층 주차장 (P-23 구역)" required>
+              </div>
+              <span class="error-msg" id="regionError">세차 희망 주소/장소를 입력해주세요.</span>
+            </div>
+
+            <!-- Car Details & Color Row -->
+            <div class="input-row">
+              <div class="input-group">
+                <label for="carOwnership">보유 차종 및 차량번호 <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i data-lucide="car" class="input-icon"></i>
+                  <input type="text" id="carOwnership" name="car" placeholder="예: 123가 4567 (제네시스 G80 세단)" required>
+                </div>
+                <span class="error-msg" id="carError">보유 차종 및 차량번호를 입력해주세요.</span>
+              </div>
+
+              <div class="input-group">
+                <label for="carColor">차량 색상 <span class="req">*</span></label>
+                <div class="input-wrapper">
+                  <i data-lucide="palette" class="input-icon"></i>
+                  <input type="text" id="carColor" name="color" placeholder="예: 블랙 (검정) / 화이트 (흰색) / 다크그레이" required>
+                </div>
+                <span class="error-msg" id="colorError">차량 색상을 입력해주세요.</span>
+              </div>
+            </div>
+
+            <!-- CARWASH PLAN Pricing Matrix & Plan Selection -->
+            <div class="input-group">
+              <label><i data-lucide="badge-percent" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 세차 이용 형태 및 요금 안내 (CARWASH PLAN) <span class="req">*</span></label>
+              
+              <!-- Pricing Matrix Table Card -->
+              <div class="plan-price-card">
+                <div class="plan-price-header">
+                  <span class="plan-sub-tag">월 회원제 차량관리 서비스</span>
+                  <h4 class="plan-price-title">CARWASH PLAN 출장세차 요금안내표</h4>
+                </div>
+
+                <div class="plan-table-wrapper">
+                  <table class="plan-price-table">
+                    <thead>
+                      <tr>
+                        <th>구분 (차종)</th>
+                        <th>라이트 (월 1회)</th>
+                        <th>스마트 (격주)</th>
+                        <th class="highlight-col">퍼펙트 (월 4회) 🔥</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>소형·중형</strong></td>
+                        <td>31,900원</td>
+                        <td>44,000원</td>
+                        <td class="highlight-col"><del class="old-price">88,000원</del> <span class="new-price">66,000원</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>대형 세단</strong></td>
+                        <td>35,900원</td>
+                        <td>49,500원</td>
+                        <td class="highlight-col"><del class="old-price">99,000원</del> <span class="new-price">77,000원</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>SUV</strong></td>
+                        <td>39,900원</td>
+                        <td>55,000원</td>
+                        <td class="highlight-col"><del class="old-price">110,000원</del> <span class="new-price">88,000원</span></td>
+                      </tr>
+                      <tr>
+                        <td><strong>대형 SUV / 카니발</strong></td>
+                        <td>43,900원</td>
+                        <td>60,500원</td>
+                        <td class="highlight-col"><del class="old-price">120,000원</del> <span class="new-price">99,000원</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Extra Options Row -->
+                <div class="plan-options-block">
+                  <span class="options-title"><i data-lucide="plus-circle" style="width:14px;height:14px;display:inline-block;vertical-align:sub;"></i> 추가 선택 옵션 (선택 가능):</span>
+                  <div class="options-grid">
+                    <label class="chip-option"><input type="checkbox" name="extraOption" value="실내세차 (+25,000원)"><span>실내세차 (+25,000원)</span></label>
+                    <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)"><span>피톤치드 케어 (+10,000원)</span></label>
+                    <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)"><span>유막 제거 (+50,000원)</span></label>
+                    <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)"><span>발수왁스 (+20,000원)</span></label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Plan Selector Cards -->
+              <div class="radio-options-grid" style="margin-top:14px;">
+                <label class="radio-card">
+                  <input type="radio" name="experience" value="퍼펙트 (월 4회 할인 특가)" checked>
+                  <span class="radio-box">
+                    <span class="radio-title">퍼펙트 (월 4회) 🔥</span>
+                    <span class="radio-sub">주 1회 퍼펙트 특가 케어</span>
+                  </span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="experience" value="스마트 (격주 / 월 2회)">
+                  <span class="radio-box">
+                    <span class="radio-title">스마트 (격주)</span>
+                    <span class="radio-sub">격주 2회 알뜰 케어</span>
+                  </span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="experience" value="라이트 (월 1회)">
+                  <span class="radio-box">
+                    <span class="radio-title">라이트 (월 1회)</span>
+                    <span class="radio-sub">월 1회 기본 관리</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Preferred Car Wash Day Selection -->
+            <div class="input-group">
+              <label>희망 세차 요일 선택 (복수 선택 가능) <span class="req">*</span></label>
+              <div class="day-selector-grid">
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="월요일" checked>
+                  <span class="day-box">월</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="화요일">
+                  <span class="day-box">화</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="수요일">
+                  <span class="day-box">수</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="목요일">
+                  <span class="day-box">목</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="금요일">
+                  <span class="day-box">금</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="토요일">
+                  <span class="day-box">토</span>
+                </label>
+                <label class="day-chip">
+                  <input type="checkbox" name="preferredDays" value="일요일">
+                  <span class="day-box">일</span>
+                </label>
+              </div>
+              <span class="error-msg" id="dayError">최소 1개 이상의 희망 세차 요일을 선택해주세요.</span>
+            </div>
+
+            <!-- Special Remarks Section (특이사항) -->
+            <div class="input-group special-notes-group">
+              <label><i data-lucide="clipboard-list" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 특이사항 선택 (선택 항목)</label>
+              <div class="special-notes-card">
+                
+                <!-- 1. 외관상태 -->
+                <div class="notes-row">
+                  <span class="notes-label">외관상태:</span>
+                  <div class="notes-options">
+                    <label class="chip-option"><input type="checkbox" name="exteriorState" value="유광"><span>유광</span></label>
+                    <label class="chip-option"><input type="checkbox" name="exteriorState" value="무광"><span>무광</span></label>
+                    <label class="chip-option"><input type="checkbox" name="exteriorState" value="랩핑(ppf)"><span>랩핑(ppf)</span></label>
+                  </div>
+                </div>
+
+                <!-- 2. 실내환경 -->
+                <div class="notes-row">
+                  <span class="notes-label">실내환경:</span>
+                  <div class="notes-options">
+                    <label class="chip-option"><input type="checkbox" name="interiorEnv" value="반려동물"><span>반려동물</span></label>
+                    <label class="chip-option"><input type="checkbox" name="interiorEnv" value="어린이"><span>어린이</span></label>
+                    <label class="chip-option"><input type="checkbox" name="interiorEnv" value="먼지"><span>먼지</span></label>
+                    <label class="chip-option"><input type="checkbox" name="interiorEnv" value="냄새"><span>냄새</span></label>
+                  </div>
+                </div>
+
+                <!-- 3. 사용패턴 -->
+                <div class="notes-row">
+                  <span class="notes-label">사용패턴:</span>
+                  <div class="notes-options">
+                    <label class="chip-option"><input type="checkbox" name="usagePattern" value="출퇴근"><span>출퇴근</span></label>
+                    <label class="chip-option"><input type="checkbox" name="usagePattern" value="장거리"><span>장거리</span></label>
+                    <label class="chip-option"><input type="checkbox" name="usagePattern" value="주말"><span>주말</span></label>
+                    <label class="chip-option"><input type="checkbox" name="usagePattern" value="패밀리"><span>패밀리</span></label>
+                  </div>
+                </div>
+
+                <!-- 4. 차량특징 -->
+                <div class="notes-row">
+                  <span class="notes-label">차량특징:</span>
+                  <div class="notes-options">
+                    <label class="chip-option"><input type="checkbox" name="carFeatures" value="전기차"><span>전기차</span></label>
+                    <label class="chip-option"><input type="checkbox" name="carFeatures" value="사제장착물"><span>사제장착물</span></label>
+                    <label class="chip-option"><input type="checkbox" name="carFeatures" value="루프박스"><span>루프박스</span></label>
+                  </div>
+                </div>
+
+                <!-- 5. 증빙요청 -->
+                <div class="notes-row">
+                  <span class="notes-label">증빙요청:</span>
+                  <div class="notes-options">
+                    <label class="chip-option"><input type="checkbox" name="proofRequest" value="현금영수증"><span>현금영수증</span></label>
+                    <label class="chip-option"><input type="checkbox" name="proofRequest" value="세금계산서"><span>세금계산서</span></label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Section 2: Payment Method Selection -->
+          <div class="form-block payment-block">
+            <h3 class="block-title"><i data-lucide="credit-card"></i> 2. 결제 방식 선택</h3>
+            <p class="block-desc">희망하시는 세차 이용료 결제 방식을 선택해주세요.</p>
+
+            <div class="input-group">
+              <label>결제 수단 선택 <span class="req">*</span></label>
+              <div class="radio-options-grid">
+                <label class="radio-card">
+                  <input type="radio" name="paymentMethod" value="계좌이체">
+                  <span class="radio-box">
+                    <span class="radio-title"><i data-lucide="building-2" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 계좌이체</span>
+                    <span class="radio-sub">지정 계좌 입금</span>
+                  </span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="paymentMethod" value="자동이체">
+                  <span class="radio-box">
+                    <span class="radio-title"><i data-lucide="repeat" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 자동이체</span>
+                    <span class="radio-sub">매월 자동 정산</span>
+                  </span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="paymentMethod" value="카드" checked>
+                  <span class="radio-box">
+                    <span class="radio-title"><i data-lucide="credit-card" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 카드 결제</span>
+                    <span class="radio-sub">신용/체크카드</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="account-notice payment-notice" style="background: rgba(14, 165, 233, 0.12); border-color: var(--border-glow); color: var(--accent);">
+              <i data-lucide="info" style="color: var(--accent);"></i>
+              <strong style="color: var(--accent); font-size: 0.88rem;">신청완료시 담당매니져가 연락드리고 결제링크를 보내드립니다.</strong>
+            </div>
+          </div>
+
+          <!-- Form Section 3: Terms & Consent -->
+          <div class="form-block terms-block">
+            <h3 class="block-title"><i data-lucide="file-text"></i> 3. 이용 약관 동의</h3>
+            
+            <!-- Service & Policy Notice Document Box -->
+            <div class="terms-policy-box">
+              <div class="policy-section">
+                <h4 class="policy-title">● 서비스안내 <span class="sub">[월 구독형 방문세차]</span></h4>
+                <ul class="policy-list">
+                  <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
+                  <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
+                  <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
+                </ul>
+              </div>
+
+              <div class="policy-section">
+                <h4 class="policy-title">● 유의사항</h4>
+                <ul class="policy-list notice-list">
+                  <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장,여행 등)</strong>에 한해 가능합니다.</li>
+                  <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
+                  <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
+                  <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
+                  <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="terms-all">
+              <label class="checkbox-label all-check">
+                <input type="checkbox" id="checkAll">
+                <span class="custom-checkbox"></span>
+                <strong>[전체 동의] 위의 서비스 안내, 유의사항 및 필수 약관에 모두 동의합니다.</strong>
+              </label>
+            </div>
+
+            <div class="terms-list">
+              <label class="checkbox-label">
+                <input type="checkbox" class="req-term" id="termService" required>
+                <span class="custom-checkbox"></span>
+                <span>(필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" class="req-term" id="termPrivacy" required>
+                <span class="custom-checkbox"></span>
+                <span>(필수) 출장세차 서비스 개인정보 수집 및 이용 동의 <a href="#" class="view-term-link">[보기]</a></span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" class="req-term" id="termFinancial" required>
+                <span class="custom-checkbox"></span>
+                <span>(필수) 세차 이용료 결제 정보 처리 동의 <a href="#" class="view-term-link">[보기]</a></span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" id="termMarketing">
+                <span class="custom-checkbox"></span>
+                <span>(선택) 세차 완료 알림 및 이벤트 쿠폰 수신 동의</span>
+              </label>
+            </div>
+            <span class="error-msg" id="termError">필수 약관에 모두 동의해주세요.</span>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-actions">
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-block glow-btn">
+              <i data-lucide="send"></i> 고객 회원가입 및 세차 신청하기
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Sticky Quick Register Bar -->
+  <div class="mobile-sticky-bar">
+    <div class="sticky-info">
+      <span class="sticky-title">세차 플랜 출장세차</span>
+      <span class="sticky-sub">유막제거 서비스 제공</span>
+    </div>
+    <a href="#register-section" class="btn btn-primary btn-sm">
+      <i data-lucide="car"></i> 고객 가입
+    </a>
+  </div>
+
+  <!-- Admin Confirmation Management Modal (관리자 가입 확인 센터 모달) -->
+  <div id="adminModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-container admin-modal-container">
+      
+      <div class="modal-header">
+        <div class="admin-title-wrap">
+          <i data-lucide="shield-check" class="admin-icon"></i>
+          <div>
+            <h3 class="modal-title">관리자 가입 확인 & 회원 관리 센터</h3>
+            <p class="modal-subtitle">신규 가입 고객의 개인정보 및 결제 방식을 검토/승인합니다.</p>
+          </div>
+        </div>
+        <button id="closeAdminBtn" class="close-btn" aria-label="닫기">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Admin Top Navigation Tabs -->
+        <div class="admin-main-tabs">
+          <button class="admin-tab-btn active" id="tabBtnCustomers" data-tab="customers">
+            <i data-lucide="users"></i> 고객 가입 신청 관리
+          </button>
+          <button class="admin-tab-btn" id="tabBtnGallery" data-tab="gallery">
+            <i data-lucide="image-plus"></i> 시공 갤러리 사진 등록/관리
+          </button>
+          <button class="admin-tab-btn" id="tabBtnIntegration" data-tab="integration">
+            <i data-lucide="webhook"></i> 구글시트 & 알림 연동
+          </button>
+        </div>
+
+        <!-- Tab Content 1: Customer Submissions -->
+        <div id="adminCustomerTabContent" class="admin-tab-content">
+          <!-- Admin Summary Stats Bar -->
+          <div class="admin-stats-row">
+            <div class="admin-stat-box total">
+              <span class="num" id="statTotalCount">0</span>
+              <span class="lbl">전체 고객 신청</span>
+            </div>
+            <div class="admin-stat-box pending">
+              <span class="num" id="statPendingCount">0</span>
+              <span class="lbl">승인 대기</span>
+            </div>
+            <div class="admin-stat-box approved">
+              <span class="num" id="statApprovedCount">0</span>
+              <span class="lbl">승인 완료</span>
+            </div>
+            <div class="admin-stat-box rejected">
+              <span class="num" id="statRejectedCount">0</span>
+              <span class="lbl">반려</span>
+            </div>
+          </div>
+
+          <!-- Filter & Search Controls -->
+          <div class="admin-controls">
+            <div class="filter-tabs">
+              <button class="filter-btn active" data-filter="ALL">전체보기</button>
+              <button class="filter-btn" data-filter="PENDING">대기중</button>
+              <button class="filter-btn" data-filter="APPROVED">승인완료</button>
+              <button class="filter-btn" data-filter="REJECTED">반려</button>
+            </div>
+            <div class="admin-actions-right">
+              <button id="exportCsvBtn" class="btn btn-outline btn-sm">
+                <i data-lucide="download"></i> CSV 엑셀 다운로드
+              </button>
+            </div>
+          </div>
+
+          <!-- Registered Customer Submissions Table -->
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>신청일시</th>
+                  <th>고객명 / 연락처</th>
+                  <th>방문장소 / 차종</th>
+                  <th>결제 방식</th>
+                  <th>상태</th>
+                  <th>승인 관리</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <!-- Dynamically populated via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Admin Gallery Photo Manager (직접 사진/제목/설명 등록) -->
+        <div id="adminGalleryTabContent" class="admin-tab-content hidden">
+          <div class="gallery-admin-container">
+            
+            <!-- Photo Registration Form Card -->
+            <div class="gallery-upload-card">
+              <h4 class="admin-section-sub-title"><i data-lucide="plus-circle"></i> 신규 시공 사진 등록</h4>
+              <form id="adminGalleryForm" class="admin-gallery-form">
+                <div class="admin-form-grid">
+                  <div class="input-group">
+                    <label for="adminPhotoFile">사진 파일 업로드 <span class="req">*</span></label>
+                    <div class="input-wrapper">
+                      <i data-lucide="image" class="input-icon"></i>
+                      <input type="file" id="adminPhotoFile" accept="image/*" class="admin-file-input">
+                    </div>
+                  </div>
+
+                  <div class="input-group">
+                    <label for="adminPhotoUrl">또는 이미지 URL 주소</label>
+                    <div class="input-wrapper">
+                      <i data-lucide="link" class="input-icon"></i>
+                      <input type="text" id="adminPhotoUrl" placeholder="예: assets/car_wash_hero.jpg">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <label for="adminPhotoTitle">시공 제목 <span class="req">*</span></label>
+                  <div class="input-wrapper">
+                    <i data-lucide="type" class="input-icon"></i>
+                    <input type="text" id="adminPhotoTitle" placeholder="예: 1. 프리미엄 친환경 워터리스 세차" required>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <label for="adminPhotoDesc">시공 상세 설명 <span class="req">*</span></label>
+                  <div class="input-wrapper">
+                    <i data-lucide="file-text" class="input-icon"></i>
+                    <input type="text" id="adminPhotoDesc" placeholder="예: 도장면 손상 없는 고성능 워터리스 폼 케미컬 세차 시공" required>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block glow-btn" style="margin-top:8px;">
+                  <i data-lucide="upload-cloud"></i> 시공 사진 등록하기
+                </button>
+              </form>
+            </div>
+
+            <!-- Registered Photo List Header & Items Grid -->
+            <div class="gallery-list-header">
+              <h4 class="admin-section-sub-title"><i data-lucide="images"></i> 현재 등록된 시공 갤러리 (<span id="adminGalleryCount">0</span>개)</h4>
+              <button id="resetGalleryBtn" class="btn btn-outline btn-xs"><i data-lucide="rotate-ccw"></i> 기본샘플 복원</button>
+            </div>
+
+            <div id="adminGalleryList" class="admin-gallery-grid">
+              <!-- Dynamically populated via app.js -->
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tab Content 3: Integration Settings (구글 시트 & 텔레그램 알림) -->
+        <div id="adminIntegrationTabContent" class="admin-tab-content hidden">
+          <div class="integration-admin-container" style="display:flex;flex-direction:column;gap:20px;">
+            
+            <!-- Google Sheet Webhook Integration Card -->
+            <div class="card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:22px;">
+              <h4 class="admin-section-sub-title" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--primary);font-size:16px;">
+                <i data-lucide="table"></i> 1. 구글 스프레드시트 실시간 자동 저장 (Apps Script Webhook)
+              </h4>
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+                고객이 신청서를 제출하면 사장님의 구글 시트에 1초 만에 새 행으로 자동 기록됩니다.<br>
+                프로젝트 폴더의 <code>google-apps-script.js</code> 코드를 복사하여 구글 시트 웹 앱으로 배포한 후 아래에 URL을 입력하세요.
+              </p>
+              
+              <div class="input-group" style="margin-bottom:14px;">
+                <label for="cfgGoogleSheetUrl">구글 Apps Script 웹 앱 배포 URL (doPost Webhook URL)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="link" class="input-icon"></i>
+                  <input type="url" id="cfgGoogleSheetUrl" placeholder="https://script.google.com/macros/s/.../exec">
+                </div>
+              </div>
+              
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" id="testGoogleSheetBtn" class="btn btn-outline btn-sm">
+                  <i data-lucide="send"></i> 구글 시트 연동 테스트 전송
+                </button>
+                <span id="googleSheetTestStatus" style="font-size:12px;color:var(--accent);"></span>
+              </div>
+            </div>
+
+            <!-- Telegram Notification Card -->
+            <div class="card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:22px;">
+              <h4 class="admin-section-sub-title" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--primary);font-size:16px;">
+                <i data-lucide="bell-ring"></i> 2. 텔레그램 실시간 스마트폰 푸시 알림
+              </h4>
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+                신규 고객 가입 시 사장님 스마트폰 텔레그램으로 신청 내역 전문이 실시간 푸시 수신됩니다.<br>
+                텔레그램 @BotFather로부터 발급받은 <strong>Bot Token</strong>과 수신받을 <strong>Chat ID</strong>를 입력하세요.
+              </p>
+              
+              <div class="input-group" style="margin-bottom:14px;">
+                <label for="cfgTelegramToken">텔레그램 봇 토큰 (Bot Token)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="key" class="input-icon"></i>
+                  <input type="text" id="cfgTelegramToken" placeholder="예: 7123456789:AAHKz...">
+                </div>
+              </div>
+
+              <div class="input-group" style="margin-bottom:14px;">
+                <label for="cfgTelegramChatId">텔레그램 채팅 ID (Chat ID)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="message-square" class="input-icon"></i>
+                  <input type="text" id="cfgTelegramChatId" placeholder="예: 123456789">
+                </div>
+              </div>
+
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" id="testTelegramBtn" class="btn btn-outline btn-sm">
+                  <i data-lucide="send"></i> 텔레그램 알림 테스트 전송
+                </button>
+                <span id="telegramTestStatus" style="font-size:12px;color:var(--accent);"></span>
+              </div>
+            </div>
+
+            <!-- Save Button -->
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
+              <button type="button" id="saveIntegrationConfigBtn" class="btn btn-primary btn-md glow-btn">
+                <i data-lucide="check"></i> 연동 설정 저장하기
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <span class="footer-note">* 관리자 승인 완료 시 고객에게 세차 배정 안내 알림톡이 발송됩니다.</span>
+        <button id="closeAdminFooterBtn" class="btn btn-secondary btn-sm">닫기</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Member Detail View Modal -->
+  <div id="detailModal" class="modal-backdrop hidden" role="dialog">
+    <div class="modal-container detail-modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detailMemberName">고객 상세 정보</h3>
+        <button id="closeDetailBtn" class="close-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" id="detailModalBody">
+        <!-- Dynamically rendered detail view -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Gallery Photo Item Modal (시공 사진 수정 모달) -->
+  <div id="editGalleryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-container edit-gallery-modal-container" style="max-width: 560px; width: 92%;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:flex;align-items:center;gap:8px;"><i data-lucide="edit-3"></i> 시공 사진 정보 수정</h3>
+        <button id="closeEditGalleryBtn" class="close-btn" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="editGalleryForm">
+          <input type="hidden" id="editGalleryId">
+          
+          <div class="input-group" style="margin-bottom: 14px;">
+            <label>현재 이미지 미리보기</label>
+            <div style="width: 100%; height: 160px; border-radius: 8px; overflow: hidden; background: #000; margin-top: 6px;">
+              <img id="editGalleryPreview" src="" alt="시공 사진 미리보기" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-bottom: 12px;">
+            <label for="editPhotoFile">새 사진 파일로 변경 (선택)</label>
+            <input type="file" id="editPhotoFile" accept="image/*" class="admin-file-input">
+          </div>
+
+          <div class="input-group" style="margin-bottom: 12px;">
+            <label for="editPhotoUrl">또는 이미지 URL 주소 수정</label>
+            <input type="text" id="editPhotoUrl" placeholder="예: assets/car_wash_hero.jpg">
+          </div>
+
+          <div class="input-group" style="margin-bottom: 12px;">
+            <label for="editPhotoTitle">시공 제목 <span class="req">*</span></label>
+            <input type="text" id="editPhotoTitle" placeholder="시공 제목 입력" required>
+          </div>
+
+          <div class="input-group" style="margin-bottom: 18px;">
+            <label for="editPhotoDesc">시공 상세 설명 <span class="req">*</span></label>
+            <textarea id="editPhotoDesc" rows="3" placeholder="시공 상세 설명 입력" required style="width:100%;padding:10px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-main);font-family:inherit;"></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button type="button" id="cancelEditGalleryBtn" class="btn btn-secondary btn-sm">취소</button>
+            <button type="submit" class="btn btn-primary btn-sm glow-btn"><i data-lucide="check"></i> 수정사항 저장하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Notification Toast -->
+  <div id="toastNotification" class="toast hidden">
+    <i data-lucide="check-circle" class="toast-icon"></i>
+    <div class="toast-content">
+      <h4 id="toastTitle">고객 가입 신청 완료!</h4>
+      <p id="toastMsg">출장세차 회원 가입 및 결제 계좌 제출이 완료되었습니다.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <i data-lucide="sparkles"></i> CARWASH PLAN
+      </div>
+      <p class="footer-desc">주식회사 세차 플랜 | 사업자등록번호: 123-45-67890 | 찾아가는 출장세차 서비스 센터</p>
+      <p class="footer-copy">© 2026 CARWASH PLAN Corp. All rights reserved. <a href="partner-info.html" class="footer-link">파트너/기사 모집 페이지</a> | <button id="footerAdminTrigger" class="footer-link">관리자 페이지</button></p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
