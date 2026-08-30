@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>세차 플랜 (CARWASH PLAN) - 공식 프리미엄 네임카드 제작기</title>
+  
+  <!-- Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- html2canvas for instant image download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --bg-body: #090D16;
+      --card-dark: #0F172A;
+      --primary: #0EA5E9;
+      --accent: #38BDF8;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --font-main: 'Noto Sans KR', sans-serif;
+      --font-display: 'Montserrat', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .header-bar {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header-bar h1 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .header-bar p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Main Container */
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      max-width: 1060px;
+      width: 100%;
+    }
+
+    @media (max-width: 860px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    /* Card Preview Showcase */
+    .preview-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .cards-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    /* Standard Business Card Aspect Ratio (90mm x 50mm -> 450px x 250px) */
+    .biz-card {
+      width: 450px;
+      height: 255px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12);
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    @media (max-width: 480px) {
+      .biz-card { width: 340px; height: 195px; border-radius: 12px; }
+    }
+
+    /* Front Card Design */
+    .card-front {
+      background: radial-gradient(circle at 10% 10%, #1E293B 0%, #0F172A 60%, #080D1A 100%);
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #FFF;
+      position: relative;
+    }
+    .card-front::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .front-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-logo i { color: var(--accent); }
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+    .brand-title span { color: var(--accent); }
+    .brand-sub {
+      font-size: 0.68rem;
+      color: #94A3B8;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      margin-top: 2px;
+    }
+    .badge-tag {
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .front-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .person-info h3 {
+      font-size: 1.18rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .person-info .role {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .contact-list {
+      font-size: 0.75rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .contact-item i { width: 12px; height: 12px; color: var(--accent); }
+
+    .service-tags {
+      text-align: right;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .service-tags strong { color: #E2E8F0; }
+
+    /* Back Card Design */
+    .card-back {
+      background: #FFFFFF;
+      color: #0F172A;
+      padding: 22px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    .back-left {
+      flex: 1;
+      padding-right: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .back-promo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, #0284C7, #0EA5E9);
+      color: #FFF;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      width: fit-content;
+    }
+    .back-heading {
+      font-size: 1.02rem;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+    .back-desc {
+      font-size: 0.75rem;
+      color: #64748B;
+      line-height: 1.45;
+      margin-bottom: 8px;
+    }
+    .price-badge-row {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #0284C7;
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .back-url {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #64748B;
+      font-family: var(--font-display);
+    }
+
+    .back-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .qr-box {
+      width: 120px;
+      height: 120px;
+      background: #FFF;
+      border: 2px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .qr-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .qr-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #0284C7;
+      text-align: center;
+    }
+
+    /* Form Controls Sidebar */
+    .controls-panel {
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px 18px;
+      backdrop-filter: blur(16px);
+      height: fit-content;
+    }
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+    }
+    .input-grp {
+      margin-bottom: 12px;
+    }
+    .input-grp label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+    }
+    .input-grp input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #FFF;
+      font-size: 0.85rem;
+      font-family: var(--font-main);
+      outline: none;
+    }
+    .input-grp input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-action-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0EA5E9, #0284C7);
+      color: #FFF;
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      color: #FFF;
+    }
+    .btn-outline:hover {
+      background: rgba(30, 41, 59, 0.8);
+      border-color: var(--primary);
+    }
+
+    /* Print View */
+    @media print {
+      body { background: #FFF !important; padding: 0 !important; color: #000 !important; }
+      .header-bar, .controls-panel, .btn-action-group, .nav-back-link { display: none !important; }
+      .container { display: block !important; }
+      .preview-area { display: block !important; }
+      .cards-wrapper { display: grid !important; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .biz-card { box-shadow: none !important; border: 1px solid #CCC !important; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Link back to main -->
+  <div style="width:100%;max-width:1060px;margin-bottom:12px;" class="nav-back-link">
+    <a href="index.html" style="color:var(--accent);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;">
+      <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> 메인 웹사이트로 돌아가기
+    </a>
+  </div>
+
+  <header class="header-bar">
+    <h1><i data-lucide="sparkles"></i> CARWASH PLAN 공식 네임카드(명함) 생성기</h1>
+    <p>QR코드가 포함된 세차 플랜 비즈니스 명함 실시간 편집 & 고화질 이미지 저장</p>
+  </header>
+
+  <div class="container">
+    
+    <!-- Left Showcase Preview Area -->
+    <div class="preview-area">
+      <div class="cards-wrapper">
+        
+        <!-- 1. Front Card -->
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;">[ 명함 앞면 (Front) ]</div>
+          <div id="cardFront" class="biz-card card-front">
+            <div class="front-top">
+              <div class="brand-logo">
+                <i data-lucide="sparkles"></i>
+                <div>
+                  <div class="brand-title">CARWASH <span>PLAN</span></div>
+                  <div class="brand-sub">PREMIUM MOBILE CAR WASH</div>
+                </div>
+              </div>
+              <span class="badge-tag">찾아가는 출장세차</span>
+            </div>
+
+            <div class="front-bottom">
+              <div class="person-info">
+                <h3 id="previewName">안기정</h3>
+                <span class="role" id="previewRole">디테일링 마스터 / 대표</span>
+                <div class="contact-list">
+                  <div class="contact-item"><i data-lucide="phone"></i> <span id="previewPhone">010-1234-5678</span></div>
+                  <div class="contact-item"><i data-lucide="mail"></i> <span id="previewEmail">contact@carwashplan.com</span></div>
+                  <div class="contact-item"><i data-lucide="globe"></i> <span>carwashplan.vercel.app</span></div>
+                </div>
+              </div>
+
+              <div class="service-tags">
+                <div>#워터리스친환경</div>
+                <div>#실내항균탈취</div>
+                <div><strong>월 정기세차</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Back Card -->
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;">[ 명함 뒷면 (Back) ]</div>
+          <div id="cardBack" class="biz-card card-back">
+            <div class="back-left">
+              <div>
+                <span class="back-promo-badge"><i data-lucide="award" style="width:12px;height:12px;"></i> 신규가입 특별혜택</span>
+                <h4 class="back-heading">유막제거 1회 무료<br>월 정기세차 멤버십</h4>
+                <p class="back-desc">아파트/회사 주차장으로 직접 방문!<br>정해진 요일에 도장면 손상 없는 정밀 케어</p>
+              </div>
+
+              <div>
+                <div class="price-badge-row">월 31,900원부터~</div>
+                <div class="back-url" style="margin-top:4px;">https://carwashplan.vercel.app/</div>
+              </div>
+            </div>
+
+            <div class="back-right">
+              <div class="qr-box">
+                <img src="assets/carwashplan_qr.png" alt="세차 플랜 가입 QR코드">
+              </div>
+              <span class="qr-label">스마트폰 스캔 간편가입</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right Controls Panel -->
+    <div class="controls-panel">
+      <h3 class="panel-title"><i data-lucide="edit-3"></i> 명함 정보 실시간 수정</h3>
+      
+      <div class="input-grp">
+        <label for="inputName">성함</label>
+        <input type="text" id="inputName" value="안기정">
+      </div>
+
+      <div class="input-grp">
+        <label for="inputRole">직함 / 포지션</label>
+        <input type="text" id="inputRole" value="디테일링 마스터 / 대표">
+      </div>
+
+      <div class="input-grp">
+        <label for="inputPhone">연락처</label>
+        <input type="text" id="inputPhone" value="010-1234-5678">
+      </div>
+
+      <div class="input-grp">
+        <label for="inputEmail">이메일</label>
+        <input type="email" id="inputEmail" value="contact@carwashplan.com">
+      </div>
+
+      <div class="btn-action-group">
+        <button id="downloadFrontBtn" class="btn btn-primary">
+          <i data-lucide="download"></i> 명함 앞면 이미지 저장 (PNG)
+        </button>
+        <button id="downloadBackBtn" class="btn btn-primary">
+          <i data-lucide="download"></i> 명함 뒷면 이미지 저장 (PNG)
+        </button>
+        <button onclick="window.print()" class="btn btn-outline">
+          <i data-lucide="printer"></i> 명함 즉시 인쇄 (A4 출력)
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Live update fields
+    const bindInput = (id, targetId) => {
+      const input = document.getElementById(id);
+      const target = document.getElementById(targetId);
+      if (input && target) {
+        input.addEventListener('input', () => {
+          target.textContent = input.value;
+        });
+      }
+    };
+
+    bindInput('inputName', 'previewName');
+    bindInput('inputRole', 'previewRole');
+    bindInput('inputPhone', 'previewPhone');
+    bindInput('inputEmail', 'previewEmail');
+
+    // Download Function using html2canvas
+    const downloadCard = (elementId, filename) => {
+      const el = document.getElementById(elementId);
+      html2canvas(el, { scale: 3, useCORS: true }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    };
+
+    document.getElementById('downloadFrontBtn').addEventListener('click', () => {
+      downloadCard('cardFront', '세차플랜_명함_앞면.png');
+    });
+
+    document.getElementById('downloadBackBtn').addEventListener('click', () => {
+      downloadCard('cardBack', '세차플랜_명함_뒷면.png');
+    });
+  </script>
+</body>
+</html>
