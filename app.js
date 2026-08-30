@@ -24,55 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. Initial Sample Seed Data for Customer Admin Confirmation Review
+   1. Live Customer Submissions Storage Management (실시간 고객 신청 데이터)
    ========================================================================== */
-const STORAGE_KEY = 'carwashplan_customer_submissions';
+const STORAGE_KEY = 'carwashplan_customer_submissions_live';
 
 function initSeedData() {
-  const existingData = localStorage.getItem(STORAGE_KEY);
-  if (!existingData) {
-    const sampleCustomers = [
-      {
-        id: 'CUST-2026-001',
-        createdAt: '2026-08-29 14:30',
-        name: '김지현',
-        phone: '010-3847-1920',
-        email: 'jihyun.kim@naver.com',
-        region: '서울 강남구 테헤란로 123 아파트 지하 2층',
-        car: '123가 4567 (제네시스 G80)',
-        experience: '월 4회 정기세차 (추천)',
-        days: '월요일, 목요일',
-        paymentMethod: '카드',
-        status: 'PENDING'
-      },
-      {
-        id: 'CUST-2026-002',
-        createdAt: '2026-08-28 11:15',
-        name: '이동욱',
-        phone: '010-8291-5531',
-        email: 'dw.lee@gmail.com',
-        region: '경기 성남시 분당구 수내동 레미안아파트 P-12',
-        car: '56나 7890 (카니발 SUV)',
-        experience: '월 2회 정기세차',
-        days: '화요일',
-        paymentMethod: '자동이체',
-        status: 'APPROVED'
-      },
-      {
-        id: 'CUST-2026-003',
-        createdAt: '2026-08-27 16:45',
-        name: '최수진',
-        phone: '010-4491-8820',
-        email: 'sujin.choi@daum.net',
-        region: '서울 마포구 상암동 456 빌딩 주차장',
-        car: '34다 1234 (아반떼)',
-        experience: '1회성 단건 출장세차',
-        days: '토요일',
-        paymentMethod: '계좌이체',
-        status: 'APPROVED'
-      }
-    ];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleCustomers));
+  // Clear legacy mock seed data so table is pristine and only reflects live customer data
+  if (localStorage.getItem('carwashplan_customer_submissions')) {
+    localStorage.removeItem('carwashplan_customer_submissions');
   }
 }
 
@@ -893,11 +852,16 @@ function renderAdminTable(filter = 'ALL') {
   if (filteredData.length === 0) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align: center; padding: 32px; color: var(--text-muted);">
-          제출된 고객 가입 신청 데이터가 없습니다.
+        <td colspan="6" style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(14, 165, 233, 0.1); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: var(--accent);">
+            <i data-lucide="inbox" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">접수된 신청 내역이 없습니다.</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">고객이 홈페이지에서 가입 신청서를 제출하면 실시간으로 이곳에 등록됩니다.</div>
         </td>
       </tr>
     `;
+    if (window.lucide) lucide.createIcons();
     return;
   }
 
