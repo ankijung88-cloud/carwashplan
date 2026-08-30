@@ -2093,15 +2093,46 @@ a:hover {
   }
 
   .nav-container {
-    padding: 10px 16px;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .logo {
+    white-space: nowrap;
+    flex-shrink: 0;
+    gap: 6px;
   }
 
   .logo-text {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .logo-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
 
   .logo-badge {
     display: none;
+  }
+
+  .nav-actions {
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    white-space: nowrap;
+    padding: 6px 11px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
+
+  .nav-btn i {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
   }
 
   /* Hero Section */
