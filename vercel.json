@@ -2,7 +2,6 @@
   "version": 2,
   "cleanUrls": true,
   "routes": [
-    { "src": "/partner-info", "dest": "/partner-info.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
 }
