@@ -1967,6 +1967,8 @@ a:hover {
 
 /* --------------------------------------------------------------------------
    14. Footer
+/* --------------------------------------------------------------------------
+   14. Footer
    -------------------------------------------------------------------------- */
 .footer {
   border-top: 1px solid var(--border-color);
@@ -1975,6 +1977,9 @@ a:hover {
   text-align: center;
   font-size: 0.82rem;
   color: var(--text-muted);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.6;
 }
 
 .footer-logo {
@@ -1991,6 +1996,13 @@ a:hover {
 
 .footer-desc {
   margin-bottom: 8px;
+  word-break: keep-all;
+  line-height: 1.6;
+}
+
+.footer-copy {
+  word-break: keep-all;
+  line-height: 1.6;
 }
 
 .footer-link {
@@ -2003,67 +2015,25 @@ a:hover {
   font-size: inherit;
 }
 
-/* --------------------------------------------------------------------------
-   15. Mobile & Responsive Layout Adjustments
-   -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 1.65rem;
-  }
-  
-  .hero-stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+/* Table Scroll Hint */
+.table-scroll-hint {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 0.74rem;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
 
-  .stat-num {
-    font-size: 1.05rem;
-  }
-
-  .stat-label {
-    font-size: 0.68rem;
-  }
-
-  .video-tabs-bar {
-    grid-template-columns: 1fr;
-  }
-
-  .video-tab {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .steps-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .input-row {
-    grid-template-columns: 1fr;
-  }
-
-  .radio-options-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mobile-sticky-bar {
-    display: flex;
-  }
-
-  .footer {
-    padding-bottom: 90px;
-  }
-
-  .admin-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.table-scroll-hint i {
+  width: 14px;
+  height: 14px;
 }
 
 /* --------------------------------------------------------------------------
-   16. Nav Actions & Sub-page Specific Styles
+   15. Nav Actions
    -------------------------------------------------------------------------- */
 .nav-actions {
   display: flex;
@@ -2075,9 +2045,9 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-radius: var(--radius-full);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 700;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -2099,17 +2069,6 @@ a:hover {
   box-shadow: 0 4px 14px rgba(14, 165, 233, 0.6);
 }
 
-.nav-btn.partner-btn {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34D399;
-}
-
-.nav-btn.partner-btn:hover {
-  background: #10B981;
-  color: #FFFFFF;
-}
-
 /* Hero Button Group */
 .hero-btn-group {
   display: flex;
@@ -2123,3 +2082,452 @@ a:hover {
   background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(12px);
 }
+
+/* --------------------------------------------------------------------------
+   16. Mobile & Responsive Layout Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Layout & Spacing */
+  body {
+    font-size: 14px;
+  }
+
+  .nav-container {
+    padding: 10px 16px;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .logo-badge {
+    display: none;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 24px 14px 32px 14px;
+  }
+
+  .hero-badge {
+    font-size: 0.76rem;
+    padding: 5px 12px;
+    word-break: keep-all;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 1.55rem;
+    line-height: 1.35;
+    word-break: keep-all;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtext {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    word-break: keep-all;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  /* Stat Badges */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 22px;
+    width: 100%;
+  }
+
+  .stat-card {
+    padding: 10px 4px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 0.95rem;
+    font-weight: 800;
+    white-space: nowrap;
+    letter-spacing: -0.3px;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .hero-visual-wrapper {
+    border-radius: var(--radius-md);
+  }
+
+  .hero-btn-group .btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    justify-content: center;
+  }
+
+  /* Why / Features Section */
+  .gallery-section {
+    padding: 32px 14px;
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+    word-break: keep-all;
+  }
+
+  .section-desc {
+    font-size: 0.82rem;
+    word-break: keep-all;
+    line-height: 1.5;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .feature-card {
+    padding: 18px 16px;
+    word-break: keep-all;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  /* Gallery Carousel */
+  .gallery-carousel-container {
+    padding: 18px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .gallery-carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .gallery-carousel-title {
+    font-size: 1.02rem;
+    word-break: keep-all;
+  }
+
+  .gallery-carousel-subtitle {
+    font-size: 0.78rem;
+    word-break: keep-all;
+  }
+
+  .gallery-counter-badge {
+    align-self: flex-end;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+
+  .gallery-card {
+    width: 250px;
+    min-width: 250px;
+  }
+
+  /* Steps Section */
+  .steps-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .step-card {
+    padding: 14px 10px;
+  }
+
+  .step-num {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+
+  .step-card h4 {
+    font-size: 0.88rem;
+    word-break: keep-all;
+  }
+
+  .step-card p {
+    font-size: 0.72rem;
+    word-break: keep-all;
+  }
+
+  /* Form Container */
+  .form-section {
+    padding: 32px 14px 40px 14px;
+  }
+
+  .form-container {
+    padding: 22px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .form-title {
+    font-size: 1.35rem;
+    word-break: keep-all;
+  }
+
+  .form-subtitle {
+    font-size: 0.82rem;
+    word-break: keep-all;
+  }
+
+  .form-block {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+  }
+
+  .block-title {
+    font-size: 1.05rem;
+    word-break: keep-all;
+  }
+
+  .block-desc {
+    font-size: 0.78rem;
+    word-break: keep-all;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .input-group {
+    margin-bottom: 14px;
+  }
+
+  .input-group label {
+    font-size: 0.84rem;
+  }
+
+  .input-wrapper input,
+  .input-wrapper select {
+    font-size: 0.88rem;
+    padding: 11px 12px 11px 38px;
+  }
+
+  /* Pricing Table */
+  .plan-price-card {
+    padding: 14px 10px;
+  }
+
+  .plan-price-title {
+    font-size: 0.95rem;
+    word-break: keep-all;
+  }
+
+  .table-scroll-hint {
+    display: flex;
+  }
+
+  .plan-price-table th,
+  .plan-price-table td {
+    padding: 8px 6px;
+    font-size: 0.74rem;
+  }
+
+  .old-price {
+    font-size: 0.68rem;
+  }
+
+  .new-price {
+    font-size: 0.82rem;
+  }
+
+  /* Options Grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .options-grid .chip-option {
+    width: 100%;
+  }
+
+  .options-grid .chip-option span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.75rem;
+    padding: 7px 4px;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+
+  /* Radio Plan Selector Cards */
+  .radio-options-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .radio-box {
+    padding: 11px 14px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+
+  .radio-title {
+    font-size: 0.88rem;
+    margin-bottom: 0;
+  }
+
+  .radio-sub {
+    font-size: 0.74rem;
+  }
+
+  /* Day Selector Chips Grid */
+  .day-selector-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .day-box {
+    padding: 9px 2px;
+    font-size: 0.82rem;
+  }
+
+  /* Special Remarks Checklist (특이사항) */
+  .special-notes-card {
+    padding: 12px 10px;
+    gap: 10px;
+  }
+
+  .notes-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding-bottom: 8px;
+  }
+
+  .notes-label {
+    font-size: 0.82rem;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .notes-options {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .notes-options .chip-option {
+    flex: 1 1 auto;
+  }
+
+  .notes-options .chip-option span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.76rem;
+    padding: 6px 10px;
+    box-sizing: border-box;
+  }
+
+  /* Payment Method Cards */
+  .payment-options-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* Terms Box */
+  .terms-policy-box {
+    padding: 14px 12px;
+    font-size: 0.76rem;
+    line-height: 1.55;
+    word-break: keep-all;
+  }
+
+  .checkbox-label {
+    font-size: 0.78rem;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+
+  .form-actions button[type="submit"] {
+    padding: 15px 20px;
+    font-size: 1rem;
+  }
+
+  /* Sticky Bar & Footer */
+  .mobile-sticky-bar {
+    display: flex;
+  }
+
+  .footer {
+    padding: 28px 16px 100px 16px;
+    word-break: keep-all;
+  }
+
+  /* Modals */
+  .modal-container {
+    width: 95%;
+    max-height: 90vh;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-modal-container {
+    width: 96%;
+    max-height: 92vh;
+  }
+
+  .admin-main-tabs {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .admin-tab-btn {
+    font-size: 0.76rem;
+    padding: 7px 10px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .admin-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}
+
+/* Extra Small Screens (<= 380px) */
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 1.35rem;
+  }
+
+  .stat-num {
+    font-size: 0.85rem;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
