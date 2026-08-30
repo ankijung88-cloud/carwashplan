@@ -1070,7 +1070,7 @@ function initCustomerDetailModal() {
   if (footerCloseBtn) footerCloseBtn.onclick = () => window.closeCustomerDetailModal();
   if (printBtn) {
     printBtn.onclick = () => {
-      window.print();
+      window.printCustomerConfirmation();
     };
   }
 
@@ -1242,6 +1242,121 @@ window.openCustomerDetailModal = function(id) {
 window.closeCustomerDetailModal = function() {
   const modal = document.getElementById('customerDetailModal');
   if (modal) modal.classList.add('hidden');
+};
+
+/* Print Confirmation via dedicated popup window (prevents 4x duplicates from modal/body structure) */
+window.printCustomerConfirmation = function() {
+  const content = document.getElementById('customerDetailContent');
+  if (!content) return;
+
+  const innerHtml = content.innerHTML;
+
+  const printWin = window.open('', '_blank', 'width=820,height=1160,scrollbars=yes');
+  if (!printWin) {
+    alert('팝업이 차단되었습니다. 브라우저 팝업 차단을 해제해 주세요.');
+    return;
+  }
+
+  printWin.document.write(`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세차 플랜 – 고객 가입신청 및 약관동의 확인서</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 8pt; color: #0F172A; background: #fff; line-height: 1.35;
+  }
+  .print-doc-header { text-align: center; border-bottom: 2px solid #0F172A; padding-bottom: 5px; margin-bottom: 8px; }
+  .print-doc-header h2 { font-size: 13pt; font-weight: 900; color: #0F172A; margin-bottom: 2px; }
+  .print-doc-header p { font-size: 7.5pt; color: #64748B; }
+
+  .detail-box-group { margin-bottom: 7px; page-break-inside: avoid; }
+  .detail-section-title {
+    font-size: 8.5pt; font-weight: 800; color: #0284C7;
+    border-bottom: 1.5px solid #0284C7; padding-bottom: 2px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .detail-section-title i, [data-lucide] { display: none; }
+
+  .detail-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 3px 8px; background: #F8FAFC;
+    border: 1px solid #CBD5E1; padding: 4px 6px; border-radius: 4px;
+  }
+  .detail-item { display: flex; flex-direction: column; }
+  .detail-lbl { font-size: 6.5pt; color: #64748B; font-weight: 700; }
+  .detail-val { font-size: 7.5pt; color: #0F172A; font-weight: 700; word-break: break-all; }
+
+  .detail-terms-list { display: flex; flex-direction: column; gap: 4px; }
+  .detail-term-card {
+    background: #F8FAFC; border: 1px solid #CBD5E1;
+    border-radius: 4px; padding: 4px 6px; page-break-inside: avoid;
+  }
+  .detail-term-card:first-child { border-left: 3px solid #0284C7; }
+  .detail-term-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 6px; margin-bottom: 3px;
+    font-size: 7.5pt; font-weight: 800; color: #0F172A;
+  }
+  .detail-term-text {
+    font-size: 6.8pt; line-height: 1.3; color: #334155;
+    background: #fff; border: 1px solid #E2E8F0;
+    padding: 3px 5px; border-radius: 3px;
+  }
+  .detail-term-text ul { padding-left: 12px; margin-top: 2px; }
+  .detail-term-text li { margin-bottom: 0; }
+  .detail-term-text strong { font-weight: 700; }
+
+  .term-badge-agreed {
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: 6.5pt; font-weight: 800; padding: 1px 5px;
+    border-radius: 10px; white-space: nowrap;
+    background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0;
+  }
+  .term-badge-na {
+    background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1;
+  }
+
+  .signature-box-print-wrapper {
+    display: grid; grid-template-columns: 1fr 130px;
+    gap: 8px; align-items: center;
+    background: #F8FAFC; border: 1px solid #CBD5E1;
+    padding: 5px 8px; border-radius: 4px;
+  }
+  .signature-statement { font-size: 7.2pt; line-height: 1.4; color: #1E293B; }
+  .signature-statement span { font-size: 6.8pt; color: #64748B; }
+  .signature-display-box {
+    background: #fff; border: 1.5px solid #0F172A; border-radius: 4px;
+    padding: 2px; height: 48px; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .signature-display-box img { max-height: 42px; max-width: 100%; }
+  .no-sig { font-size: 6.5pt; color: #94A3B8; text-align: center; }
+
+  .print-doc-header { display: block !important; }
+</style>
+</head>
+<body>
+  ${innerHtml}
+</body>
+</html>`);
+
+  printWin.document.close();
+  // Wait for content to render before printing
+  printWin.onload = function() {
+    setTimeout(() => {
+      printWin.focus();
+      printWin.print();
+    }, 400);
+  };
+  // Fallback if onload doesn't fire
+  setTimeout(() => {
+    try { printWin.focus(); printWin.print(); } catch(e) {}
+  }, 800);
 };
 
 // Global Admin Action Functions
