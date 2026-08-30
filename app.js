@@ -1122,28 +1122,43 @@ window.openCustomerDetailModal = function(id) {
     <!-- 2. Terms Agreement Verification & Full Policy Document Texts -->
     <div class="detail-box-group">
       <div class="detail-section-title">
-        <i data-lucide="shield-check" style="width:16px;height:16px;"></i> 이용약관 동의 확인 및 전체 약관 내용 (동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)})
+        <i data-lucide="shield-check" style="width:16px;height:16px;"></i> 이용약관 동의 확인 및 서비스 안내/유의사항 전문 (동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)})
       </div>
       <div class="detail-terms-list">
         
+        <!-- Service Guide & Notice Full Document Box -->
+        <div class="detail-term-card" style="border-left: 3px solid var(--accent);">
+          <div class="detail-term-header">
+            <span>● 서비스 안내 및 유의사항 전문 [월 구독형 방문세차]</span>
+            <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 확인 및 동의 완료</span>
+          </div>
+          <div class="detail-term-text">
+            <strong style="color:var(--accent);display:block;margin-bottom:4px;">[서비스 안내]</strong>
+            <ul>
+              <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
+              <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
+              <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
+            </ul>
+            <strong style="color:#FCD34D;display:block;margin-top:10px;margin-bottom:4px;">[유의사항]</strong>
+            <ul style="color:#E2E8F0;">
+              <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장, 여행 등)</strong>에 한해 가능합니다.</li>
+              <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
+              <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
+              <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
+              <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Term 1 -->
         <div class="detail-term-card">
           <div class="detail-term-header">
-            <span>1. (필수) 월 구독형 방문세차 서비스 안내 및 유의사항</span>
+            <span>1. (필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의</span>
             <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
           </div>
           <div class="detail-term-text">
-            <strong>[서비스 개요 및 시공 원칙]</strong>
             <ul>
-              <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 정기 케어 서비스</strong>입니다.</li>
-              <li>차량 색상과 도장면 재질에 맞춘 프리미엄 친환경 케미컬과 초극세사 타월을 사용하여 스크래치 없이 안전하게 관리하며, 방문마다 코팅 보호막을 지속적으로 보강합니다.</li>
-              <li>세차 방문 시간은 전문 매니저의 작업 동선에 따라 배정되며, 차량이 주차된 현장에서 정밀 시공됩니다.</li>
-            </ul>
-            <strong style="display:block;margin-top:6px;">[유의사항 및 책임 한계]</strong>
-            <ul>
-              <li>지정된 세차 요일 변경 및 연기는 출장, 여행 등 부득이한 사유에 한해 사전 협의로 가능합니다.</li>
-              <li>우천, 폭염, 한파 등 기상 악화 시 안전한 시공을 위해 일정이 순연될 수 있습니다.</li>
-              <li>차량에 이미 존재하던 기존 손상(스톤칩, 도장 불량, 깊은 스크래치, 랩핑/PPF 노후 손상 등)은 세차 후 도드라질 수 있으며 기존 외관 하자는 보상 대상에서 제외됩니다.</li>
+              <li>위의 서비스 안내 및 유의사항 내용을 충분히 숙지하였으며, 정기 방문 출장세차 서비스 제공 및 작업 환경 규정에 전적으로 동의합니다.</li>
             </ul>
           </div>
         </div>
@@ -1156,9 +1171,9 @@ window.openCustomerDetailModal = function(id) {
           </div>
           <div class="detail-term-text">
             <ul>
-              <li><strong>수집 항목:</strong> 고객 성명, 휴대전화번호, 이메일 주소, 차량번호, 차종, 색상, 세차 방문 희망 주소(동·호수 및 주차 위치), 결제 수단 정보</li>
-              <li><strong>이용 목적:</strong> 출장세차 정기 방문 일정 조율 및 세차 시공, 시공 완료 전/후 사진 알림 전송, 서비스 이용료 결제 및 청구서 발송, 고객 상담 및 AS 처리</li>
-              <li><strong>보유 및 이용 기간:</strong> 출장세차 서비스 구독 해지 시까지 (단, 전자상거래 등에서의 소비자보호에 관한 법률 등 관계 법령에 따른 의무 보관 기간 동안 보관 후 파기)</li>
+              <li><strong>수집 항목:</strong> 성명, 연락처, 이메일, 세차 장소(주소 및 주차위치), 차종 및 차량번호, 색상, 결제 수단 정보</li>
+              <li><strong>이용 목적:</strong> 출장세차 정기 방문 일정 조율, 세차 시공 및 완료 알림 전송, 서비스 이용료 결제/정산, 고객 상담 및 AS 응대</li>
+              <li><strong>보유 및 이용 기간:</strong> 출장세차 서비스 구독 해지 시까지 (단, 전자상거래 등 관계 법령에 따른 보존 의무 기간 준수)</li>
             </ul>
           </div>
         </div>
@@ -1166,15 +1181,15 @@ window.openCustomerDetailModal = function(id) {
         <!-- Term 3 -->
         <div class="detail-term-card">
           <div class="detail-term-header">
-            <span>3. (필수) 세차 이용료 결제 정보 처리 및 결제 규정 동의</span>
+            <span>3. (필수) 세차 이용료 결제 정보 처리 동의 및 결제 규정</span>
             <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
           </div>
           <div class="detail-term-text">
             <ul>
-              <li><strong>결제 방식:</strong> 고객이 신청 시 선택한 결제 수단(신용/체크카드 결제링크, 계좌이체, 자동이체)에 따라 담당 매니저 배정 후 정기 결제 청구가 진행됩니다.</li>
-              <li><strong>결제일 및 정산:</strong> 매월 지정된 정기 결제일에 청구되며, 구독 취소 및 플랜 변경은 다음 회차 결제일 전일까지 요청 시 정상 처리됩니다.</li>
-              <li><strong>미사용 횟수 관리:</strong> 당월 미사용 잔여 세차 횟수는 결제일 기준 50일 이내 이월하여 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
-              <li><strong>환불 규정:</strong> 서비스 개시 전 또는 잔여 미시공 회차에 대해 회차별 계산 후 전액 환불되며, 이미 시공이 완료된 회차는 환불이 불가합니다.</li>
+              <li><strong>결제 방식:</strong> 고객이 선택한 결제 수단(카드 결제링크, 자동이체, 계좌이체)에 따라 담당 매니저 배정 후 정기 결제 진행</li>
+              <li><strong>결제일 및 정산:</strong> 매월 지정 결제일에 청구되며, 구독 취소 및 변경은 결제일 전일까지 요청 시 정상 처리</li>
+              <li><strong>미사용 횟수 관리:</strong> 당월 미사용 잔여 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸</li>
+              <li><strong>환불 규정:</strong> 미시공 잔여 회차에 대해 회차별 계산 후 전액 환불, 이미 시공 완료된 회차는 환불 불가</li>
             </ul>
           </div>
         </div>
@@ -1182,14 +1197,14 @@ window.openCustomerDetailModal = function(id) {
         <!-- Term 4 -->
         <div class="detail-term-card">
           <div class="detail-term-header">
-            <span>4. (선택) 세차 완료 알림 및 이벤트/할인 정보 수신 동의</span>
+            <span>4. (선택) 세차 완료 알림 및 이벤트 쿠폰 수신 동의</span>
             <span class="term-badge-agreed" style="${terms.marketing ? '' : 'background:rgba(148,163,184,0.15);color:#94A3B8;border-color:rgba(148,163,184,0.3);'}">
               <i data-lucide="${terms.marketing ? 'check' : 'minus'}" style="width:12px;height:12px;"></i> ${terms.marketing ? '수신 동의 완료' : '미동의 (수신거부)'}
             </span>
           </div>
           <div class="detail-term-text">
             <ul>
-              <li>세차 시공 전/후 고화질 비교 사진 실시간 카카오톡/문자 전송 알림 및 CARWASH PLAN의 신규 프로모션, 시즌별 특가 할인 쿠폰 혜택 안내를 수신합니다.</li>
+              <li>세차 완료 알림(전/후 사진 전송) 및 세차 플랜(CARWASH PLAN) 신규 이벤트/할인 쿠폰 혜택 정보 수신</li>
             </ul>
           </div>
         </div>
