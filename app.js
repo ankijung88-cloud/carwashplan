@@ -161,10 +161,10 @@ function initVideoPlayerBox() {
 const GALLERY_STORAGE_KEY = 'carwashplan_gallery_photos';
 
 const DEFAULT_GALLERY_ITEMS = [
-  { id: 'GAL-1', src: 'assets/car_wash_hero.jpg', title: '1. 프리미엄 워터리스 폼 세차', desc: '도장면 손상 없는 고성능 워터리스 폼 케미컬 세차 시공' },
-  { id: 'GAL-2', src: 'assets/car_detailing_process.jpg', title: '2. 파란색 극세사 타월 닦기', desc: '특수 프리미엄 파란색 극세사 타월로 차량 표면을 부드럽게 버핑 정밀 닦기' },
-  { id: 'GAL-3', src: 'assets/car_interior_clean.jpg', title: '3. 실내 항균 탈취 딥케어', desc: '가죽 시트, 플로어 매트 세균 및 냄새 99.9% 항균 소독 케어' },
-  { id: 'GAL-4', src: 'assets/car_wheel_shine.jpg', title: '4. 휠 코팅 & 타이어 드레싱', desc: '신차급 휠 광택 보존 및 타이어 수명 연장 보호막 도포' },
+  { id: 'GAL-1', src: 'assets/car_wash_hero.jpg', title: '1. 프리미엄 워터리스 세차', desc: '도장면 손상 없는 고성능 워터리스 케미컬 세차 시공' },
+  { id: 'GAL-2', src: 'assets/car_detailing_process.jpg', title: '2. 초극세사 타월 버핑', desc: '특수 프리미엄 초극세사 타월로 차량 표면을 부드럽게 버핑 정밀 닦기' },
+  { id: 'GAL-3', src: 'assets/car_interior_clean.jpg', title: '3. 실내 크리닝 옵션', desc: '가죽 시트, 플로어 매트, 대쉬보드 부터 콘솔 오염제거' },
+  { id: 'GAL-4', src: 'assets/car_wheel_shine.jpg', title: '4. 휠 세척 & 타이어 드레싱', desc: '주행중 발생한 휠의 외부 노출부에 쌓인 분진과 먼지를 제거하여 보존 및 타이어 수명 연장 보호막 도포' },
   { id: 'GAL-5', src: 'assets/car_glass_coating.jpg', title: '5. 전면 유리 유막제거 & 발수', desc: '빗길 시야 확보를 위한 찌든 유막제거 및 초발수 비딩 시공' }
 ];
 
