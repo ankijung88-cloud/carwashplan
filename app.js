@@ -1043,7 +1043,7 @@ const INTEGRATION_CONFIG_KEY = 'carwashplan_integration_config';
 
 function getIntegrationConfig() {
   const defaults = {
-    googleSheetUrl: '',
+    googleSheetUrl: 'https://script.google.com/macros/s/AKfycbznhZPBaaYzpe_lcbct6-lThNhyGjrtkqQzv0yeqPtxqoTUpt8ae4bm-EHMtt7Wbyo/exec',
     telegramToken: '',
     telegramChatId: ''
   };
