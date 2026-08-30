@@ -158,7 +158,7 @@ function initVideoPlayerBox() {
 /* ==========================================================================
    3. Interactive Horizontal Loop Photo Gallery & Admin Lightbox Modal
    ========================================================================== */
-const GALLERY_STORAGE_KEY = 'carwashplan_gallery_photos';
+const GALLERY_STORAGE_KEY = 'carwashplan_gallery_photos_v2';
 
 const DEFAULT_GALLERY_ITEMS = [
   { id: 'GAL-1', src: 'assets/car_wash_hero.jpg', title: '1. 프리미엄 워터리스 세차', desc: '도장면 손상 없는 고성능 워터리스 케미컬 세차 시공' },
