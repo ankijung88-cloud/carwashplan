@@ -575,6 +575,41 @@
     </a>
   </div>
 
+  <!-- Admin Security Authentication Modal (관리자 전용 비밀번호 인증 모달) -->
+  <div id="adminAuthModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 400px; width: 90%; text-align: center; background: rgba(18, 24, 38, 0.95); border: 1px solid var(--border-glow); box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+      <div class="modal-header" style="justify-content: flex-end; border-bottom: none; padding: 16px 20px 0 20px;">
+        <button id="closeAdminAuthBtn" class="close-btn" aria-label="닫기">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 10px 24px 28px 24px;">
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(14, 165, 233, 0.15); border: 1px solid var(--border-glow); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: var(--accent);">
+          <i data-lucide="lock" style="width: 26px; height: 26px;"></i>
+        </div>
+        <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 8px;">관리자 전용 인증</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+          고객 정보 및 관리 센터 접근을 위해<br>관리자 비밀번호를 입력해주세요.
+        </p>
+
+        <form id="adminAuthForm">
+          <div class="input-group" style="margin-bottom: 12px; text-align: left;">
+            <label for="adminPasswordInput">관리자 비밀번호</label>
+            <div class="input-wrapper">
+              <i data-lucide="key" class="input-icon"></i>
+              <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력 (기본: admin1234)" required autocomplete="current-password">
+            </div>
+            <span id="adminAuthError" class="error-msg" style="display: none; margin-top: 6px;">비밀번호가 올바르지 않습니다.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block glow-btn" style="margin-top: 14px;">
+            <i data-lucide="unlock"></i> 관리자 확인 로그인
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Admin Confirmation Management Modal (관리자 가입 확인 센터 모달) -->
   <div id="adminModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="modal-container admin-modal-container">
@@ -587,9 +622,14 @@
             <p class="modal-subtitle">신규 가입 고객의 개인정보 및 결제 방식을 검토/승인합니다.</p>
           </div>
         </div>
-        <button id="closeAdminBtn" class="close-btn" aria-label="닫기">
-          <i data-lucide="x"></i>
-        </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button id="adminLogoutBtn" class="btn btn-outline btn-xs" title="관리자 로그아웃">
+            <i data-lucide="log-out"></i> 로그아웃
+          </button>
+          <button id="closeAdminBtn" class="close-btn" aria-label="닫기">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
       </div>
 
       <div class="modal-body">
@@ -789,10 +829,28 @@
               </div>
             </div>
 
+            <!-- Admin Password Change Card -->
+            <div class="card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:22px;">
+              <h4 class="admin-section-sub-title" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--primary);font-size:16px;">
+                <i data-lucide="shield"></i> 3. 관리자 비밀번호 변경
+              </h4>
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
+                관리자 확인 페이지 접속 시 사용할 비밀번호를 설정합니다. (기본 비밀번호: <code>admin1234</code>)
+              </p>
+              
+              <div class="input-group" style="margin-bottom:14px;">
+                <label for="cfgNewAdminPw">새 관리자 비밀번호</label>
+                <div class="input-wrapper">
+                  <i data-lucide="lock" class="input-icon"></i>
+                  <input type="password" id="cfgNewAdminPw" placeholder="새 비밀번호 입력 (4자리 이상)">
+                </div>
+              </div>
+            </div>
+
             <!-- Save Button -->
             <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
               <button type="button" id="saveIntegrationConfigBtn" class="btn btn-primary btn-md glow-btn">
-                <i data-lucide="check"></i> 연동 설정 저장하기
+                <i data-lucide="check"></i> 전체 설정 저장하기
               </button>
             </div>
 

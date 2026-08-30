@@ -561,15 +561,86 @@ function initAdminManager() {
   if (tabBtnGallery) tabBtnGallery.addEventListener('click', () => switchAdminTab('gallery'));
   if (tabBtnIntegration) tabBtnIntegration.addEventListener('click', () => switchAdminTab('integration'));
 
+  // Admin Security Auth State
+  const ADMIN_PW_KEY = 'carwashplan_admin_password';
+  const DEFAULT_ADMIN_PW = 'admin1234';
+  const ADMIN_AUTH_SESSION_KEY = 'carwashplan_admin_authenticated';
+
+  const getAdminPassword = () => {
+    return localStorage.getItem(ADMIN_PW_KEY) || DEFAULT_ADMIN_PW;
+  };
+
+  const isAdminAuthed = () => {
+    return sessionStorage.getItem(ADMIN_AUTH_SESSION_KEY) === 'true';
+  };
+
+  const adminAuthModal = document.getElementById('adminAuthModal');
+  const adminAuthForm = document.getElementById('adminAuthForm');
+  const adminPasswordInput = document.getElementById('adminPasswordInput');
+  const adminAuthError = document.getElementById('adminAuthError');
+  const closeAdminAuthBtn = document.getElementById('closeAdminAuthBtn');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+
   const openModal = () => {
-    renderAdminTable(currentFilter);
-    renderAdminGalleryList();
-    adminModal.classList.remove('hidden');
+    if (isAdminAuthed()) {
+      renderAdminTable(currentFilter);
+      renderAdminGalleryList();
+      adminModal.classList.remove('hidden');
+    } else {
+      if (adminPasswordInput) adminPasswordInput.value = '';
+      if (adminAuthError) adminAuthError.style.display = 'none';
+      if (adminAuthModal) {
+        adminAuthModal.classList.remove('hidden');
+        if (adminPasswordInput) setTimeout(() => adminPasswordInput.focus(), 100);
+      }
+    }
+  };
+
+  const closeAuthModal = () => {
+    if (adminAuthModal) adminAuthModal.classList.add('hidden');
   };
 
   const closeModal = () => {
     adminModal.classList.add('hidden');
   };
+
+  if (closeAdminAuthBtn) closeAdminAuthBtn.addEventListener('click', closeAuthModal);
+  if (adminAuthModal) {
+    adminAuthModal.addEventListener('click', (e) => {
+      if (e.target === adminAuthModal) closeAuthModal();
+    });
+  }
+
+  if (adminAuthForm) {
+    adminAuthForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entered = adminPasswordInput ? adminPasswordInput.value.trim() : '';
+      const correctPw = getAdminPassword();
+
+      if (entered === correctPw) {
+        sessionStorage.setItem(ADMIN_AUTH_SESSION_KEY, 'true');
+        closeAuthModal();
+        renderAdminTable(currentFilter);
+        renderAdminGalleryList();
+        adminModal.classList.remove('hidden');
+        showToast('관리자 인증 성공', '관리자 확인 센터에 로그인되었습니다.');
+      } else {
+        if (adminAuthError) adminAuthError.style.display = 'block';
+        if (adminPasswordInput) {
+          adminPasswordInput.select();
+          adminPasswordInput.focus();
+        }
+      }
+    });
+  }
+
+  if (adminLogoutBtn) {
+    adminLogoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem(ADMIN_AUTH_SESSION_KEY);
+      closeModal();
+      showToast('로그아웃 완료', '관리자 세션이 안전하게 종료되었습니다.');
+    });
+  }
 
   if (openAdminBtn) openAdminBtn.addEventListener('click', openModal);
   if (footerAdminTrigger) footerAdminTrigger.addEventListener('click', openModal);
@@ -1051,6 +1122,8 @@ function initIntegrationSettings() {
   if (cfgTelegramToken) cfgTelegramToken.value = config.telegramToken || '';
   if (cfgTelegramChatId) cfgTelegramChatId.value = config.telegramChatId || '';
 
+  const cfgNewAdminPw = document.getElementById('cfgNewAdminPw');
+
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
       const newCfg = {
@@ -1059,7 +1132,15 @@ function initIntegrationSettings() {
         telegramChatId: cfgTelegramChatId ? cfgTelegramChatId.value.trim() : ''
       };
       saveIntegrationConfig(newCfg);
-      showToast('설정 저장 완료', '구글 시트 및 텔레그램 연동 정보가 안전하게 저장되었습니다.');
+
+      let pwChanged = false;
+      if (cfgNewAdminPw && cfgNewAdminPw.value.trim().length >= 4) {
+        localStorage.setItem('carwashplan_admin_password', cfgNewAdminPw.value.trim());
+        cfgNewAdminPw.value = '';
+        pwChanged = true;
+      }
+
+      showToast('설정 저장 완료', pwChanged ? '연동 정보 및 관리자 비밀번호가 안전하게 변경되었습니다.' : '구글 시트 및 텔레그램 연동 정보가 안전하게 저장되었습니다.');
     });
   }
 
