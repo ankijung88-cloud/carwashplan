@@ -703,6 +703,9 @@ function initFormValidationAndSubmit() {
       isSignatureDrawn = false;
       const placeholder = document.getElementById('signaturePlaceholder');
       if (placeholder) placeholder.style.display = 'block';
+      if (sigContainer) sigContainer.classList.remove('active');
+    }
+
     // Show Application Complete Success Modal (신청 완료 모달 팝업)
     const successModal = document.getElementById('submissionSuccessModal');
     if (successModal) {
