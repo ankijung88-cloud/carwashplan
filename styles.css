@@ -3081,7 +3081,7 @@ a:hover {
    ========================================================================== */
 @page {
   size: A4 portrait;
-  margin: 14mm 10mm 14mm 10mm;
+  margin: 10mm 10mm 10mm 10mm;
 }
 
 @media print {
@@ -3129,7 +3129,7 @@ a:hover {
     justify-content: center !important;
   }
 
-  /* Match exact modal doc dimensions and look */
+  /* Match exact modal doc dimensions and center vertically with balanced margins */
   .registration-form-doc {
     box-shadow: none !important;
     border: 1px solid #CBD5E1 !important;
@@ -3137,7 +3137,7 @@ a:hover {
     padding: 20px 24px !important;
     max-width: 680px !important;
     width: 680px !important;
-    margin: 0 auto !important;
+    margin: 22mm auto 0 auto !important;
     box-sizing: border-box !important;
     background: #FFFFFF !important;
     -webkit-print-color-adjust: exact !important;
@@ -3146,8 +3146,8 @@ a:hover {
 
   /* 1. Header with shield logo */
   .reg-doc-header {
-    margin-top: 4px !important;
-    margin-bottom: 12px !important;
+    margin-top: 6px !important;
+    margin-bottom: 14px !important;
     text-align: center !important;
   }
 
