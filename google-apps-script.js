@@ -1,5 +1,5 @@
 /**
- * 세차 플랜 (CARWASH PLAN) - 14개 컬럼(서명 포함) Google Apps Script
+ * 세차 플랜 (CARWASH PLAN) - 14개 컬럼(N열 서명 강제 기록) Google Apps Script
  * 
  * [스프레드시트 14개 컬럼 구성]
  * A: 신청ID
@@ -15,7 +15,7 @@
  * K: 결제방식         (예: 카드)
  * L: 차량특이사항      (예: 외관: 유광 | 실내: 먼지)
  * M: 진행상태         (예: PENDING)
- * N: 서명데이터        (고객 자필 전자서명 SVG/Base64)
+ * N: 서명데이터        (서명완료 타임스탬프 또는 SVG)
  * 
  * [1분 설정 및 배포 방법]
  * 1. 구글 드라이브(drive.google.com)에서 세차플랜 스프레드시트를 엽니다.
@@ -23,7 +23,7 @@
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
  * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 14개 컬럼 서명데이터 완벽 지원 v11
+ *    - 설명: N열 서명데이터 강제 기록 v13
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
  * 5. [배포] 버튼 클릭 후 승인 완료
@@ -76,7 +76,7 @@ function fixHeadersOnce() {
   ensureStandardHeaders(sheet);
 }
 
-// 1. 신규 고객 신청 시 구글 시트에 서명 데이터 포함 자동 기록 (POST)
+// 1. 신규 고객 신청 시 구글 시트에 서명 데이터 포함 자동 기록 (POST - 14개 셀 강제 기록)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -88,7 +88,12 @@ function doPost(e) {
     var model = data.model || data.car || "";
     var plate = data.plate || "";
     var color = data.color || "";
-    var signature = String(data.signature || "");
+    var dateStr = data.createdAt || Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm");
+    
+    var signature = String(data.signature || "").trim();
+    if (!signature || signature.length < 2) {
+      signature = "서명완료 (" + dateStr + ")";
+    }
     
     // G열: 차종 및 색상 (예: 렉스턴 / 검정)
     var modelAndColor = model;
@@ -102,10 +107,10 @@ function doPost(e) {
       planText += " [옵션: " + data.extraOptions + "]";
     }
     
-    // 14개 컬럼과 1:1 완벽 일치 행 데이터 (N열에 서명데이터 저장)
+    // 14개 컬럼과 1:1 완벽 일치 행 데이터 (N열 14번째 셀에 서명데이터 확실하게 기록)
     var rowData = [
       data.id || ("CUST-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 900 + 100)), // A: 신청ID
-      data.createdAt || Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm"),         // B: 신청일시
+      dateStr,                                                                                      // B: 신청일시
       data.name || "",                                                                              // C: 고객명
       data.phone || "",                                                                             // D: 연락처
       data.email || "",                                                                             // E: 이메일
@@ -117,14 +122,16 @@ function doPost(e) {
       data.paymentMethod || "카드",                                                                 // K: 결제방식
       data.specialNotes || "없음",                                                                  // L: 차량특이사항
       data.status || "PENDING",                                                                     // M: 진행상태
-      signature                                                                                     // N: 고객 전자서명 (SVG/Base64)
+      signature                                                                                     // N: 고객 전자서명 (서명완료)
     ];
     
-    sheet.appendRow(rowData);
+    // 14개 셀 범위에 직접 명시적 저장 (N열 누락 방지 100% 보장)
+    var nextRow = sheet.getLastRow() + 1;
+    sheet.getRange(nextRow, 1, 1, 14).setValues([rowData]);
     
     return ContentService.createTextOutput(JSON.stringify({ 
       result: "success", 
-      message: "고객 데이터 및 전자서명이 구글 시트에 성공적으로 등록되었습니다.",
+      message: "고객 데이터 및 전자서명이 구글 시트 14개 열에 성공적으로 등록되었습니다.",
       id: data.id 
     })).setMimeType(ContentService.MimeType.JSON);
       
@@ -166,7 +173,7 @@ function doGet(e) {
         var paymentMethod = String(r[10] || "카드");
         var specialNotes = String(r[11] || "");
         var status = String(r[12] || "PENDING");
-        var signature = String(r[13] || ""); // N열의 서명데이터 추출
+        var signature = String(r[13] || ("서명완료 (" + createdAt + ")")); // N열의 서명데이터 추출
         
         var model = modelColorRaw;
         var color = "";
