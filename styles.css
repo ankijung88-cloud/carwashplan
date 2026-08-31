@@ -285,8 +285,66 @@ a:hover {
   font-size: 1rem;
   color: var(--text-muted);
   max-width: 640px;
-  margin: 0 auto 28px auto;
+  margin: 0 auto 16px auto;
   word-break: keep-all;
+}
+
+/* Hero Operating Hours Banner */
+.hero-hours-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  color: #E2E8F0;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.hero-hours-pill i {
+  color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+.hero-hours-pill strong {
+  color: var(--accent);
+}
+.hero-hours-pill .pill-divider {
+  color: rgba(255, 255, 255, 0.25);
+  margin: 0 4px;
+}
+
+/* Form Info Banner */
+.form-info-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  margin-top: 14px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+.form-info-banner .info-banner-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.form-info-banner .info-banner-item i {
+  color: var(--accent);
+  width: 15px;
+  height: 15px;
+}
+.form-info-banner strong {
+  color: var(--text-main);
 }
 
 /* Hero Stats Grid */
