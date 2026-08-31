@@ -1641,7 +1641,7 @@ function escapeHtml(str) {
    ========================================================================== */
 const INTEGRATION_CONFIG_KEY = 'carwashplan_integration_config';
 
-const LATEST_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyrzx_tQSdI02DB0uE_vyt1nYc3jVaNsf4rVEtnMv_wITuwIH749P8ZML54JhnkI-U/exec';
+const LATEST_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwG8jaM1EJUNTsqqIm_DUMs8B3JuwAC6W2RN8JGo-dmG72rJZxMauMWDAFtvFUmc5Y/exec';
 
 function getIntegrationConfig() {
   const defaults = {
