@@ -3077,11 +3077,11 @@ a:hover {
 }
 
 /* ==========================================================================
-   Print Specific Rules for Standalone Single-Page A4 (정기세차 회원가입서 A4 풀페이지 출력)
+   Print Specific Rules for Standalone Single-Page A4 (정기세차 회원가입서 A4 풀페이지 꽉 찬 출력)
    ========================================================================== */
 @page {
   size: A4 portrait;
-  margin: 14mm 16mm 14mm 16mm;
+  margin: 12mm 14mm 12mm 14mm;
 }
 
 @media print {
@@ -3091,7 +3091,7 @@ a:hover {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -3138,135 +3138,148 @@ a:hover {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    min-height: 258mm !important;
     box-sizing: border-box !important;
   }
 
   .reg-doc-header {
-    margin-bottom: 5mm !important;
+    margin-bottom: 6mm !important;
   }
 
   .reg-brand-logo img {
-    width: 52px !important;
-    height: 52px !important;
-    margin-bottom: 2mm !important;
+    width: 56px !important;
+    height: 56px !important;
+    margin-bottom: 2.5mm !important;
   }
 
   .reg-brand-name {
-    font-size: 13pt !important;
+    font-size: 14pt !important;
     letter-spacing: -0.3px !important;
   }
 
   .reg-doc-title {
-    font-size: 23pt !important;
+    font-size: 26pt !important;
     font-weight: 900 !important;
-    margin: 3mm 0 4mm 0 !important;
+    margin: 4mm 0 5mm 0 !important;
     letter-spacing: 2px !important;
   }
 
   .reg-striped-divider {
-    height: 3mm !important;
-    margin-bottom: 5mm !important;
+    height: 3.5mm !important;
+    margin-bottom: 6.5mm !important;
   }
 
   /* Table Scaling */
   .reg-info-table {
-    margin-bottom: 4.5mm !important;
-    border-width: 1.5pt !important;
+    margin-bottom: 6mm !important;
+    border-width: 1.8pt !important;
   }
 
   .reg-info-table th,
   .reg-info-table td {
-    padding: 3mm 4mm !important;
-    font-size: 10.2pt !important;
-    line-height: 1.4 !important;
+    padding: 4.2mm 5mm !important;
+    font-size: 11.5pt !important;
+    line-height: 1.45 !important;
   }
 
   .reg-info-table th {
-    font-size: 10.5pt !important;
+    font-size: 11.8pt !important;
   }
 
   /* Notes Box */
   .reg-notes-box {
-    margin-bottom: 5mm !important;
-    border-width: 1.5pt !important;
+    margin-bottom: 6.5mm !important;
+    border-width: 1.8pt !important;
   }
 
   .reg-notes-header {
-    padding: 2.2mm !important;
-    font-size: 10.8pt !important;
+    padding: 3mm !important;
+    font-size: 12pt !important;
   }
 
   .reg-notes-body {
-    padding: 3.5mm 4.5mm !important;
-    gap: 2.5mm !important;
+    padding: 4.5mm 5.5mm !important;
+    gap: 3.2mm !important;
   }
 
   .note-row {
-    font-size: 9.8pt !important;
+    font-size: 10.8pt !important;
   }
 
   /* Service Guide & Policy Section */
   .reg-policy-section {
-    margin-bottom: 6mm !important;
-    padding-top: 1mm !important;
+    margin-bottom: 7.5mm !important;
+    padding-top: 1.5mm !important;
   }
 
   .reg-section-title {
-    font-size: 11pt !important;
-    margin-top: 3.5mm !important;
-    margin-bottom: 1.8mm !important;
+    font-size: 12.5pt !important;
+    margin-top: 4mm !important;
+    margin-bottom: 2.5mm !important;
   }
 
   .reg-policy-list {
-    gap: 1.8mm !important;
+    gap: 2.2mm !important;
   }
 
   .reg-policy-list li {
-    font-size: 8.8pt !important;
-    line-height: 1.45 !important;
+    font-size: 9.8pt !important;
+    line-height: 1.55 !important;
   }
 
   /* Bottom Consent & Signature */
   .reg-footer-consent {
-    margin-top: auto !important;
-    padding-top: 5mm !important;
+    margin-top: 4mm !important;
+    padding-top: 6mm !important;
     text-align: center !important;
   }
 
   .consent-statement {
-    font-size: 12pt !important;
-    font-weight: 800 !important;
-    margin-bottom: 3.5mm !important;
+    font-size: 14pt !important;
+    font-weight: 900 !important;
+    margin-bottom: 4.5mm !important;
     color: #0F172A !important;
   }
 
   .consent-date {
-    font-size: 11.5pt !important;
+    font-size: 13pt !important;
     font-weight: 700 !important;
-    margin-bottom: 5.5mm !important;
-    letter-spacing: 1.5px !important;
+    margin-bottom: 7mm !important;
+    letter-spacing: 2px !important;
   }
 
   .signature-line-wrap {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    gap: 5mm !important;
+    gap: 6mm !important;
     padding-right: 4mm !important;
   }
 
   .applicant-label {
-    font-size: 13pt !important;
+    font-size: 14.5pt !important;
   }
 
   .signature-stamp-box {
-    min-width: 45mm !important;
-    height: 16mm !important;
+    min-width: 50mm !important;
+    height: 18mm !important;
   }
 
   .official-digital-seal {
-    padding: 2mm 3.5mm !important;
+    padding: 2.5mm 4.5mm !important;
+  }
+
+  .seal-circle-mark {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .seal-badge-title {
+    font-size: 12px !important;
+  }
+
+  .seal-timestamp {
+    font-size: 9.5px !important;
   }
 }
 
