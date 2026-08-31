@@ -694,11 +694,15 @@ function initAdminManager() {
   const closeAdminAuthBtn = document.getElementById('closeAdminAuthBtn');
   const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
+  const syncCloudBtn = document.getElementById('syncCloudBtn');
+
   const openModal = () => {
     if (isAdminAuthed()) {
       renderAdminTable(currentFilter);
       renderAdminGalleryList();
       adminModal.classList.remove('hidden');
+      // Auto-fetch latest customer submissions from Google Sheets cloud
+      fetchSubmissionsFromCloud(false);
     } else {
       if (adminPasswordInput) adminPasswordInput.value = '';
       if (adminAuthError) adminAuthError.style.display = 'none';
@@ -737,6 +741,7 @@ function initAdminManager() {
         renderAdminGalleryList();
         adminModal.classList.remove('hidden');
         showToast('관리자 인증 성공', '관리자 확인 센터에 로그인되었습니다.');
+        fetchSubmissionsFromCloud(false);
       } else {
         if (adminAuthError) adminAuthError.style.display = 'block';
         if (adminPasswordInput) {
@@ -759,6 +764,12 @@ function initAdminManager() {
   if (footerAdminTrigger) footerAdminTrigger.addEventListener('click', openModal);
   if (closeAdminBtn) closeAdminBtn.addEventListener('click', closeModal);
   if (closeAdminFooterBtn) closeAdminFooterBtn.addEventListener('click', closeModal);
+
+  if (syncCloudBtn) {
+    syncCloudBtn.addEventListener('click', () => {
+      fetchSubmissionsFromCloud(true);
+    });
+  }
 
   adminModal.addEventListener('click', (e) => {
     if (e.target === adminModal) closeModal();
@@ -1536,6 +1547,78 @@ function getIntegrationConfig() {
 function saveIntegrationConfig(cfg) {
   localStorage.setItem(INTEGRATION_CONFIG_KEY, JSON.stringify(cfg));
 }
+
+/* Real-time Bidirectional Cloud Data Sync (구글 스프레드시트 양방향 실시간 동기화) */
+async function fetchSubmissionsFromCloud(isManual = false) {
+  const config = getIntegrationConfig();
+  const syncIcon = document.getElementById('syncCloudIcon');
+
+  if (!config.googleSheetUrl || !config.googleSheetUrl.trim()) {
+    if (isManual) {
+      alert('구글 시트 연동 URL이 설정되어 있지 않습니다. 관리자 [연동 설정] 탭에서 구글 시트 웹 앱 URL을 먼저 등록해 주세요.');
+    }
+    return;
+  }
+
+  if (syncIcon) syncIcon.classList.add('rotating');
+
+  try {
+    const res = await fetch(config.googleSheetUrl.trim());
+    const json = await res.json();
+
+    if (json && json.result === 'success' && Array.isArray(json.data)) {
+      const cloudList = json.data;
+      const localList = getSubmissions();
+
+      // Merge Cloud List with Local List by Unique ID
+      const map = new Map();
+
+      // 1. Add local records first
+      localList.forEach(item => {
+        if (item.id) map.set(item.id, item);
+      });
+
+      // 2. Overwrite or Add cloud records (Cloud is ground truth across all mobile/PC devices)
+      cloudList.forEach(item => {
+        if (item.id) {
+          const existing = map.get(item.id);
+          if (existing) {
+            map.set(item.id, {
+              ...item,
+              signature: item.signature || existing.signature || '',
+              status: existing.status || item.status || 'PENDING'
+            });
+          } else {
+            map.set(item.id, item);
+          }
+        }
+      });
+
+      const mergedList = Array.from(map.values());
+      // Sort by creation date desc
+      mergedList.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+      saveSubmissions(mergedList);
+      renderAdminTable(document.querySelector('.filter-btn.active')?.dataset.filter || 'ALL');
+
+      if (isManual) {
+        showToast('클라우드 동기화 완료', `구글 시트로부터 총 ${cloudList.length}건의 전체 고객 신청 데이터를 성공적으로 동기화했습니다.`);
+      }
+    } else {
+      if (isManual) {
+        showToast('동기화 완료', '구글 시트와 정상 연결되었으며 최신 데이터 상태입니다.');
+      }
+    }
+  } catch (err) {
+    console.error('❌ 클라우드 데이터 동기화 오류:', err);
+    if (isManual) {
+      showToast('동기화 안내', '구글 시트 서버 응답을 확인 중입니다. 잠시 후 다시 시도해 주세요.');
+    }
+  } finally {
+    if (syncIcon) syncIcon.classList.remove('rotating');
+  }
+}
+window.fetchSubmissionsFromCloud = fetchSubmissionsFromCloud;
 
 async function syncSubmissionToCloud(record) {
   const config = getIntegrationConfig();

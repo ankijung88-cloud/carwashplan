@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -712,7 +712,10 @@
               <button class="filter-btn" data-filter="APPROVED">승인완료</button>
               <button class="filter-btn" data-filter="REJECTED">반려</button>
             </div>
-            <div class="admin-actions-right" style="display:flex;gap:8px;">
+            <div class="admin-actions-right" style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button id="syncCloudBtn" class="btn btn-primary btn-sm glow-btn" style="background:var(--primary);color:#FFF;">
+                <i data-lucide="refresh-cw" id="syncCloudIcon"></i> 실시간 클라우드 동기화
+              </button>
               <a href="namecard.html" class="btn btn-outline btn-sm" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
                 <i data-lucide="qr-code"></i> 공식 명함 제작기
               </a>
@@ -810,11 +813,12 @@
             <!-- Google Sheet Webhook Integration Card -->
             <div class="card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:22px;">
               <h4 class="admin-section-sub-title" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--primary);font-size:16px;">
-                <i data-lucide="table"></i> 1. 구글 스프레드시트 실시간 자동 저장 (Apps Script Webhook)
+                <i data-lucide="table"></i> 1. 구글 스프레드시트 실시간 양방향 클라우드 연동 (Apps Script Webhook)
               </h4>
               <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">
-                고객이 신청서를 제출하면 사장님의 구글 시트에 1초 만에 새 행으로 자동 기록됩니다.<br>
-                프로젝트 폴더의 <code>google-apps-script.js</code> 코드를 복사하여 구글 시트 웹 앱으로 배포한 후 아래에 URL을 입력하세요.
+                • <strong>신규 고객 신청</strong>: 고객이 신청서를 제출하면 사장님의 구글 시트에 1초 만에 자동 기록됩니다.<br>
+                • <strong>모든 기기 실시간 동기화</strong>: 다른 PC나 모바일에서 관리자 페이지 접속 시 구글 시트로부터 전체 고객 신청 목록을 실시간으로 가져옵니다.<br>
+                ※ 프로젝트의 <code>google-apps-script.js</code> 코드를 복사하여 구글 시트 Apps Script에 붙여넣고 [웹 앱으로 배포]한 URL을 등록하세요.
               </p>
               
               <div class="input-group" style="margin-bottom:14px;">
@@ -1008,6 +1012,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
