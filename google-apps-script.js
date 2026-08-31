@@ -7,11 +7,11 @@
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
  * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 세차플랜 실시간 양방향 연동 (색상 및 전 기기 동기화)
+ *    - 설명: 세차플랜 실시간 연동 (G열 차종 및 색상 표기 지원)
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
  * 5. [배포] 버튼 클릭 후 승인 완료
- * 6. 생성된 '웹 앱 URL'을 복사하여 관리자 모달 [연동 설정]에 등록하시면 모든 PC/모바일에서 실시간으로 데이터가 동기화됩니다!
+ * 6. 생성된 '웹 앱 URL'을 복사하여 관리자 모달 [연동 설정]에 등록하시면 완료됩니다!
  */
 
 // 1. 신규 고객 신청 시 구글 시트에 실시간 자동 기록 (POST)
@@ -19,7 +19,7 @@ function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
-    // 시트가 완전히 비어있는 경우 헤더 행 생성
+    // 시트가 완전히 비어있는 경우 헤더 행 생성 (기존 사장님 시트 컬럼 양식 일치)
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
         "신청ID", 
@@ -28,8 +28,7 @@ function doPost(e) {
         "연락처", 
         "이메일", 
         "세차희망주소", 
-        "차종 및 차량번호", 
-        "차량색상", 
+        "차종 및 색상", 
         "이용플랜", 
         "희망요일", 
         "결제방식", 
@@ -38,7 +37,7 @@ function doPost(e) {
         "서명데이터"
       ]);
       
-      var headerRange = sheet.getRange(1, 1, 1, 14);
+      var headerRange = sheet.getRange(1, 1, 1, 13);
       headerRange.setBackground("#0284C7");
       headerRange.setFontColor("#FFFFFF");
       headerRange.setFontWeight("bold");
@@ -53,14 +52,13 @@ function doPost(e) {
     var plate = data.plate || "";
     var color = data.color || "";
     
-    var carWithPlate = model;
-    if (plate && !carWithPlate.includes(plate)) {
-      carWithPlate += " (" + plate + ")";
+    // G열 [차종 및 색상] 표기 생성: 예: 제네시스g90 (263호2634) / 색상: 블랙
+    var carFullInfo = model;
+    if (plate && !carFullInfo.includes(plate)) {
+      carFullInfo += " (" + plate + ")";
     }
-    
-    var carFullInfo = carWithPlate;
-    if (color) {
-      carFullInfo += " [색상: " + color + "]";
+    if (color && !carFullInfo.includes("색상")) {
+      carFullInfo += " / 색상: " + color;
     }
     
     var rowData = [
@@ -70,8 +68,7 @@ function doPost(e) {
       data.phone || "",
       data.email || "",
       data.region || "",
-      carFullInfo,       // 차종, 차량번호, 색상 통합 표기 (기존 시트 호환)
-      color,             // 차량 색상 전용 컬럼
+      carFullInfo,       // G열: 차종, 차량번호, 색상이 모두 포함되어 완벽 표기됨
       data.experience || "",
       data.days || "",
       data.paymentMethod || "",
@@ -105,7 +102,7 @@ function doGet(e) {
     var customerList = [];
     
     if (lastRow > 1) {
-      var lastColumn = Math.max(sheet.getLastColumn(), 14);
+      var lastColumn = Math.max(sheet.getLastColumn(), 13);
       var rows = sheet.getRange(2, 1, lastRow - 1, lastColumn).getValues();
       
       for (var i = 0; i < rows.length; i++) {
@@ -119,29 +116,30 @@ function doGet(e) {
         var email = String(r[4] || "");
         var region = String(r[5] || "");
         var carRaw = String(r[6] || "");
-        var colorRaw = String(r[7] || "");
-        var experience = String(r[8] || "");
-        var days = String(r[9] || "");
-        var paymentMethod = String(r[10] || "카드");
-        var specialNotes = String(r[11] || "");
-        var status = String(r[12] || "PENDING");
-        var signature = String(r[13] || "");
+        var experience = String(r[7] || "");
+        var days = String(r[8] || "");
+        var paymentMethod = String(r[9] || "카드");
+        var specialNotes = String(r[10] || "");
+        var status = String(r[11] || "PENDING");
+        var signature = String(r[12] || "");
         
-        // 차종, 차량번호, 색상 파싱
+        // 차종, 차량번호, 색상 분리 파싱
         var model = carRaw;
         var plate = "";
-        var color = colorRaw;
+        var color = "";
         
-        // carRaw에 차량번호나 색상이 포함된 경우 분리
         var plateMatch = carRaw.match(/(\d{2,3}[가-힣]\s*\d{4})/);
         if (plateMatch) {
           plate = plateMatch[1];
-          model = carRaw.replace(plateMatch[0], '').replace(/[()]/g, '').replace(/\[색상:[^\]]+\]/g, '').trim();
         }
         
-        var colorMatch = carRaw.match(/\[색상:\s*([^\]]+)\]/);
-        if (colorMatch && !color) {
+        var colorMatch = carRaw.match(/(?:색상|컬러|Color)\s*[:：]\s*([^\/\[\],]+)/i) || carRaw.match(/\[색상:\s*([^\]]+)\]/);
+        if (colorMatch) {
           color = colorMatch[1].trim();
+        }
+        
+        if (plateMatch || colorMatch) {
+          model = carRaw.replace(/(\d{2,3}[가-힣]\s*\d{4})/, '').replace(/[()]/g, '').replace(/\/\s*색상\s*[:：][^\/]+/g, '').replace(/\[색상:[^\]]+\]/g, '').trim();
         }
         
         customerList.push({
