@@ -703,14 +703,28 @@ function initFormValidationAndSubmit() {
       isSignatureDrawn = false;
       const placeholder = document.getElementById('signaturePlaceholder');
       if (placeholder) placeholder.style.display = 'block';
-      if (sigContainer) sigContainer.classList.remove('active');
+    // Show Application Complete Success Modal (신청 완료 모달 팝업)
+    const successModal = document.getElementById('submissionSuccessModal');
+    if (successModal) {
+      successModal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
     }
 
-    showToast('신청 완료!', `${nameVal} 고객님의 신청 및 약관 서명이 완료되었습니다. 담당 매니저가 곧 연락드립니다.`);
+    showToast('신청 완료!', `${nameVal} 고객님의 신청이 정상 접수되었습니다.`);
 
     // Refresh Admin Table View if open
     renderAdminTable();
   });
+
+  // Close Success Modal & Scroll to Top (종료하기 버튼 클릭 시 최상단 이동)
+  const closeSuccessBtn = document.getElementById('closeSuccessModalBtn');
+  if (closeSuccessBtn) {
+    closeSuccessBtn.addEventListener('click', () => {
+      const successModal = document.getElementById('submissionSuccessModal');
+      if (successModal) successModal.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 }
 
 function setError(inputId) {
