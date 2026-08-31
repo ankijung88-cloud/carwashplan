@@ -1039,12 +1039,54 @@ function renderAdminTable(filter = 'ALL') {
 
   tableBody.innerHTML = filteredData.map(item => {
     let statusTag = '';
-    if (item.status === 'PENDING') {
-      statusTag = `<span class="status-tag pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> 승인 대기</span>`;
-    } else if (item.status === 'APPROVED') {
+    if (item.status === 'APPROVED') {
       statusTag = `<span class="status-tag approved"><i data-lucide="check" style="width:12px;height:12px;"></i> 승인 완료</span>`;
-    } else {
+    } else if (item.status === 'REJECTED') {
       statusTag = `<span class="status-tag rejected"><i data-lucide="x" style="width:12px;height:12px;"></i> 반려</span>`;
+    } else {
+      statusTag = `<span class="status-tag pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> 승인 대기</span>`;
+    }
+
+    // 1. 정제된 결제 방식 (특이사항 텍스트 오염 방지)
+    let displayPay = item.paymentMethod || '카드';
+    if (displayPay.includes('외관:') || displayPay.includes('실내:') || displayPay.includes('패턴:') || displayPay.includes('특징:')) {
+      displayPay = '카드';
+    }
+
+    // 2. 정제된 차종/번호/색상
+    let plateM = (item.plate || '').match(/\d{2,3}[가-힣]\s*\d{4}/) || (item.car || '').match(/\d{2,3}[가-힣]\s*\d{4}/);
+    let carPlate = plateM ? plateM[0] : '';
+    let carModel = (item.model || item.car || '')
+      .replace(/\d{2,3}[가-힣]\s*\d{4}/g, '')
+      .replace(/퍼펙트.*|스마트.*|라이트.*/g, '')
+      .replace(/\(카드\)/g, '')
+      .replace(/월요일|화요일|수요일|목요일|금요일|토요일|일요일/g, '')
+      .replace(/(?:색상|컬러|Color)\s*[:：]\s*[^\/\[\],]+/gi, '')
+      .replace(/\[색상:[^\]]+\]/g, '')
+      .replace(/[()\/[\]]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    let carColor = (item.color || '').replace(/색상\s*[:：]/, '').trim();
+    if (!carColor) {
+      let cMatch = (item.car || '').match(/(?:색상|컬러|Color)\s*[:：]\s*([^\/\[\],]+)/i) || (item.car || '').match(/\[색상:\s*([^\]]+)\]/);
+      if (cMatch) carColor = cMatch[1].trim();
+    }
+
+    let displayCar = carModel || '차종 미입력';
+    if (carPlate) displayCar += ` (${carPlate})`;
+    if (carColor) displayCar += ` - ${carColor}`;
+
+    // 3. 정제된 플랜 및 요일
+    let displayPlan = item.plan || item.experience || '퍼펙트 (월 4회 할인 특가)';
+    if (displayPlan.includes('카드') || displayPlan.includes('외관:')) {
+      displayPlan = '퍼펙트 (월 4회 할인 특가)';
+    }
+
+    let displayDays = item.days || '';
+    if (displayDays.includes('외관:') || displayDays.includes('실내:')) {
+      let dMatches = `${item.days || ''} ${item.car || ''}`.match(/(월|화|수|목|금|토|일)요일/g);
+      displayDays = dMatches ? Array.from(new Set(dMatches)).join(', ') : '월요일';
     }
 
     return `
@@ -1060,11 +1102,11 @@ function renderAdminTable(filter = 'ALL') {
         </td>
         <td>
           <div style="font-weight: 600;">${escapeHtml(item.region)}</div>
-          <div style="font-size: 0.75rem; color: var(--accent);">${escapeHtml(item.car)}</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(item.experience)}${item.days ? ` (${escapeHtml(item.days)})` : ''}</div>
+          <div style="font-size: 0.75rem; color: var(--accent); font-weight:600;">${escapeHtml(displayCar)}</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(displayPlan)}${displayDays ? ` (${escapeHtml(displayDays)})` : ''}</div>
         </td>
         <td>
-          <div><span class="bank-badge" style="background:var(--primary-light); color:var(--accent); font-weight:800;">${escapeHtml(item.paymentMethod || item.bank || '카드')}</span></div>
+          <div><span class="bank-badge" style="background:var(--primary-light); color:var(--accent); font-weight:800;">${escapeHtml(displayPay)}</span></div>
         </td>
         <td>${statusTag}</td>
         <td>

@@ -1,5 +1,5 @@
 /**
- * 세차 플랜 (CARWASH PLAN) - [차량번호] 독립 컬럼 분리 Google Apps Script
+ * 세차 플랜 (CARWASH PLAN) - 헤더 자동인식 스마트 Google Apps Script
  * 
  * [스프레드시트 13개 컬럼 구성]
  * A: 신청ID
@@ -22,7 +22,7 @@
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
  * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 세차플랜 차량번호 독립 컬럼 분리 v5
+ *    - 설명: 세차플랜 스마트 컬럼 자동인식 v6
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
  * 5. [배포] 버튼 클릭 후 승인 완료
@@ -66,7 +66,7 @@ function doPost(e) {
     var plate = data.plate || "";
     var color = data.color || "";
     
-    // 1. 차종 및 색상 (G열): 예: 렉스턴 / 색상: 검정 (또는 렉스턴 (검정))
+    // 1. 차종 및 색상 (G열): 예: 렉스턴 / 검정
     var modelAndColor = model;
     if (color) {
       modelAndColor += " / " + color;
@@ -86,8 +86,8 @@ function doPost(e) {
       data.phone || "",                                                                             // D: 연락처
       data.email || "",                                                                             // E: 이메일
       data.region || "",                                                                            // F: 세차희망주소
-      modelAndColor,                                                                                // G: 차종 및 색상 (예: 렉스턴 / 검정)
-      plate,                                                                                        // H: 차량번호 (예: 290루3326)
+      modelAndColor,                                                                                // G: 차종 및 색상
+      plate,                                                                                        // H: 차량번호 (개별 분리)
       planText,                                                                                     // I: 이용플랜 및 선택옵션
       data.days || "미지정",                                                                        // J: 희망요일
       data.paymentMethod || "카드",                                                                 // K: 결제방식
@@ -111,7 +111,7 @@ function doPost(e) {
   }
 }
 
-// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원)
+// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원 - 헤더 이름 기반 스마트 매핑)
 function doGet(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -119,19 +119,57 @@ function doGet(e) {
     var customerList = [];
     
     if (lastRow > 1) {
-      var rows = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
+      var lastCol = sheet.getLastColumn();
+      var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+      var rows = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+      
+      // 헤더 인덱스 동적 탐색
+      var colMap = {};
+      for (var h = 0; h < headers.length; h++) {
+        var hName = String(headers[h] || '').trim();
+        colMap[hName] = h;
+      }
+      
+      var findIdx = function(keywords, defaultIdx) {
+        for (var k = 0; k < keywords.length; k++) {
+          for (var name in colMap) {
+            if (name.indexOf(keywords[k]) !== -1) return colMap[name];
+          }
+        }
+        return defaultIdx;
+      };
+
+      var idIdx = findIdx(["신청ID", "ID"], 0);
+      var dateIdx = findIdx(["일시", "시간", "날짜"], 1);
+      var nameIdx = findIdx(["고객명", "성명", "이름"], 2);
+      var phoneIdx = findIdx(["연락처", "전화", "휴대폰"], 3);
+      var emailIdx = findIdx(["이메일", "Email"], 4);
+      var regionIdx = findIdx(["주소", "장소", "지역"], 5);
+      var carIdx = findIdx(["차종 및 색상", "차종및색상", "차량정보", "차종"], 6);
+      var plateIdx = findIdx(["차량번호", "번호판"], 7);
+      var planIdx = findIdx(["이용플랜", "플랜", "선택옵션"], 8);
+      var daysIdx = findIdx(["요일"], 9);
+      var payIdx = findIdx(["결제방식", "결제"], 10);
+      var notesIdx = findIdx(["특이사항", "차량특이사항"], 11);
+      var statusIdx = findIdx(["진행상태", "상태"], 12);
       
       for (var i = 0; i < rows.length; i++) {
         var r = rows[i];
         if (!r[0] && !r[1] && !r[2]) continue;
         
-        var modelColorRaw = String(r[6] || "");
-        var plate = String(r[7] || "");
-        var planText = String(r[8] || "");
-        var days = String(r[9] || "");
-        var paymentMethod = String(r[10] || "카드");
-        var specialNotes = String(r[11] || "");
-        var status = String(r[12] || "PENDING");
+        var id = String(r[idIdx] || ("CUST-" + (i + 1)));
+        var createdAt = r[dateIdx] ? (r[dateIdx] instanceof Date ? Utilities.formatDate(r[dateIdx], "Asia/Seoul", "yyyy-MM-dd HH:mm") : String(r[dateIdx])) : "";
+        var name = String(r[nameIdx] || "");
+        var phone = String(r[phoneIdx] || "");
+        var email = String(r[emailIdx] || "");
+        var region = String(r[regionIdx] || "");
+        var modelColorRaw = String(r[carIdx] || "");
+        var plate = plateIdx !== -1 ? String(r[plateIdx] || "") : "";
+        var planText = String(r[planIdx] || "");
+        var days = String(r[daysIdx] || "");
+        var paymentMethod = String(r[payIdx] || "카드");
+        var specialNotes = String(r[notesIdx] || "");
+        var status = String(r[statusIdx] || "PENDING");
         
         var model = modelColorRaw;
         var color = "";
@@ -142,17 +180,18 @@ function doGet(e) {
           color = parts.slice(1).join("/").replace(/색상\s*[:：]/, '').trim();
         }
         
+        // 차종/번호판/색상 분리
         var carSummary = model;
         if (plate) carSummary += " (" + plate + ")";
         if (color) carSummary += " - " + color;
         
         customerList.push({
-          id: String(r[0]),
-          createdAt: String(r[1]),
-          name: String(r[2]),
-          phone: String(r[3]),
-          email: String(r[4]),
-          region: String(r[5]),
+          id: id,
+          createdAt: createdAt,
+          name: name,
+          phone: phone,
+          email: email,
+          region: region,
           model: model,
           plate: plate,
           color: color,
@@ -168,7 +207,7 @@ function doGet(e) {
             privacy: true,
             financial: true,
             marketing: true,
-            agreedAt: String(r[1])
+            agreedAt: createdAt
           }
         });
       }
