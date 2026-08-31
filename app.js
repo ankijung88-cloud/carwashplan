@@ -480,14 +480,23 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
-    // 5. Car Details Check
-    const carVal = document.getElementById('carOwnership').value.trim();
-    if (!carVal) {
-      setError('carOwnership');
+    // 5. Car Plate Check (차량번호)
+    const plateInput = document.getElementById('carPlate');
+    const plateVal = plateInput ? plateInput.value.trim() : '';
+    if (!plateVal) {
+      setError('carPlate');
       isValid = false;
     }
 
-    // 5.1 Car Color Check
+    // 5.1 Car Model Check (보유 차종)
+    const modelInput = document.getElementById('carModel');
+    const modelVal = modelInput ? modelInput.value.trim() : '';
+    if (!modelVal) {
+      setError('carModel');
+      isValid = false;
+    }
+
+    // 5.2 Car Color Check (차량 색상)
     const colorInput = document.getElementById('carColor');
     const colorVal = colorInput ? colorInput.value.trim() : '';
     if (!colorVal) {
@@ -562,7 +571,9 @@ function initFormValidationAndSubmit() {
       phone: phoneVal,
       email: emailVal,
       region: regionVal,
-      car: carVal + (colorVal ? ` (${colorVal})` : ''),
+      plate: plateVal,
+      model: modelVal,
+      car: `${modelVal} (${plateVal})`,
       color: colorVal,
       experience: planVal + (extraOpts ? ` [옵션: ${extraOpts}]` : ''),
       days: selectedDaysStr,
@@ -1119,15 +1130,23 @@ function generateRegistrationFormHTML(item) {
   const isAuto = payment.includes('자동이체');
   const isCard = payment.includes('카드') || (!isBank && !isAuto);
 
-  // 차종, 색상, 차량번호 파싱
-  let carPlate = '';
-  let carModel = item.car || '';
+  // 차종, 색상, 차량번호 파싱 (item.model, item.plate 우선)
+  let carPlate = item.plate || '';
+  let carModel = item.model || '';
   let carColor = item.color || '';
 
-  const plateMatch = (item.car || '').match(/(\d{2,3}[가-힣]\s*\d{4})/);
-  if (plateMatch) {
-    carPlate = plateMatch[1];
-    carModel = (item.car || '').replace(plateMatch[0], '').replace(/[()]/g, '').trim();
+  if (!carPlate && item.car) {
+    const plateMatch = item.car.match(/(\d{2,3}[가-힣]\s*\d{4})/);
+    if (plateMatch) {
+      carPlate = plateMatch[1];
+      if (!carModel) carModel = item.car.replace(plateMatch[0], '').replace(/[()]/g, '').trim();
+    } else if (!carModel) {
+      carModel = item.car;
+    }
+  }
+
+  if (!carModel && item.car) {
+    carModel = item.car;
   }
 
   if (!carColor && (item.car || '').includes('(')) {

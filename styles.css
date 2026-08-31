@@ -1050,6 +1050,20 @@ a:hover {
   gap: 14px;
 }
 
+.vehicle-input-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr 1.1fr;
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .input-row,
+  .vehicle-input-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
 .error-msg {
   display: none;
   font-size: 0.78rem;
