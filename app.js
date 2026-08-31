@@ -1693,42 +1693,34 @@ async function fetchSubmissionsFromCloud(isManual = false) {
     const cloudList = json.data;
     const localList = getSubmissions();
 
-    // Merge Cloud List with Local List by Unique ID
-    const map = new Map();
-
-    // 1. Add local records first
+    // Map local records to preserve signature and status
+    const localMap = new Map();
     localList.forEach(item => {
-      if (item.id) map.set(item.id, item);
+      if (item.id) localMap.set(item.id, item);
     });
 
-    // 2. Overwrite or Add cloud records (Cloud is ground truth across all devices)
-    cloudList.forEach(item => {
-      if (item.id) {
-        const existing = map.get(item.id);
-        if (existing) {
-          map.set(item.id, {
-            ...item,
-            signature: item.signature || existing.signature || '',
-            status: existing.status || item.status || 'PENDING'
-          });
-        } else {
-          map.set(item.id, item);
-        }
-      }
+    // Google Sheets is the Single Source of Truth:
+    // Only records present in Google Sheets are kept. If rows are deleted in Google Sheets, they are immediately deleted here!
+    const syncedList = cloudList.map(item => {
+      const existing = localMap.get(item.id);
+      return {
+        ...item,
+        signature: item.signature || existing?.signature || '',
+        status: existing?.status || item.status || 'PENDING'
+      };
     });
 
-    const mergedList = Array.from(map.values());
     // Sort by creation date desc
-    mergedList.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    syncedList.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
-    saveSubmissions(mergedList);
+    saveSubmissions(syncedList);
     renderAdminTable(document.querySelector('.filter-btn.active')?.dataset.filter || 'ALL');
 
     if (statusText) statusText.textContent = `구글 시트 연동 정상 (${cloudList.length}건 동기화됨)`;
     if (timeText) timeText.textContent = `최근 동기화: ${timeStr}`;
 
     if (isManual) {
-      showToast('클라우드 동기화 완료', `구글 시트로부터 총 ${cloudList.length}건의 전체 고객 신청 데이터를 성공적으로 불러왔습니다.`);
+      showToast('클라우드 동기화 완료', `구글 시트의 최신 목록(${cloudList.length}건)으로 동기화되었습니다. (삭제된 내역 반영 완료)`);
     }
   } else {
     if (statusText) statusText.textContent = '구글 시트 연동 활성화 (최신 상태)';
