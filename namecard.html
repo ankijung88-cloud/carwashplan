@@ -149,9 +149,9 @@
       background: rgba(14, 165, 233, 0.15);
       border: 1px solid rgba(14, 165, 233, 0.4);
       color: var(--accent);
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 3px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
       border-radius: 20px;
     }
 
@@ -161,91 +161,104 @@
       align-items: flex-end;
     }
     .person-info h3 {
-      font-size: 1.18rem;
+      font-size: 1.4rem;
       font-weight: 900;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+      color: #FFF;
     }
     .person-info .role {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-weight: 600;
+      margin-top: 2px;
+      margin-bottom: 10px;
       display: block;
     }
     .contact-list {
-      font-size: 0.75rem;
-      color: #CBD5E1;
-      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
     .contact-item {
+      font-size: 0.74rem;
+      color: #CBD5E1;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .contact-item i { width: 12px; height: 12px; color: var(--accent); }
+    .contact-item i {
+      width: 12px;
+      height: 12px;
+      color: var(--accent);
+    }
 
     .service-tags {
       text-align: right;
       font-size: 0.68rem;
-      color: var(--text-muted);
-      line-height: 1.5;
+      color: #94A3B8;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-weight: 500;
     }
-    .service-tags strong { color: #E2E8F0; }
+    .service-tags strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
 
     /* Back Card Design */
     .card-back {
-      background: #FFFFFF;
-      color: #0F172A;
-      padding: 22px 24px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+      padding: 24px 26px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: relative;
+      color: #0F172A;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.8);
     }
     .back-left {
-      flex: 1;
-      padding-right: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
+      max-width: 250px;
     }
     .back-promo-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      background: linear-gradient(135deg, #0284C7, #0EA5E9);
-      color: #FFF;
+      gap: 4px;
+      background: rgba(14, 165, 233, 0.12);
+      color: #0284C7;
       font-size: 0.72rem;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 20px;
+      padding: 3px 8px;
+      border-radius: 4px;
       margin-bottom: 6px;
       width: fit-content;
     }
     .back-heading {
-      font-size: 1.02rem;
+      font-size: 1.1rem;
       font-weight: 900;
+      line-height: 1.25;
       color: #0F172A;
-      line-height: 1.35;
-      margin-bottom: 4px;
+      letter-spacing: -0.5px;
     }
     .back-desc {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #64748B;
-      line-height: 1.45;
-      margin-bottom: 8px;
+      margin-top: 6px;
+      line-height: 1.35;
+      font-weight: 500;
     }
     .price-badge-row {
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #0284C7;
-      background: #F0F9FF;
-      border: 1px solid #BAE6FD;
-      padding: 4px 8px;
-      border-radius: 6px;
       display: inline-block;
+      background: #0284C7;
+      color: #FFF;
+      font-weight: 900;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-top: 8px;
     }
     .back-url {
       font-size: 0.72rem;
@@ -366,12 +379,18 @@
       border-color: var(--primary);
     }
 
+    /* Screen-only Print Container Hidden */
+    #printSheetContainer {
+      display: none;
+    }
+
     /* ==========================================================================
-       Print View - Perfectly Scaled Single-Page A4 (No Clipping Guaranteed)
+       Print View - 10-Up Imposition (2 Columns x 5 Rows = 10 Cards on A4)
+       Left Column: 5 Fronts | Right Column: 5 Backs (Perfect for 5 Double-Sided Cards)
        ========================================================================== */
     @page {
       size: A4 portrait;
-      margin: 15mm 10mm;
+      margin: 6mm 10mm 6mm 10mm;
     }
 
     @media print {
@@ -385,54 +404,49 @@
         print-color-adjust: exact !important;
       }
 
-      .header-bar, .controls-panel, .btn-action-group, .nav-back-link {
+      .header-bar, .controls-panel, .btn-action-group, .nav-back-link, .container {
         display: none !important;
       }
 
-      .container {
-        display: block !important;
-        max-width: 100% !important;
+      #printSheetContainer {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 3mm !important;
         width: 100% !important;
         margin: 0 auto !important;
         padding: 0 !important;
-      }
-
-      .preview-area {
-        display: block !important;
-        width: 100% !important;
-        margin: 0 auto !important;
-      }
-
-      .cards-wrapper {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
-        gap: 12mm !important;
-        width: 100% !important;
-        margin: 0 auto !important;
         page-break-inside: avoid !important;
       }
 
-      /* Card labels for printing */
-      .cards-wrapper > div {
+      .print-header-label-row {
+        display: grid !important;
+        grid-template-columns: 86mm 86mm !important;
+        gap: 10mm !important;
+        width: 182mm !important;
         text-align: center !important;
+        font-size: 6.8pt !important;
+        font-weight: 800 !important;
+        color: #475569 !important;
+        margin-bottom: -1mm !important;
       }
 
-      .cards-wrapper > div > div:first-child {
-        font-size: 7.5pt !important;
-        color: #64748B !important;
-        margin-bottom: 3mm !important;
-        font-weight: bold !important;
+      .print-row {
+        display: grid !important;
+        grid-template-columns: 86mm 86mm !important;
+        gap: 10mm !important;
+        width: 182mm !important;
+        page-break-inside: avoid !important;
       }
 
-      /* Standard Business Card Dimensions on A4 Print (86mm x 52mm) */
-      .biz-card {
+      /* Standard Business Card Dimensions on A4 Print (86mm x 51.5mm) */
+      .print-row .biz-card {
         width: 86mm !important;
-        height: 52mm !important;
+        height: 51.5mm !important;
         max-width: 86mm !important;
-        max-height: 52mm !important;
-        border-radius: 3.5mm !important;
+        max-height: 51.5mm !important;
+        border-radius: 3mm !important;
         border: 1px solid #CBD5E1 !important;
         box-shadow: none !important;
         box-sizing: border-box !important;
@@ -443,127 +457,127 @@
       }
 
       /* Front Card Print Specifics */
-      .card-front {
+      .print-row .card-front {
         background: radial-gradient(circle at 10% 10%, #1E293B 0%, #0F172A 60%, #080D1A 100%) !important;
-        padding: 4mm 5mm !important;
+        padding: 3.8mm 4.8mm !important;
         color: #FFFFFF !important;
       }
 
-      .brand-title {
-        font-size: 8.5pt !important;
+      .print-row .brand-title {
+        font-size: 8pt !important;
         line-height: 1.1 !important;
       }
 
-      .brand-title span {
+      .print-row .brand-title span {
         color: #38BDF8 !important;
       }
 
-      .brand-sub {
-        font-size: 4.2pt !important;
+      .print-row .brand-sub {
+        font-size: 4pt !important;
         color: #94A3B8 !important;
-        margin-top: 0.5mm !important;
+        margin-top: 0.4mm !important;
       }
 
-      .badge-tag {
-        font-size: 4.8pt !important;
-        padding: 0.8mm 2mm !important;
+      .print-row .badge-tag {
+        font-size: 4.5pt !important;
+        padding: 0.6mm 1.8mm !important;
         border-radius: 1.5mm !important;
         color: #38BDF8 !important;
         background: rgba(14, 165, 233, 0.2) !important;
         border: 0.5px solid rgba(14, 165, 233, 0.5) !important;
       }
 
-      .person-info h3 {
-        font-size: 10pt !important;
+      .print-row .person-info h3 {
+        font-size: 9.5pt !important;
         line-height: 1.1 !important;
       }
 
-      .person-info .role {
-        font-size: 5.5pt !important;
-        margin-top: 0.5mm !important;
-        margin-bottom: 1.5mm !important;
+      .print-row .person-info .role {
+        font-size: 5.2pt !important;
+        margin-top: 0.4mm !important;
+        margin-bottom: 1.2mm !important;
         color: #38BDF8 !important;
       }
 
-      .contact-list {
-        gap: 0.8mm !important;
+      .print-row .contact-list {
+        gap: 0.6mm !important;
       }
 
-      .contact-item {
-        font-size: 4.8pt !important;
-        gap: 1.2mm !important;
+      .print-row .contact-item {
+        font-size: 4.5pt !important;
+        gap: 1mm !important;
         color: #E2E8F0 !important;
       }
 
-      .contact-item i {
-        width: 2.8mm !important;
-        height: 2.8mm !important;
+      .print-row .contact-item i {
+        width: 2.6mm !important;
+        height: 2.6mm !important;
         color: #38BDF8 !important;
       }
 
-      .service-tags {
-        font-size: 4.5pt !important;
-        gap: 0.8mm !important;
+      .print-row .service-tags {
+        font-size: 4.2pt !important;
+        gap: 0.6mm !important;
         color: #94A3B8 !important;
       }
 
-      .service-tags strong {
+      .print-row .service-tags strong {
         color: #38BDF8 !important;
       }
 
       /* Back Card Print Specifics */
-      .card-back {
+      .print-row .card-back {
         background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%) !important;
-        padding: 4mm 5mm !important;
+        padding: 3.8mm 4.8mm !important;
         color: #0F172A !important;
         border: 1px solid #CBD5E1 !important;
       }
 
-      .back-promo-badge {
-        font-size: 4.8pt !important;
-        padding: 0.8mm 2mm !important;
-        margin-bottom: 1.2mm !important;
+      .print-row .back-promo-badge {
+        font-size: 4.5pt !important;
+        padding: 0.6mm 1.8mm !important;
+        margin-bottom: 1mm !important;
         color: #0284C7 !important;
         background: rgba(14, 165, 233, 0.12) !important;
         border: 0.5px solid rgba(14, 165, 233, 0.35) !important;
       }
 
-      .back-heading {
-        font-size: 7.2pt !important;
+      .print-row .back-heading {
+        font-size: 6.8pt !important;
         line-height: 1.2 !important;
         color: #0F172A !important;
       }
 
-      .back-desc {
-        font-size: 4.6pt !important;
+      .print-row .back-desc {
+        font-size: 4.3pt !important;
         line-height: 1.25 !important;
-        margin-top: 1mm !important;
+        margin-top: 0.8mm !important;
         color: #64748B !important;
       }
 
-      .price-badge-row {
-        font-size: 5.2pt !important;
-        padding: 0.8mm 2.2mm !important;
+      .print-row .price-badge-row {
+        font-size: 5pt !important;
+        padding: 0.6mm 2mm !important;
         color: #0284C7 !important;
         background: rgba(14, 165, 233, 0.12) !important;
         border: 0.5px solid rgba(14, 165, 233, 0.3) !important;
       }
 
-      .back-url {
-        font-size: 4.6pt !important;
+      .print-row .back-url {
+        font-size: 4.3pt !important;
         color: #64748B !important;
       }
 
-      .qr-box {
-        width: 22mm !important;
-        height: 22mm !important;
-        padding: 1.2mm !important;
+      .print-row .qr-box {
+        width: 20mm !important;
+        height: 20mm !important;
+        padding: 1mm !important;
         border: 1px solid #CBD5E1 !important;
         background: #FFFFFF !important;
       }
 
-      .qr-label {
-        font-size: 4.5pt !important;
+      .print-row .qr-label {
+        font-size: 4.2pt !important;
         color: #0284C7 !important;
       }
     }
@@ -606,11 +620,11 @@
 
             <div class="front-bottom">
               <div class="person-info">
-                <h3 id="previewName">안기정</h3>
-                <span class="role" id="previewRole">디테일링 마스터 / 영업</span>
+                <h3 class="dyn-name">안기정</h3>
+                <span class="role dyn-role">디테일링 마스터 / 영업</span>
                 <div class="contact-list">
-                  <div class="contact-item"><i data-lucide="phone"></i> <span id="previewPhone">010-1234-5678</span></div>
-                  <div class="contact-item"><i data-lucide="mail"></i> <span id="previewEmail">contact@carwashplan.com</span></div>
+                  <div class="contact-item"><i data-lucide="phone"></i> <span class="dyn-phone">010-1234-5678</span></div>
+                  <div class="contact-item"><i data-lucide="mail"></i> <span class="dyn-email">contact@carwashplan.com</span></div>
                   <div class="contact-item"><i data-lucide="globe"></i> <span>carwashplan.vercel.app</span></div>
                 </div>
               </div>
@@ -684,32 +698,143 @@
         <button id="downloadBackBtn" class="btn btn-primary">
           <i data-lucide="download"></i> 명함 뒷면 이미지 저장 (PNG)
         </button>
-        <button onclick="window.print()" class="btn btn-outline">
-          <i data-lucide="printer"></i> 명함 즉시 인쇄 (A4 출력)
+        <button onclick="prepareAndPrint()" class="btn btn-outline" style="background:rgba(14,165,233,0.15);border-color:var(--primary);color:#38BDF8;">
+          <i data-lucide="printer"></i> 명함 10장 즉시 인쇄 (A4 5세트 출력)
         </button>
       </div>
     </div>
 
   </div>
 
+  <!-- A4 Print Sheet (10-Up Imposition: Left 5 Fronts, Right 5 Backs) -->
+  <div id="printSheetContainer">
+    <div class="print-header-label-row">
+      <div>[ 명함 앞면 (Front) - 5장 ]</div>
+      <div>[ 명함 뒷면 (Back) - 5장 ]</div>
+    </div>
+    
+    <!-- Row 1 -->
+    <div class="print-row" id="printRow1"></div>
+    <!-- Row 2 -->
+    <div class="print-row" id="printRow2"></div>
+    <!-- Row 3 -->
+    <div class="print-row" id="printRow3"></div>
+    <!-- Row 4 -->
+    <div class="print-row" id="printRow4"></div>
+    <!-- Row 5 -->
+    <div class="print-row" id="printRow5"></div>
+  </div>
+
   <script>
     lucide.createIcons();
 
-    // Live update fields
-    const bindInput = (id, targetId) => {
-      const input = document.getElementById(id);
-      const target = document.getElementById(targetId);
-      if (input && target) {
-        input.addEventListener('input', () => {
-          target.textContent = input.value;
-        });
-      }
-    };
+    // Generate single front card HTML template
+    function getFrontCardHTML(name, role, phone, email) {
+      return `
+        <div class="biz-card card-front">
+          <div class="front-top">
+            <div class="brand-logo">
+              <i data-lucide="sparkles"></i>
+              <div>
+                <div class="brand-title">CARWASH <span>PLAN</span></div>
+                <div class="brand-sub">PREMIUM MOBILE CAR WASH</div>
+              </div>
+            </div>
+            <span class="badge-tag">찾아가는 출장세차</span>
+          </div>
 
-    bindInput('inputName', 'previewName');
-    bindInput('inputRole', 'previewRole');
-    bindInput('inputPhone', 'previewPhone');
-    bindInput('inputEmail', 'previewEmail');
+          <div class="front-bottom">
+            <div class="person-info">
+              <h3 class="dyn-name">${name}</h3>
+              <span class="role dyn-role">${role}</span>
+              <div class="contact-list">
+                <div class="contact-item"><i data-lucide="phone"></i> <span class="dyn-phone">${phone}</span></div>
+                <div class="contact-item"><i data-lucide="mail"></i> <span class="dyn-email">${email}</span></div>
+                <div class="contact-item"><i data-lucide="globe"></i> <span>carwashplan.vercel.app</span></div>
+              </div>
+            </div>
+
+            <div class="service-tags">
+              <div>#워터리스친환경</div>
+              <div>#옵션 크리닝</div>
+              <div><strong>월 정기세차</strong></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Generate single back card HTML template
+    function getBackCardHTML() {
+      return `
+        <div class="biz-card card-back">
+          <div class="back-left">
+            <div>
+              <span class="back-promo-badge"><i data-lucide="award" style="width:12px;height:12px;"></i> 신규가입 특별혜택</span>
+              <h4 class="back-heading">유막제거 1회 무료<br>월 정기세차 멤버십</h4>
+              <p class="back-desc">아파트/회사 주차장으로 직접 방문!<br>정해진 요일에 도장면 손상 없는 정밀 케어</p>
+            </div>
+
+            <div>
+              <div class="price-badge-row">월 31,900원부터~</div>
+              <div class="back-url" style="margin-top:4px;">https://carwashplan.vercel.app/</div>
+            </div>
+          </div>
+
+          <div class="back-right">
+            <div class="qr-box">
+              <img src="assets/carwashplan_qr.png" alt="세차 플랜 가입 QR코드">
+            </div>
+            <span class="qr-label">스마트폰 스캔 간편가입</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Build the 5 rows (10 cards) for A4 Print Sheet
+    function renderPrintSheet() {
+      const name = document.getElementById('inputName').value || '안기정';
+      const role = document.getElementById('inputRole').value || '디테일링 마스터 / 대표';
+      const phone = document.getElementById('inputPhone').value || '010-1234-5678';
+      const email = document.getElementById('inputEmail').value || 'contact@carwashplan.com';
+
+      for (let i = 1; i <= 5; i++) {
+        const rowEl = document.getElementById(`printRow${i}`);
+        if (rowEl) {
+          rowEl.innerHTML = getFrontCardHTML(name, role, phone, email) + getBackCardHTML();
+        }
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Live update all card instances on screen
+    function updateAllCardFields() {
+      const name = document.getElementById('inputName').value;
+      const role = document.getElementById('inputRole').value;
+      const phone = document.getElementById('inputPhone').value;
+      const email = document.getElementById('inputEmail').value;
+
+      document.querySelectorAll('.dyn-name').forEach(el => el.textContent = name);
+      document.querySelectorAll('.dyn-role').forEach(el => el.textContent = role);
+      document.querySelectorAll('.dyn-phone').forEach(el => el.textContent = phone);
+      document.querySelectorAll('.dyn-email').forEach(el => el.textContent = email);
+
+      renderPrintSheet();
+    }
+
+    ['inputName', 'inputRole', 'inputPhone', 'inputEmail'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateAllCardFields);
+    });
+
+    // Initial render of 10-up print sheet
+    renderPrintSheet();
+
+    // Prepare and trigger A4 print
+    window.prepareAndPrint = function() {
+      renderPrintSheet();
+      window.print();
+    };
 
     // Download Function using html2canvas
     const downloadCard = (elementId, filename) => {
