@@ -1839,7 +1839,7 @@ async function syncSubmissionToCloud(record) {
     plate: record.plate || '',
     color: record.color || '',
     car: record.car || `${record.model || ''} (${record.plate || ''}) [색상: ${record.color || ''}]`,
-    signature: record.signature || ('서명완료 (' + (record.createdAt || formatNowDate()) + ')')
+    signature: `서명완료 (${record.createdAt || formatNowDate()})`
   };
 
   // 1. Google Spreadsheet Webhook Sync
