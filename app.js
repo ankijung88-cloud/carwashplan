@@ -424,24 +424,74 @@ function initSignaturePad() {
   }
 }
 
-function buildSignatureSvgString(canvas, strokes) {
-  if (!strokes || strokes.length === 0) {
-    return isSignatureDrawn && canvas ? canvas.toDataURL('image/png') : '';
-  }
-  const rect = canvas ? canvas.getBoundingClientRect() : { width: 280, height: 110 };
-  const w = Math.round(rect.width) || 280;
-  const h = Math.round(rect.height) || 110;
-  
-  let pathD = '';
-  strokes.forEach(stroke => {
-    if (!stroke || stroke.length === 0) return;
-    pathD += `M ${stroke[0].x} ${stroke[0].y} `;
-    for (let i = 1; i < stroke.length; i++) {
-      pathD += `L ${stroke[i].x} ${stroke[i].y} `;
+function encodeStrokesToCompactString(strokes, canvas) {
+  if (strokes && strokes.length > 0) {
+    const rect = canvas ? canvas.getBoundingClientRect() : { width: 280, height: 110 };
+    const w = Math.round(rect.width) || 280;
+    const h = Math.round(rect.height) || 110;
+    const strokeParts = strokes.map(stroke => {
+      return stroke.map(pt => `${pt.x},${pt.y}`).join('_');
+    }).filter(Boolean);
+    if (strokeParts.length > 0) {
+      return `SIG:${w}_${h}|${strokeParts.join('|')}`;
     }
-  });
+  }
+  if (canvas && isSignatureDrawn) {
+    try {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 200;
+      tempCanvas.height = 70;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.drawImage(canvas, 0, 0, tempCanvas.width, tempCanvas.height);
+      return tempCanvas.toDataURL('image/png');
+    } catch (e) {
+      return canvas.toDataURL('image/png');
+    }
+  }
+  return '';
+}
 
-  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><path d="${pathD}" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+function decodeCompactSignatureToHtml(sigData, applicantName = '') {
+  if (!sigData || sigData.trim().length === 0) {
+    return '<span class="stamp-text">(서명/인)</span>';
+  }
+  const cleanSig = sigData.trim();
+  // 1. Compact Vector Signature format
+  if (cleanSig.startsWith('SIG:')) {
+    try {
+      const content = cleanSig.substring(4);
+      const parts = content.split('|');
+      const dim = parts[0].split('_');
+      const w = parseInt(dim[0]) || 280;
+      const h = parseInt(dim[1]) || 110;
+      const strokeParts = parts.slice(1);
+      
+      let pathD = '';
+      strokeParts.forEach(sp => {
+        const pts = sp.split('_');
+        if (pts.length > 0 && pts[0]) {
+          const first = pts[0].split(',');
+          pathD += `M ${first[0]} ${first[1]} `;
+          for (let i = 1; i < pts.length; i++) {
+            const p = pts[i].split(',');
+            if (p.length === 2) pathD += `L ${p[0]} ${p[1]} `;
+          }
+        }
+      });
+      return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;max-height:50px;"><path d="${pathD}" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    } catch (e) {
+      console.warn('SVG parse error:', e);
+    }
+  }
+  // 2. Raw SVG string format
+  if (cleanSig.includes('<svg')) {
+    return cleanSig;
+  }
+  // 3. Base64 / Image URL format
+  if (cleanSig.startsWith('data:image') || cleanSig.startsWith('http')) {
+    return `<img src="${cleanSig}" alt="${escapeHtml(applicantName)} 고객 전자서명" style="max-height:48px;width:auto;display:inline-block;">`;
+  }
+  return '<span class="stamp-text">(서명/인)</span>';
 }
 
 function initFormValidationAndSubmit() {
@@ -594,23 +644,9 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // 100% Guaranteed Signature Capture (Direct Canvas Export & Ultra-compact Compression under 4KB)
+    // 100% Guaranteed Signature Capture (Ultra-compact 150-char Vector Format for Google Sheets)
     const signatureCanvas = document.getElementById('signatureCanvas');
-    let signatureDataUrl = '';
-    if (signatureCanvas) {
-      try {
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = 220;
-        tempCanvas.height = 80;
-        const tCtx = tempCanvas.getContext('2d');
-        tCtx.drawImage(signatureCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-        signatureDataUrl = tempCanvas.toDataURL('image/png');
-      } catch (e) {
-        try {
-          signatureDataUrl = signatureCanvas.toDataURL('image/png');
-        } catch (e2) {}
-      }
-    }
+    const signatureDataUrl = encodeStrokesToCompactString(window.currentSignatureStrokes || [], signatureCanvas);
 
     // Build New Customer Registration Record with Terms & Signature
     const formattedNow = formatNowDate();
@@ -1413,13 +1449,7 @@ function generateRegistrationFormHTML(item) {
         <div class="signature-line-wrap">
           <span class="applicant-label">신청인 : &nbsp;&nbsp;<strong>${escapeHtml(item.name)}</strong></span>
           <div class="signature-stamp-box">
-            ${
-              item.signature 
-                ? (item.signature.includes('<svg') 
-                    ? item.signature 
-                    : `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">`)
-                : '<span class="stamp-text">(서명/인)</span>'
-            }
+            ${decodeCompactSignatureToHtml(item.signature, item.name)}
           </div>
         </div>
       </div>
