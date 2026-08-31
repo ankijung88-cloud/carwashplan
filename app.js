@@ -1756,9 +1756,15 @@ async function fetchSubmissionsFromCloud(isManual = false) {
     // Only records present in Google Sheets are kept. If rows are deleted in Google Sheets, they are immediately deleted here!
     const syncedList = cloudList.map(item => {
       const existing = localMap.get(item.id);
+      let rawSig = item.signature || existing?.signature || '';
+      try {
+        if (rawSig.includes('%3C') || rawSig.includes('%253C')) {
+          rawSig = decodeURIComponent(rawSig);
+        }
+      } catch (e) {}
       return {
         ...item,
-        signature: item.signature || existing?.signature || '',
+        signature: rawSig,
         status: existing?.status || item.status || 'PENDING'
       };
     });
@@ -1790,13 +1796,16 @@ window.fetchSubmissionsFromCloud = fetchSubmissionsFromCloud;
 async function syncSubmissionToCloud(record) {
   const config = getIntegrationConfig();
 
-  // Ensure full car info including color is included in transmission
+  // Ensure safe encoded signature for 100% reliable cross-device sync
+  const safeSignature = record.signature ? encodeURIComponent(record.signature) : '';
+
   const payload = {
     ...record,
     model: record.model || '',
     plate: record.plate || '',
     color: record.color || '',
-    car: record.car || `${record.model || ''} (${record.plate || ''}) [색상: ${record.color || ''}]`
+    car: record.car || `${record.model || ''} (${record.plate || ''}) [색상: ${record.color || ''}]`,
+    signature: safeSignature
   };
 
   // 1. Google Spreadsheet Webhook Sync
@@ -1808,7 +1817,7 @@ async function syncSubmissionToCloud(record) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      console.log('✅ [구글 시트] 고객 데이터(색상 포함) 실시간 전송 완료:', record.id);
+      console.log('✅ [구글 시트] 고객 데이터 및 서명 실시간 전송 완료:', record.id);
     } catch (err) {
       console.error('❌ [구글 시트] 전송 오류:', err);
     }
