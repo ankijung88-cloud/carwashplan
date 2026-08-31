@@ -1832,6 +1832,7 @@ window.fetchSubmissionsFromCloud = fetchSubmissionsFromCloud;
 
 async function syncSubmissionToCloud(record) {
   const config = getIntegrationConfig();
+  const targetSheetUrl = LATEST_GOOGLE_SHEET_URL;
 
   const payload = {
     ...record,
@@ -1842,16 +1843,16 @@ async function syncSubmissionToCloud(record) {
     signature: `서명완료 (${record.createdAt || formatNowDate()})`
   };
 
-  // 1. Google Spreadsheet Webhook Sync
-  if (config.googleSheetUrl && config.googleSheetUrl.trim()) {
+  // 1. Google Spreadsheet Webhook Sync (Always send to the latest 14-column endpoint)
+  if (targetSheetUrl) {
     try {
-      await fetch(config.googleSheetUrl.trim(), {
+      await fetch(targetSheetUrl, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      console.log('✅ [구글 시트] 고객 데이터 및 서명 실시간 전송 완료:', record.id);
+      console.log('✅ [구글 시트] 고객 데이터 및 서명 실시간 전송 완료 (URL: ' + targetSheetUrl + '):', record.id);
     } catch (err) {
       console.error('❌ [구글 시트] 전송 오류:', err);
     }
