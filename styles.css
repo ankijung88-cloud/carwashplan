@@ -2737,92 +2737,290 @@ a:hover {
   white-space: nowrap;
 }
 
-.signature-display-box {
+/* ==========================================================================
+   Official Paper Registration Form & Print Styles (정기세차 회원가입서 공식 서식)
+   ========================================================================== */
+.registration-form-doc {
   background: #FFFFFF;
-  border: 2px solid var(--border-color);
+  color: #0F172A;
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  padding: 22px 24px;
   border-radius: var(--radius-md);
-  padding: 14px;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.reg-doc-header {
   text-align: center;
-  min-height: 130px;
+  margin-bottom: 12px;
+}
+
+.reg-brand-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.reg-brand-name {
+  font-size: 14px;
+  font-weight: 900;
+  color: #0284C7;
+  letter-spacing: -0.5px;
+}
+
+.reg-doc-title {
+  font-size: 23px;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: 1.5px;
+  margin: 6px 0 10px 0;
+}
+
+.reg-striped-divider {
+  background: repeating-linear-gradient(45deg, #0284C7, #0284C7 5px, #BAE6FD 5px, #BAE6FD 10px);
+  height: 7px;
+  width: 100%;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+/* Form Tables */
+.reg-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #0284C7;
+  margin-bottom: 8px;
+}
+
+.reg-info-table th,
+.reg-info-table td {
+  border: 1px solid #7DD3FC;
+  padding: 6px 9px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+.reg-info-table th {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.reg-info-table td {
+  background-color: #FFFFFF;
+  color: #0F172A;
+  font-weight: 600;
+}
+
+.reg-info-table .check-box {
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  color: #0284C7;
+}
+
+.reg-info-table .sub-hint {
+  font-size: 11.5px;
+  color: #64748B;
+  font-weight: normal;
+}
+
+/* Special Notes Box */
+.reg-notes-box {
+  border: 1.5px solid #0284C7;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.reg-notes-header {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  font-weight: 800;
+  font-size: 12.5px;
+  text-align: center;
+  padding: 4px;
+  border-bottom: 1px solid #7DD3FC;
+}
+
+.reg-notes-body {
+  padding: 7px 12px;
+  background: #FFFFFF;
+  font-size: 11.8px;
+  line-height: 1.55;
+}
+
+.note-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.note-row:last-child {
+  margin-bottom: 0;
+}
+
+.note-lbl {
+  font-weight: 700;
+  color: #0F172A;
+  min-width: 62px;
+}
+
+.note-opts {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #334155;
+}
+
+.note-opts span {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Policy & Notices */
+.reg-policy-section {
+  margin-bottom: 14px;
+}
+
+.reg-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0284C7;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.reg-section-title .sub {
+  color: #0284C7;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.reg-policy-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #334155;
+}
+
+.reg-policy-list li {
+  margin-bottom: 3px;
+}
+
+.reg-policy-list strong {
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.reg-policy-list.notice-list li {
+  color: #1E293B;
+}
+
+/* Bottom Consent & Signature */
+.reg-footer-consent {
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 8px;
+}
+
+.consent-statement {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 10px;
+}
+
+.consent-date {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.signature-line-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-right: 18px;
+}
+
+.applicant-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.signature-stamp-box {
+  min-width: 100px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.signature-display-box img {
-  max-width: 100%;
-  max-height: 110px;
-/* Print Document Header (Hidden on Screen, Shown on Print) */
-.print-doc-header {
-  display: none;
+.signature-stamp-box img {
+  max-height: 44px;
+  max-width: 110px;
+  object-fit: contain;
 }
 
-.signature-box-print-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.signature-stamp-box .stamp-text {
+  font-size: 12px;
+  color: #94A3B8;
 }
 
-.signature-statement {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
+/* Print Specific Rules for Standalone Single-Page A4 */
 @page {
   size: A4 portrait;
-  margin: 8mm 10mm 8mm 10mm;
+  margin: 10mm 12mm 10mm 12mm;
 }
 
 @media print {
-  /* Hide all website layout completely */
   html, body {
-    width: 100% !important;
-    height: auto !important;
-    min-height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
     background: #FFFFFF !important;
     color: #0F172A !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     font-size: 8pt !important;
-    line-height: 1.3 !important;
-    overflow: visible !important;
   }
 
-  /* Hide entire body contents by default */
   body > * {
     display: none !important;
   }
 
-  /* Exclusively display customerDetailModal */
   body > #customerDetailModal {
     display: block !important;
     position: static !important;
     width: 100% !important;
-    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #FFFFFF !important;
-    border: none !important;
-    box-shadow: none !important;
+    background: #FFF !important;
   }
 
   #customerDetailModal .modal-container {
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #FFFFFF !important;
-    border: none !important;
     box-shadow: none !important;
-    color: #0F172A !important;
-    overflow: visible !important;
-  }
-
-  #customerDetailModal .modal-body {
+    border: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
     padding: 0 !important;
+    background: #FFF !important;
   }
 
   #customerDetailModal .modal-header,
@@ -2830,146 +3028,18 @@ a:hover {
     display: none !important;
   }
 
-  .print-doc-header {
-    display: block !important;
-    text-align: center !important;
-    border-bottom: 2px solid #0F172A !important;
-    padding-bottom: 4px !important;
-    margin-bottom: 6px !important;
+  #customerDetailContent {
+    padding: 0 !important;
   }
 
-  .print-doc-header h2 {
-    font-size: 13pt !important;
-    font-weight: 900 !important;
-    color: #0F172A !important;
-    margin: 0 0 2px 0 !important;
-    letter-spacing: -0.5px !important;
-  }
-
-  .print-doc-header p {
-    font-size: 7.5pt !important;
-    color: #64748B !important;
-    margin: 0 !important;
-  }
-
-  .detail-box-group {
-    margin-bottom: 6px !important;
-    page-break-inside: avoid !important;
-  }
-
-  .detail-section-title {
-    font-size: 8.5pt !important;
-    font-weight: 800 !important;
-    color: #0284C7 !important;
-    border-bottom: 1.5px solid #0284C7 !important;
-    padding-bottom: 2px !important;
-    margin-bottom: 4px !important;
-  }
-
-  .detail-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 3px 6px !important;
-    background: #F8FAFC !important;
-    border: 1px solid #CBD5E1 !important;
-    padding: 4px 6px !important;
-    border-radius: 4px !important;
-  }
-
-  .detail-lbl {
-    font-size: 6.8pt !important;
-    color: #64748B !important;
-    font-weight: 700 !important;
-  }
-
-  .detail-val {
-    font-size: 7.6pt !important;
-    color: #0F172A !important;
-    font-weight: 700 !important;
-  }
-
-  .detail-terms-list {
-    background: transparent !important;
+  .registration-form-doc {
+    box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
-    gap: 4px !important;
-  }
-
-  .detail-term-card {
-    background: #F8FAFC !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 4px !important;
-    padding: 4px 6px !important;
-  }
-
-  .detail-term-header {
-    font-size: 7.6pt !important;
-    font-weight: 800 !important;
-    color: #0F172A !important;
-    margin-bottom: 2px !important;
-  }
-
-  .detail-term-text {
-    font-size: 6.8pt !important;
-    line-height: 1.28 !important;
-    color: #334155 !important;
-    background: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    padding: 3px 5px !important;
-    border-radius: 3px !important;
-  }
-
-  .detail-term-text ul {
-    padding-left: 10px !important;
-    margin-top: 1px !important;
-  }
-
-  .detail-term-text li {
-    margin-bottom: 0px !important;
-  }
-
-  .term-badge-agreed {
-    font-size: 6.5pt !important;
-    padding: 1px 4px !important;
-    background: #ECFDF5 !important;
-    color: #059669 !important;
-    border: 1px solid #A7F3D0 !important;
-  }
-
-  /* Single-page compact signature row */
-  .signature-box-print-wrapper {
-    display: grid !important;
-    grid-template-columns: 1fr 140px !important;
-    gap: 8px !important;
-    align-items: center !important;
-    background: #F8FAFC !important;
-    border: 1px solid #CBD5E1 !important;
-    padding: 4px 8px !important;
-    border-radius: 4px !important;
-  }
-
-  .signature-statement {
-    font-size: 7.2pt !important;
-    line-height: 1.3 !important;
-    color: #1E293B !important;
-  }
-
-  .signature-display-box {
-    background: #FFFFFF !important;
-    border: 1.5px solid #0F172A !important;
-    border-radius: 4px !important;
-    padding: 2px !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .signature-display-box img {
-    max-height: 38px !important;
     max-width: 100% !important;
   }
 }
+
 
 
 

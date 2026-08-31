@@ -1081,6 +1081,204 @@ function initCustomerDetailModal() {
   }
 }
 
+/* ==========================================================================
+   Official Paper Registration Form Builder (정기세차 회원가입서 양식 생성기)
+   ========================================================================== */
+function generateRegistrationFormHTML(item) {
+  // 날짜 파싱 (예: 2026-08-31 03:00 -> 2026, 08, 31)
+  let year = '2026', month = '08', day = '31';
+  if (item.createdAt) {
+    const dMatch = item.createdAt.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+    if (dMatch) {
+      year = dMatch[1];
+      month = dMatch[2].padStart(2, '0');
+      day = dMatch[3].padStart(2, '0');
+    }
+  }
+
+  // 횟수 파싱 (월 4회, 월 2회, 월 1회)
+  let countStr = '4';
+  if (item.experience) {
+    const cMatch = item.experience.match(/월\s*(\d+)회/);
+    if (cMatch) {
+      countStr = cMatch[1];
+    } else if (item.experience.includes('스마트') || item.experience.includes('격주')) {
+      countStr = '2';
+    } else if (item.experience.includes('라이트') || item.experience.includes('월 1회')) {
+      countStr = '1';
+    }
+  }
+
+  // 요일 정리
+  let daysStr = item.days || '월';
+  daysStr = daysStr.replace(/요일/g, '').trim();
+
+  // 결제 수단 체크
+  const payment = item.paymentMethod || '';
+  const isBank = payment.includes('계좌이체');
+  const isAuto = payment.includes('자동이체');
+  const isCard = payment.includes('카드') || (!isBank && !isAuto);
+
+  // 차종, 색상, 차량번호 파싱
+  let carPlate = '';
+  let carModel = item.car || '';
+  let carColor = item.color || '';
+
+  const plateMatch = (item.car || '').match(/(\d{2,3}[가-힣]\s*\d{4})/);
+  if (plateMatch) {
+    carPlate = plateMatch[1];
+    carModel = (item.car || '').replace(plateMatch[0], '').replace(/[()]/g, '').trim();
+  }
+
+  if (!carColor && (item.car || '').includes('(')) {
+    const colMatch = (item.car || '').match(/\(([^)]+)\)/);
+    if (colMatch && !colMatch[1].match(/\d{4}/)) {
+      carColor = colMatch[1];
+    }
+  }
+
+  const specialNotes = item.specialNotes || '';
+  const hasOpt = (kw) => specialNotes.includes(kw);
+
+  return `
+    <div class="registration-form-doc">
+      <!-- Top Brand Logo & Title -->
+      <div class="reg-doc-header">
+        <div class="reg-brand-logo">
+          <svg width="40" height="32" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 1px auto;">
+            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path>
+            <circle cx="7" cy="17" r="2"></circle>
+            <path d="M9 17h6"></path>
+            <circle cx="17" cy="17" r="2"></circle>
+          </svg>
+          <span class="reg-brand-name">세차플랜</span>
+        </div>
+        <h1 class="reg-doc-title">정기세차 회원가입서</h1>
+        <div class="reg-striped-divider"></div>
+      </div>
+
+      <!-- Main Customer Info Table -->
+      <table class="reg-info-table">
+        <tbody>
+          <tr>
+            <th style="width: 16%;">이름</th>
+            <td style="width: 34%; font-weight: 700;">${escapeHtml(item.name)}</td>
+            <th style="width: 18%;">횟수 / 요일</th>
+            <td style="width: 32%;">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+          </tr>
+          <tr>
+            <th>주소</th>
+            <td colspan="3">${escapeHtml(item.region)}</td>
+          </tr>
+          <tr>
+            <th>출입 동의</th>
+            <td colspan="3">
+              <span class="check-box checked">☑</span> 예 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+              <span class="check-box">☐</span> 아니요 &nbsp;&nbsp;&nbsp;&nbsp; 
+              <span class="sub-hint">(아파트 출입 허용여부)</span>
+            </td>
+          </tr>
+          <tr>
+            <th>연락처</th>
+            <td>${escapeHtml(item.phone)}</td>
+            <th>결제</th>
+            <td>
+              <span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체 &nbsp;&nbsp;
+              <span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체 &nbsp;&nbsp;
+              <span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드
+            </td>
+          </tr>
+          <tr>
+            <th>차종 / 색상</th>
+            <td>${escapeHtml(carModel || item.car)} ${carColor ? `/ ${escapeHtml(carColor)}` : ''}</td>
+            <th>차량번호</th>
+            <td><strong>${escapeHtml(carPlate || '-')}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Special Remarks Box -->
+      <div class="reg-notes-box">
+        <div class="reg-notes-header">특이사항</div>
+        <div class="reg-notes-body">
+          <div class="note-row">
+            <span class="note-lbl">외관상태:</span>
+            <span class="note-opts">
+              <span>${hasOpt('유광') ? '☑' : '☐'} 유광</span>
+              <span>${hasOpt('무광') ? '☑' : '☐'} 무광</span>
+              <span>${hasOpt('랩핑') ? '☑' : '☐'} 랩핑 (ppf)</span>
+            </span>
+          </div>
+          <div class="note-row">
+            <span class="note-lbl">실내환경:</span>
+            <span class="note-opts">
+              <span>${hasOpt('반려동물') ? '☑' : '☐'} 반려동물</span>
+              <span>${hasOpt('어린이') ? '☑' : '☐'} 어린이</span>
+              <span>${hasOpt('먼지') ? '☑' : '☐'} 먼지</span>
+              <span>${hasOpt('냄새') ? '☑' : '☐'} 냄새</span>
+            </span>
+          </div>
+          <div class="note-row">
+            <span class="note-lbl">사용패턴:</span>
+            <span class="note-opts">
+              <span>${hasOpt('출퇴근') ? '☑' : '☐'} 출퇴근</span>
+              <span>${hasOpt('장거리') ? '☑' : '☐'} 장거리</span>
+              <span>${hasOpt('주말') ? '☑' : '☐'} 주말</span>
+              <span>${hasOpt('패밀리') ? '☑' : '☐'} 패밀리</span>
+            </span>
+          </div>
+          <div class="note-row">
+            <span class="note-lbl">차량특징:</span>
+            <span class="note-opts">
+              <span>${hasOpt('전기차') ? '☑' : '☐'} 전기차</span>
+              <span>${hasOpt('사제장착물') ? '☑' : '☐'} 사제장착물</span>
+              <span>${hasOpt('루프박스') ? '☑' : '☐'} 루프박스</span>
+            </span>
+          </div>
+          <div class="note-row">
+            <span class="note-lbl">증빙요청:</span>
+            <span class="note-opts">
+              <span>${hasOpt('현금영수증') ? '☑' : '☐'} 현금영수증</span>
+              <span>${hasOpt('세금계산서') ? '☑' : '☐'} 세금계산서</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Guide & Notices -->
+      <div class="reg-policy-section">
+        <h3 class="reg-section-title">● 서비스안내 <span class="sub">[월 구독형 방문세차]</span></h3>
+        <ul class="reg-policy-list">
+          <li>- 정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>**유지관리형 서비스**</strong> 입니다.<br>&nbsp;&nbsp;정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
+          <li>- 차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
+          <li>- 세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다.<br>&nbsp;&nbsp;작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
+        </ul>
+
+        <h3 class="reg-section-title" style="margin-top: 8px;">● 유의사항</h3>
+        <ul class="reg-policy-list notice-list">
+          <li>※ 지정된 세차 요일 변경 및 연기는 <strong>**부득이한 사유(출장,여행 등)**</strong>에 한해 가능합니다.</li>
+          <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
+          <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
+          <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
+          <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며,<br>&nbsp;&nbsp;&nbsp;이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
+        </ul>
+      </div>
+
+      <!-- Bottom Consent Statement & Customer Signature -->
+      <div class="reg-footer-consent">
+        <p class="consent-statement">상기 내용을 모두 확인하였으며 이에 동의합니다.</p>
+        <div class="consent-date">${year} &nbsp;&nbsp;년 &nbsp;&nbsp;&nbsp;&nbsp; ${month} &nbsp;&nbsp;월 &nbsp;&nbsp;&nbsp;&nbsp; ${day} &nbsp;&nbsp;일</div>
+        <div class="signature-line-wrap">
+          <span class="applicant-label">신청인 : &nbsp;&nbsp;<strong>${escapeHtml(item.name)}</strong></span>
+          <div class="signature-stamp-box">
+            ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span class="stamp-text">(서명/인)</span>'}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 window.openCustomerDetailModal = function(id) {
   const modal = document.getElementById('customerDetailModal');
   const content = document.getElementById('customerDetailContent');
@@ -1090,150 +1288,8 @@ window.openCustomerDetailModal = function(id) {
   const item = data.find(d => d.id === id);
   if (!item) return;
 
-  const terms = item.termsAgreed || {
-    service: true,
-    privacy: true,
-    financial: true,
-    marketing: false,
-    agreedAt: item.createdAt
-  };
-
-  content.innerHTML = `
-    <!-- Print Specific Official Document Header -->
-    <div class="print-doc-header">
-      <h2>세차 플랜 (CARWASH PLAN) 고객 가입신청 및 약관동의 확인서</h2>
-      <p>본 확인서는 고객 본인이 온라인을 통해 약관 전체를 숙지하고 자필 전자서명으로 체결한 정식 계약 확인서입니다.</p>
-    </div>
-
-    <!-- 1. Customer Basic & Order Details -->
-    <div class="detail-box-group">
-      <div class="detail-section-title">
-        <i data-lucide="user-check" style="width:16px;height:16px;"></i> 고객 기본 정보 및 신청 내역
-      </div>
-      <div class="detail-grid">
-        <div class="detail-item"><span class="detail-lbl">신청 번호</span><span class="detail-val" style="color:var(--accent);">${escapeHtml(item.id)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">신청 일시 (접수시간)</span><span class="detail-val" style="color:#FFF;">${escapeHtml(item.createdAt)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">고객 성함</span><span class="detail-val">${escapeHtml(item.name)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">연락처</span><span class="detail-val">${escapeHtml(item.phone)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">이메일</span><span class="detail-val">${escapeHtml(item.email)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">세차 장소 (주소)</span><span class="detail-val">${escapeHtml(item.region)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">차종 및 차량번호</span><span class="detail-val">${escapeHtml(item.car)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">신청 플랜</span><span class="detail-val" style="color:#F43F5E;">${escapeHtml(item.experience)}</span></div>
-        <div class="detail-item"><span class="detail-lbl">희망 세차 요일</span><span class="detail-val">${escapeHtml(item.days || '미선택')}</span></div>
-        <div class="detail-item"><span class="detail-lbl">결제 방식</span><span class="detail-val">${escapeHtml(item.paymentMethod || '카드')}</span></div>
-        ${item.specialNotes ? `<div class="detail-item" style="grid-column: 1 / -1;"><span class="detail-lbl">특이사항</span><span class="detail-val" style="font-size:0.8rem;color:#CBD5E1;">${escapeHtml(item.specialNotes)}</span></div>` : ''}
-      </div>
-    </div>
-
-    <!-- 2. Terms Agreement Verification & Full Policy Document Texts -->
-    <div class="detail-box-group">
-      <div class="detail-section-title">
-        <i data-lucide="shield-check" style="width:16px;height:16px;"></i> 이용약관 동의 확인 및 서비스 안내/유의사항 전문 (동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)})
-      </div>
-      <div class="detail-terms-list">
-        
-        <!-- Service Guide & Notice Full Document Box -->
-        <div class="detail-term-card" style="border-left: 3px solid var(--accent);">
-          <div class="detail-term-header">
-            <span>● 서비스 안내 및 유의사항 전문 [월 구독형 방문세차]</span>
-            <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 확인 및 동의 완료</span>
-          </div>
-          <div class="detail-term-text">
-            <strong style="color:var(--accent);display:block;margin-bottom:2px;">[서비스 안내]</strong>
-            <ul>
-              <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
-              <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
-              <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
-            </ul>
-            <strong style="color:#FCD34D;display:block;margin-top:6px;margin-bottom:2px;">[유의사항]</strong>
-            <ul style="color:#E2E8F0;">
-              <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장, 여행 등)</strong>에 한해 가능합니다.</li>
-              <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
-              <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
-              <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
-              <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Term 1 -->
-        <div class="detail-term-card">
-          <div class="detail-term-header">
-            <span>1. (필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의</span>
-            <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
-          </div>
-          <div class="detail-term-text">
-            <ul>
-              <li>위의 서비스 안내 및 유의사항 내용을 충분히 숙지하였으며, 정기 방문 출장세차 서비스 제공 및 작업 환경 규정에 전적으로 동의합니다.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Term 2 -->
-        <div class="detail-term-card">
-          <div class="detail-term-header">
-            <span>2. (필수) 출장세차 서비스 개인정보 수집 및 이용 동의</span>
-            <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
-          </div>
-          <div class="detail-term-text">
-            <ul>
-              <li><strong>수집 항목:</strong> 성명, 연락처, 이메일, 세차 장소(주소 및 주차위치), 차종 및 차량번호, 색상, 결제 수단 정보</li>
-              <li><strong>이용 목적:</strong> 출장세차 정기 방문 일정 조율, 세차 시공 및 완료 알림 전송, 서비스 이용료 결제/정산, 고객 상담 및 AS 응대</li>
-              <li><strong>보유 및 이용 기간:</strong> 출장세차 서비스 구독 해지 시까지 (단, 전자상거래 등 관계 법령에 따른 보존 의무 기간 준수)</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Term 3 -->
-        <div class="detail-term-card">
-          <div class="detail-term-header">
-            <span>3. (필수) 세차 이용료 결제 정보 처리 동의 및 결제 규정</span>
-            <span class="term-badge-agreed"><i data-lucide="check" style="width:12px;height:12px;"></i> 동의 완료</span>
-          </div>
-          <div class="detail-term-text">
-            <ul>
-              <li><strong>결제 방식:</strong> 고객이 선택한 결제 수단(카드 결제링크, 자동이체, 계좌이체)에 따라 담당 매니저 배정 후 정기 결제 진행</li>
-              <li><strong>결제일 및 정산:</strong> 매월 지정 결제일에 청구되며, 구독 취소 및 변경은 결제일 전일까지 요청 시 정상 처리</li>
-              <li><strong>미사용 횟수 관리:</strong> 당월 미사용 잔여 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸</li>
-              <li><strong>환불 규정:</strong> 미시공 잔여 회차에 대해 회차별 계산 후 전액 환불, 이미 시공 완료된 회차는 환불 불가</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Term 4 -->
-        <div class="detail-term-card">
-          <div class="detail-term-header">
-            <span>4. (선택) 세차 완료 알림 및 이벤트 쿠폰 수신 동의</span>
-            <span class="term-badge-agreed" style="${terms.marketing ? '' : 'background:rgba(148,163,184,0.15);color:#94A3B8;border-color:rgba(148,163,184,0.3);'}">
-              <i data-lucide="${terms.marketing ? 'check' : 'minus'}" style="width:12px;height:12px;"></i> ${terms.marketing ? '수신 동의 완료' : '미동의 (수신거부)'}
-            </span>
-          </div>
-          <div class="detail-term-text">
-            <ul>
-              <li>세차 완료 알림(전/후 사진 전송) 및 세차 플랜(CARWASH PLAN) 신규 이벤트/할인 쿠폰 혜택 정보 수신</li>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 3. Customer Signature Display -->
-    <div class="detail-box-group" style="margin-bottom: 0;">
-      <div class="detail-section-title">
-        <i data-lucide="pen-tool" style="width:16px;height:16px;"></i> 고객 자필 전자서명
-      </div>
-      <div class="signature-box-print-wrapper">
-        <div class="signature-statement">
-          위 본인(<strong>${escapeHtml(item.name)}</strong>)은 상기 세차 서비스 이용약관, 서비스 안내 및 결제 규정의 모든 내용을 확인하고 이에 정식 동의하여 본 가입신청서를 제출합니다.<br>
-          <span style="font-size:0.75rem;color:#94A3B8;">동의일시: ${escapeHtml(terms.agreedAt || item.createdAt)} | 서명자: <strong>${escapeHtml(item.name)}</strong> (인)</span>
-        </div>
-        <div class="signature-display-box">
-          ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span style="color:#94A3B8;font-size:0.85rem;">등록된 자필 서명이 없습니다.</span>'}
-        </div>
-      </div>
-    </div>
-  `;
+  // Render official registration form document HTML
+  content.innerHTML = generateRegistrationFormHTML(item);
 
   modal.classList.remove('hidden');
   if (window.lucide) lucide.createIcons();
@@ -1244,14 +1300,14 @@ window.closeCustomerDetailModal = function() {
   if (modal) modal.classList.add('hidden');
 };
 
-/* Print Confirmation via dedicated popup window (prevents 4x duplicates from modal/body structure) */
+/* Print Confirmation via dedicated popup window (Matches image format 100% on Single A4 page) */
 window.printCustomerConfirmation = function() {
   const content = document.getElementById('customerDetailContent');
   if (!content) return;
 
   const innerHtml = content.innerHTML;
 
-  const printWin = window.open('', '_blank', 'width=820,height=1160,scrollbars=yes');
+  const printWin = window.open('', '_blank', 'width=840,height=1180,scrollbars=yes');
   if (!printWin) {
     alert('팝업이 차단되었습니다. 브라우저 팝업 차단을 해제해 주세요.');
     return;
@@ -1262,82 +1318,71 @@ window.printCustomerConfirmation = function() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>세차 플랜 – 고객 가입신청 및 약관동의 확인서</title>
+<title>정기세차 회원가입서 – 세차플랜</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  @page { size: A4 portrait; margin: 10mm 12mm 10mm 12mm; }
+  @page { size: A4 portrait; margin: 12mm 14mm 10mm 14mm; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100%; font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-    font-size: 8pt; color: #0F172A; background: #fff; line-height: 1.35;
+    font-size: 8.5pt; color: #0F172A; background: #FFF; line-height: 1.35;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .print-doc-header { text-align: center; border-bottom: 2px solid #0F172A; padding-bottom: 5px; margin-bottom: 8px; }
-  .print-doc-header h2 { font-size: 13pt; font-weight: 900; color: #0F172A; margin-bottom: 2px; }
-  .print-doc-header p { font-size: 7.5pt; color: #64748B; }
-
-  .detail-box-group { margin-bottom: 7px; page-break-inside: avoid; }
-  .detail-section-title {
-    font-size: 8.5pt; font-weight: 800; color: #0284C7;
-    border-bottom: 1.5px solid #0284C7; padding-bottom: 2px; margin-bottom: 4px;
-    display: flex; align-items: center; gap: 4px;
+  .registration-form-doc {
+    width: 100%; max-width: 100%; margin: 0; padding: 0;
+    background: #FFF; border: none; box-shadow: none;
   }
-  .detail-section-title i, [data-lucide] { display: none; }
-
-  .detail-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 3px 8px; background: #F8FAFC;
-    border: 1px solid #CBD5E1; padding: 4px 6px; border-radius: 4px;
-  }
-  .detail-item { display: flex; flex-direction: column; }
-  .detail-lbl { font-size: 6.5pt; color: #64748B; font-weight: 700; }
-  .detail-val { font-size: 7.5pt; color: #0F172A; font-weight: 700; word-break: break-all; }
-
-  .detail-terms-list { display: flex; flex-direction: column; gap: 4px; }
-  .detail-term-card {
-    background: #F8FAFC; border: 1px solid #CBD5E1;
-    border-radius: 4px; padding: 4px 6px; page-break-inside: avoid;
-  }
-  .detail-term-card:first-child { border-left: 3px solid #0284C7; }
-  .detail-term-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 6px; margin-bottom: 3px;
-    font-size: 7.5pt; font-weight: 800; color: #0F172A;
-  }
-  .detail-term-text {
-    font-size: 6.8pt; line-height: 1.3; color: #334155;
-    background: #fff; border: 1px solid #E2E8F0;
-    padding: 3px 5px; border-radius: 3px;
-  }
-  .detail-term-text ul { padding-left: 12px; margin-top: 2px; }
-  .detail-term-text li { margin-bottom: 0; }
-  .detail-term-text strong { font-weight: 700; }
-
-  .term-badge-agreed {
-    display: inline-flex; align-items: center; gap: 2px;
-    font-size: 6.5pt; font-weight: 800; padding: 1px 5px;
-    border-radius: 10px; white-space: nowrap;
-    background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0;
-  }
-  .term-badge-na {
-    background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1;
+  .reg-doc-header { text-align: center; margin-bottom: 8px; }
+  .reg-brand-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+  .reg-brand-name { font-size: 11pt; font-weight: 900; color: #0284C7; letter-spacing: -0.5px; }
+  .reg-doc-title { font-size: 19pt; font-weight: 900; color: #0F172A; letter-spacing: 2px; margin: 4px 0 6px 0; }
+  .reg-striped-divider {
+    background: repeating-linear-gradient(45deg, #0284C7, #0284C7 5px, #BAE6FD 5px, #BAE6FD 10px);
+    height: 6px; width: 100%; border-radius: 2px; margin-bottom: 8px;
   }
 
-  .signature-box-print-wrapper {
-    display: grid; grid-template-columns: 1fr 130px;
-    gap: 8px; align-items: center;
-    background: #F8FAFC; border: 1px solid #CBD5E1;
-    padding: 5px 8px; border-radius: 4px;
+  .reg-info-table {
+    width: 100%; border-collapse: collapse; border: 1.5px solid #0284C7; margin-bottom: 6px;
   }
-  .signature-statement { font-size: 7.2pt; line-height: 1.4; color: #1E293B; }
-  .signature-statement span { font-size: 6.8pt; color: #64748B; }
-  .signature-display-box {
-    background: #fff; border: 1.5px solid #0F172A; border-radius: 4px;
-    padding: 2px; height: 48px; display: flex;
-    align-items: center; justify-content: center;
+  .reg-info-table th, .reg-info-table td {
+    border: 1px solid #7DD3FC; padding: 4.5px 7px; font-size: 8.2pt; line-height: 1.3; vertical-align: middle;
   }
-  .signature-display-box img { max-height: 42px; max-width: 100%; }
-  .no-sig { font-size: 6.5pt; color: #94A3B8; text-align: center; }
+  .reg-info-table th {
+    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; text-align: center; white-space: nowrap;
+  }
+  .reg-info-table td { background-color: #FFFFFF !important; color: #0F172A; font-weight: 600; }
+  .reg-info-table .check-box { font-weight: 800; font-size: 9pt; color: #0284C7; }
+  .reg-info-table .sub-hint { font-size: 7.2pt; color: #64748B; font-weight: normal; }
 
-  .print-doc-header { display: block !important; }
+  .reg-notes-box {
+    border: 1.5px solid #0284C7; border-radius: 2px; margin-bottom: 8px; overflow: hidden; page-break-inside: avoid;
+  }
+  .reg-notes-header {
+    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; font-size: 8.2pt; text-align: center; padding: 3px; border-bottom: 1px solid #7DD3FC;
+  }
+  .reg-notes-body { padding: 5px 8px; background: #FFFFFF; font-size: 7.6pt; line-height: 1.45; }
+  .note-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 1.5px; }
+  .note-row:last-child { margin-bottom: 0; }
+  .note-lbl { font-weight: 700; color: #0F172A; min-width: 52px; }
+  .note-opts { display: flex; gap: 10px; flex-wrap: wrap; color: #334155; }
+  .note-opts span { display: inline-flex; align-items: center; gap: 2px; }
+
+  .reg-policy-section { margin-bottom: 10px; page-break-inside: avoid; }
+  .reg-section-title { font-size: 8.8pt; font-weight: 800; color: #0284C7; display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+  .reg-section-title .sub { color: #0284C7; font-size: 7.8pt; font-weight: 700; }
+  .reg-policy-list { list-style: none; padding-left: 0; margin: 0; font-size: 7.4pt; line-height: 1.35; color: #334155; }
+  .reg-policy-list li { margin-bottom: 2px; }
+  .reg-policy-list strong { font-weight: 800; color: #0F172A; }
+  .reg-policy-list.notice-list li { color: #1E293B; }
+
+  .reg-footer-consent { text-align: center; margin-top: 10px; padding-top: 6px; page-break-inside: avoid; }
+  .consent-statement { font-size: 9.2pt; font-weight: 800; color: #0F172A; margin-bottom: 8px; }
+  .consent-date { font-size: 8.5pt; font-weight: 700; color: #0F172A; letter-spacing: 2px; margin-bottom: 8px; }
+  .signature-line-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding-right: 14px; }
+  .applicant-label { font-size: 9pt; font-weight: 700; color: #0F172A; }
+  .signature-stamp-box { min-width: 90px; height: 38px; display: flex; align-items: center; justify-content: center; }
+  .signature-stamp-box img { max-height: 36px; max-width: 100px; object-fit: contain; }
+  .signature-stamp-box .stamp-text { font-size: 8pt; color: #94A3B8; }
 </style>
 </head>
 <body>
@@ -1346,14 +1391,12 @@ window.printCustomerConfirmation = function() {
 </html>`);
 
   printWin.document.close();
-  // Wait for content to render before printing
   printWin.onload = function() {
     setTimeout(() => {
       printWin.focus();
       printWin.print();
     }, 400);
   };
-  // Fallback if onload doesn't fire
   setTimeout(() => {
     try { printWin.focus(); printWin.print(); } catch(e) {}
   }, 800);
