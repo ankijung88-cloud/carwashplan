@@ -1496,70 +1496,108 @@ window.printCustomerConfirmation = function() {
 <title>정기세차 회원가입서 – 세차플랜</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  @page { size: A4 portrait; margin: 12mm 14mm 10mm 14mm; }
+  @page {
+    size: A4 portrait;
+    margin: 22mm 14mm 14mm 14mm;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100%; font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-    font-size: 8.5pt; color: #0F172A; background: #FFF; line-height: 1.35;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    font-size: 9.5pt; color: #0F172A; background: #FFF; line-height: 1.45;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .registration-form-doc {
-    width: 100%; max-width: 100%; margin: 0; padding: 0;
+    width: 100%; max-width: 680px; margin: 0 auto; padding: 0;
     background: #FFF; border: none; box-shadow: none;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .reg-doc-header { text-align: center; margin-bottom: 8px; }
-  .reg-brand-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
-  .reg-brand-name { font-size: 11pt; font-weight: 900; color: #0284C7; letter-spacing: -0.5px; }
-  .reg-doc-title { font-size: 19pt; font-weight: 900; color: #0F172A; letter-spacing: 2px; margin: 4px 0 6px 0; }
+  
+  /* 1. Header with logo and top margin */
+  .reg-doc-header { text-align: center; margin-top: 6px; margin-bottom: 14px; }
+  .reg-brand-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .reg-brand-logo img { width: 48px; height: 48px; object-fit: contain; margin: 0 auto 3px auto; }
+  .reg-brand-name { font-size: 12.5pt; font-weight: 900; color: #0284C7; letter-spacing: -0.5px; }
+  .reg-doc-title { font-size: 21pt; font-weight: 900; color: #0F172A; letter-spacing: 2px; margin: 5px 0 8px 0; }
   .reg-striped-divider {
-    background: repeating-linear-gradient(45deg, #0284C7, #0284C7 5px, #BAE6FD 5px, #BAE6FD 10px);
-    height: 6px; width: 100%; border-radius: 2px; margin-bottom: 8px;
+    background: repeating-linear-gradient(45deg, #0284C7, #0284C7 5px, #BAE6FD 5px, #BAE6FD 10px) !important;
+    height: 7px; width: 100%; border-radius: 2px; margin-bottom: 12px;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
 
+  /* 2. Main Customer Table */
   .reg-info-table {
-    width: 100%; border-collapse: collapse; border: 1.5px solid #0284C7; margin-bottom: 6px;
+    width: 100%; border-collapse: collapse; border: 1.5px solid #0284C7; margin-bottom: 10px;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .reg-info-table th, .reg-info-table td {
-    border: 1px solid #7DD3FC; padding: 4.5px 7px; font-size: 8.2pt; line-height: 1.3; vertical-align: middle;
+    border: 1px solid #7DD3FC; padding: 6px 9px; font-size: 9.5pt; line-height: 1.45; vertical-align: middle;
   }
   .reg-info-table th {
     background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; text-align: center; white-space: nowrap;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .reg-info-table td { background-color: #FFFFFF !important; color: #0F172A; font-weight: 600; }
-  .reg-info-table .check-box { font-weight: 800; font-size: 9pt; color: #0284C7; }
+  .reg-info-table .check-box { font-weight: 800; font-size: 10.5pt; color: #0284C7; }
   .reg-info-table .payment-opts { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
   .reg-info-table .payment-opt-item { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
-  .reg-info-table .sub-hint { font-size: 7.2pt; color: #64748B; font-weight: normal; }
+  .reg-info-table .sub-hint { font-size: 8.5pt; color: #64748B; font-weight: normal; }
 
+  /* 3. Notes Box */
   .reg-notes-box {
-    border: 1.5px solid #0284C7; border-radius: 2px; margin-bottom: 8px; overflow: hidden; page-break-inside: avoid;
+    border: 1.5px solid #0284C7; border-radius: 2px; margin-bottom: 12px; overflow: hidden; page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .reg-notes-header {
-    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; font-size: 8.2pt; text-align: center; padding: 3px; border-bottom: 1px solid #7DD3FC;
+    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; font-size: 9.5pt; text-align: center; padding: 4.5px; border-bottom: 1px solid #7DD3FC;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
-  .reg-notes-body { padding: 5px 8px; background: #FFFFFF; font-size: 7.6pt; line-height: 1.45; }
-  .note-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 1.5px; }
+  .reg-notes-body { padding: 7px 10px; background: #FFFFFF; font-size: 9pt; line-height: 1.55; }
+  .note-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
   .note-row:last-child { margin-bottom: 0; }
-  .note-lbl { font-weight: 700; color: #0F172A; min-width: 52px; }
+  .note-lbl { font-weight: 700; color: #0F172A; min-width: 54px; }
   .note-opts { display: flex; gap: 10px; flex-wrap: wrap; color: #334155; }
   .note-opts span { display: inline-flex; align-items: center; gap: 2px; }
 
-  .reg-policy-section { margin-bottom: 10px; page-break-inside: avoid; }
-  .reg-section-title { font-size: 8.8pt; font-weight: 800; color: #0284C7; display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
-  .reg-section-title .sub { color: #0284C7; font-size: 7.8pt; font-weight: 700; }
-  .reg-policy-list { list-style: none; padding-left: 0; margin: 0; font-size: 7.4pt; line-height: 1.35; color: #334155; }
-  .reg-policy-list li { margin-bottom: 2px; }
+  /* 4. Policy Section */
+  .reg-policy-section { margin-bottom: 16px; page-break-inside: avoid; }
+  .reg-section-title { font-size: 10pt; font-weight: 800; color: #0284C7; display: flex; align-items: center; gap: 4px; margin-top: 6px; margin-bottom: 3px; }
+  .reg-section-title .sub { color: #0284C7; font-size: 8.8pt; font-weight: 700; }
+  .reg-policy-list { list-style: none; padding-left: 0; margin: 0; font-size: 8.5pt; line-height: 1.48; color: #334155; }
+  .reg-policy-list li { margin-bottom: 3px; }
   .reg-policy-list strong { font-weight: 800; color: #0F172A; }
   .reg-policy-list.notice-list li { color: #1E293B; }
 
-  .reg-footer-consent { text-align: center; margin-top: 10px; padding-top: 6px; page-break-inside: avoid; }
-  .consent-statement { font-size: 9.2pt; font-weight: 800; color: #0F172A; margin-bottom: 8px; }
-  .consent-date { font-size: 8.5pt; font-weight: 700; color: #0F172A; letter-spacing: 2px; margin-bottom: 8px; }
-  .signature-line-wrap { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding-right: 14px; }
-  .applicant-label { font-size: 9pt; font-weight: 700; color: #0F172A; }
-  .signature-stamp-box { min-width: 90px; height: 38px; display: flex; align-items: center; justify-content: center; }
-  .signature-stamp-box img { max-height: 36px; max-width: 100px; object-fit: contain; }
-  .signature-stamp-box .stamp-text { font-size: 8pt; color: #94A3B8; }
+  /* 5. Center-Aligned Bottom Consent & Red Digital Seal */
+  .reg-footer-consent {
+    text-align: center; margin-top: 16px; padding-top: 8px; page-break-inside: avoid;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;
+  }
+  .consent-statement { font-size: 11pt; font-weight: 800; color: #0F172A; margin-bottom: 8px; text-align: center; }
+  .consent-date { font-size: 10.5pt; font-weight: 700; color: #0F172A; letter-spacing: 2px; margin-bottom: 12px; text-align: center; }
+  .signature-line-wrap {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; text-align: center; margin: 0 auto;
+  }
+  .applicant-label { font-size: 11pt; font-weight: 800; color: #0F172A; }
+  .signature-stamp-box {
+    display: flex; align-items: center; justify-content: center;
+  }
+  
+  /* Red Electronic Signature Seal (전자서명 인증완료 빨간색 표기) */
+  .official-digital-seal {
+    padding: 4px 10px; border: 1.8px solid #DC2626; border-radius: 6px;
+    background: #FEF2F2 !important; color: #DC2626 !important;
+    display: inline-flex; align-items: center; gap: 8px;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .seal-circle-mark {
+    width: 28px; height: 28px; border: 1.6px solid #DC2626; border-radius: 50%;
+    font-size: 11px; font-weight: 900; color: #DC2626; background: #FFF !important;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+  .seal-badge-title { font-size: 11px; font-weight: 900; color: #DC2626; letter-spacing: -0.2px; }
+  .seal-timestamp { font-size: 9px; font-weight: 700; color: #DC2626; opacity: 0.95; }
 </style>
 </head>
 <body>
