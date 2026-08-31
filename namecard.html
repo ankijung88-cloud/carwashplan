@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>세차 플랜 (CARWASH PLAN) - 공식 프리미엄 네임카드 제작기</title>
   
   <!-- Fonts & Lucide Icons -->
@@ -26,7 +26,7 @@
       --font-display: 'Montserrat', sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body {
       background: var(--bg-body);
       color: var(--text-main);
@@ -35,26 +35,55 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 16px;
+      padding: 30px 16px 40px 16px;
+      overflow-x: hidden;
+    }
+
+    .nav-back-link {
+      width: 100%;
+      max-width: 1060px;
+      margin-bottom: 16px;
+    }
+    .nav-back-link a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      transition: all 0.2s ease;
+    }
+    .nav-back-link a:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--accent);
     }
 
     .header-bar {
       text-align: center;
       margin-bottom: 28px;
+      width: 100%;
+      max-width: 1060px;
     }
     .header-bar h1 {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 900;
       color: #FFF;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      word-break: keep-all;
     }
     .header-bar p {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
       margin-top: 6px;
+      word-break: keep-all;
     }
 
     /* Main Container */
@@ -66,16 +95,13 @@
       width: 100%;
     }
 
-    @media (max-width: 860px) {
-      .container { grid-template-columns: 1fr; }
-    }
-
     /* Card Preview Showcase */
     .preview-area {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 24px;
+      width: 100%;
     }
 
     .cards-wrapper {
@@ -83,28 +109,50 @@
       flex-wrap: wrap;
       gap: 24px;
       justify-content: center;
+      width: 100%;
     }
 
-    /* Standard Business Card Aspect Ratio (90mm x 50mm -> 450px x 250px) */
+    .card-item-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .card-side-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-align: center;
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.35);
+      padding: 3px 12px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Standard Business Card Aspect Ratio (90mm x 50mm -> 450px x 255px) */
     .biz-card {
       width: 450px;
-      height: 255px;
+      max-width: 100%;
+      aspect-ratio: 450 / 255;
+      height: auto;
       border-radius: 16px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12);
       transition: all 0.3s ease;
       user-select: none;
-    }
-
-    @media (max-width: 480px) {
-      .biz-card { width: 340px; height: 195px; border-radius: 12px; }
     }
 
     /* Front Card Design */
     .card-front {
       background: radial-gradient(circle at 10% 10%, #1E293B 0%, #0F172A 60%, #080D1A 100%);
-      padding: 22px 26px;
+      padding: 22px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -139,12 +187,13 @@
     .brand-title {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       letter-spacing: -0.5px;
+      line-height: 1.15;
     }
     .brand-title span { color: var(--accent); }
     .brand-sub {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #94A3B8;
       font-weight: 600;
       letter-spacing: 0.4px;
@@ -158,34 +207,37 @@
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 20px;
+      white-space: nowrap;
     }
 
     .front-bottom {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      gap: 8px;
     }
     .person-info h3 {
-      font-size: 1.45rem;
+      font-size: 1.4rem;
       font-weight: 900;
       letter-spacing: -0.5px;
       color: #FFF;
+      line-height: 1.2;
     }
     .person-info .role {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--accent);
       font-weight: 700;
       margin-top: 2px;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       display: block;
     }
     .contact-list {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3.5px;
     }
     .contact-item {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: #E2E8F0;
       display: flex;
       align-items: center;
@@ -193,26 +245,27 @@
       white-space: nowrap;
     }
     .contact-item strong {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 800;
       color: #FFFFFF;
     }
     .contact-item i, .contact-item svg {
-      width: 13px;
-      height: 13px;
-      min-width: 13px;
+      width: 12px;
+      height: 12px;
+      min-width: 12px;
       color: var(--accent);
       flex-shrink: 0;
     }
 
     .service-tags {
       text-align: right;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #94A3B8;
       display: flex;
       flex-direction: column;
       gap: 3px;
       font-weight: 600;
+      white-space: nowrap;
     }
     .service-tags strong {
       color: var(--accent);
@@ -222,19 +275,21 @@
     /* Back Card Design */
     .card-back {
       background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
-      padding: 24px 26px;
+      padding: 22px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: #0F172A;
       box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.8);
+      gap: 12px;
     }
     .back-left {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      max-width: 250px;
+      flex: 1;
+      min-width: 0;
     }
     .back-promo-badge {
       display: inline-flex;
@@ -242,46 +297,52 @@
       gap: 4px;
       background: rgba(14, 165, 233, 0.12);
       color: #0284C7;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       padding: 3px 8px;
       border-radius: 4px;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       width: fit-content;
+      white-space: nowrap;
     }
     .back-promo-badge i, .back-promo-badge svg {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
     }
     .back-heading {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 900;
       line-height: 1.25;
       color: #0F172A;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.4px;
+      word-break: keep-all;
     }
     .back-desc {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #475569;
-      margin-top: 6px;
-      line-height: 1.4;
+      margin-top: 5px;
+      line-height: 1.38;
       font-weight: 600;
+      word-break: keep-all;
     }
     .price-badge-row {
       display: inline-block;
       background: #0284C7;
       color: #FFF;
       font-weight: 900;
-      font-size: 0.82rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      margin-top: 8px;
+      font-size: 0.8rem;
+      padding: 4px 9px;
+      border-radius: 5px;
+      margin-top: 6px;
+      white-space: nowrap;
     }
     .back-url {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #64748B;
       font-family: var(--font-display);
+      margin-top: 3px;
+      white-space: nowrap;
     }
 
     .back-right {
@@ -289,15 +350,16 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
+      flex-shrink: 0;
     }
     .qr-box {
-      width: 120px;
-      height: 120px;
+      width: 110px;
+      height: 110px;
       background: #FFF;
       border: 2px solid #E2E8F0;
       border-radius: 10px;
-      padding: 6px;
+      padding: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -309,10 +371,11 @@
       object-fit: contain;
     }
     .qr-label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 800;
       color: #0284C7;
       text-align: center;
+      white-space: nowrap;
     }
 
     /* Form Controls Sidebar */
@@ -323,9 +386,10 @@
       padding: 22px 18px;
       backdrop-filter: blur(16px);
       height: fit-content;
+      width: 100%;
     }
     .panel-title {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       margin-bottom: 16px;
       display: flex;
@@ -348,11 +412,12 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 9px 12px;
       color: #FFF;
       font-size: 0.85rem;
       font-family: var(--font-main);
       outline: none;
+      transition: border-color 0.2s;
     }
     .input-grp input:focus {
       border-color: var(--primary);
@@ -376,6 +441,7 @@
       cursor: pointer;
       border: none;
       transition: all 0.2s ease;
+      text-decoration: none;
     }
     .btn-primary {
       background: linear-gradient(135deg, #0EA5E9, #0284C7);
@@ -394,6 +460,247 @@
     .btn-outline:hover {
       background: rgba(30, 41, 59, 0.8);
       border-color: var(--primary);
+    }
+
+    /* ==========================================================================
+       Responsive Mobile Breakpoints (Tablet & Phone)
+       ========================================================================== */
+    @media (max-width: 860px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px 12px 36px 12px;
+      }
+
+      .nav-back-link {
+        margin-bottom: 12px;
+      }
+
+      .nav-back-link a {
+        font-size: 0.78rem;
+        padding: 6px 12px;
+      }
+
+      .header-bar {
+        margin-bottom: 18px;
+        padding: 0 4px;
+      }
+
+      .header-bar h1 {
+        font-size: 1.2rem;
+        line-height: 1.35;
+        gap: 6px;
+      }
+
+      .header-bar h1 i, .header-bar h1 svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .header-bar p {
+        font-size: 0.76rem;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      .cards-wrapper {
+        gap: 20px;
+      }
+
+      .card-item-box {
+        max-width: 350px;
+      }
+
+      /* Mobile Business Card Scale */
+      .biz-card {
+        width: 100%;
+        max-width: 350px;
+        aspect-ratio: 450 / 255;
+        border-radius: 12px;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+      }
+
+      /* Front Card Mobile Refinements */
+      .card-front {
+        padding: 13px 14px;
+      }
+
+      .brand-logo {
+        gap: 5px;
+      }
+
+      .brand-logo i, .brand-logo svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .brand-title {
+        font-size: 0.98rem;
+      }
+
+      .brand-sub {
+        font-size: 0.52rem;
+        letter-spacing: 0.2px;
+        margin-top: 1px;
+      }
+
+      .badge-tag {
+        font-size: 0.6rem;
+        padding: 2px 7px;
+        border-radius: 10px;
+      }
+
+      .person-info h3 {
+        font-size: 1.12rem;
+      }
+
+      .person-info .role {
+        font-size: 0.66rem;
+        margin-top: 1px;
+        margin-bottom: 4px;
+      }
+
+      .contact-list {
+        gap: 2px;
+      }
+
+      .contact-item {
+        font-size: 0.62rem;
+        gap: 4px;
+      }
+
+      .contact-item strong {
+        font-size: 0.65rem;
+      }
+
+      .contact-item i, .contact-item svg {
+        width: 10px;
+        height: 10px;
+        min-width: 10px;
+      }
+
+      .service-tags {
+        font-size: 0.56rem;
+        gap: 2px;
+      }
+
+      /* Back Card Mobile Refinements */
+      .card-back {
+        padding: 13px 14px;
+        gap: 8px;
+      }
+
+      .back-promo-badge {
+        font-size: 0.58rem;
+        padding: 2px 5px;
+        margin-bottom: 2px;
+        gap: 2px;
+      }
+
+      .back-promo-badge i, .back-promo-badge svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      .back-heading {
+        font-size: 0.86rem;
+        line-height: 1.2;
+      }
+
+      .back-desc {
+        font-size: 0.58rem;
+        margin-top: 2px;
+        line-height: 1.3;
+      }
+
+      .price-badge-row {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        margin-top: 3px;
+      }
+
+      .back-url {
+        font-size: 0.58rem;
+        margin-top: 2px;
+      }
+
+      .back-right {
+        gap: 3px;
+      }
+
+      .qr-box {
+        width: 80px;
+        height: 80px;
+        padding: 3px;
+        border-radius: 6px;
+      }
+
+      .qr-label {
+        font-size: 0.56rem;
+      }
+
+      /* Controls Panel Mobile */
+      .controls-panel {
+        padding: 16px 14px;
+        border-radius: 14px;
+      }
+
+      .panel-title {
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+      }
+
+      .input-grp {
+        margin-bottom: 10px;
+      }
+
+      .input-grp label {
+        font-size: 0.74rem;
+        margin-bottom: 3px;
+      }
+
+      .input-grp input {
+        font-size: 0.82rem;
+        padding: 8px 10px;
+      }
+
+      .btn-action-group {
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .btn {
+        padding: 11px;
+        font-size: 0.82rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .card-item-box, .biz-card {
+        max-width: 310px;
+      }
+
+      .brand-title {
+        font-size: 0.88rem;
+      }
+
+      .person-info h3 {
+        font-size: 1.02rem;
+      }
+
+      .contact-item {
+        font-size: 0.58rem;
+      }
+
+      .qr-box {
+        width: 70px;
+        height: 70px;
+      }
     }
 
     /* Screen-only Print Container Hidden */
@@ -508,8 +815,8 @@
 <body>
 
   <!-- Top Link back to main -->
-  <div style="width:100%;max-width:1060px;margin-bottom:12px;" class="nav-back-link">
-    <a href="index.html" style="color:var(--accent);text-decoration:none;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;">
+  <div class="nav-back-link">
+    <a href="index.html">
       <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> 메인 웹사이트로 돌아가기
     </a>
   </div>
@@ -526,8 +833,8 @@
       <div class="cards-wrapper">
         
         <!-- 1. Front Card -->
-        <div>
-          <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;">[ 명함 앞면 (Front) ]</div>
+        <div class="card-item-box">
+          <span class="card-side-label"><i data-lucide="credit-card" style="width:13px;height:13px;"></i> 명함 앞면 (Front)</span>
           <div id="cardFront" class="biz-card card-front">
             <div class="front-top">
               <div class="brand-logo">
@@ -562,19 +869,19 @@
         </div>
 
         <!-- 2. Back Card -->
-        <div>
-          <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;">[ 명함 뒷면 (Back) ]</div>
+        <div class="card-item-box">
+          <span class="card-side-label"><i data-lucide="qr-code" style="width:13px;height:13px;"></i> 명함 뒷면 (Back)</span>
           <div id="cardBack" class="biz-card card-back">
             <div class="back-left">
               <div>
-                <span class="back-promo-badge"><i data-lucide="award" style="width:13px;height:13px;"></i> 신규가입 특별혜택</span>
+                <span class="back-promo-badge"><i data-lucide="award"></i> 신규가입 특별혜택</span>
                 <h4 class="back-heading">유막제거 1회 무료<br>월 정기세차 멤버십</h4>
                 <p class="back-desc">아파트/회사 주차장으로 직접 방문!<br>정해진 요일에 도장면 손상 없는 정밀 케어</p>
               </div>
 
               <div>
                 <div class="price-badge-row">월 31,900원부터~</div>
-                <div class="back-url" style="margin-top:4px;">https://carwashplan.vercel.app/</div>
+                <div class="back-url">https://carwashplan.vercel.app/</div>
               </div>
             </div>
 
