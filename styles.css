@@ -2827,6 +2827,20 @@ a:hover {
   color: #0284C7;
 }
 
+.reg-info-table .payment-opts {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.reg-info-table .payment-opt-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
 .reg-info-table .sub-hint {
   font-size: 11.5px;
   color: #64748B;

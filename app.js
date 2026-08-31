@@ -1161,10 +1161,10 @@ function generateRegistrationFormHTML(item) {
       <table class="reg-info-table">
         <tbody>
           <tr>
-            <th style="width: 16%;">이름</th>
-            <td style="width: 34%; font-weight: 700;">${escapeHtml(item.name)}</td>
+            <th style="width: 14%;">이름</th>
+            <td style="width: 31%; font-weight: 700;">${escapeHtml(item.name)}</td>
             <th style="width: 18%;">횟수 / 요일</th>
-            <td style="width: 32%;">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+            <td style="width: 37%; white-space: nowrap;">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
           </tr>
           <tr>
             <th>주소</th>
@@ -1172,7 +1172,7 @@ function generateRegistrationFormHTML(item) {
           </tr>
           <tr>
             <th>출입 동의</th>
-            <td colspan="3">
+            <td colspan="3" style="white-space: nowrap;">
               <span class="check-box checked">☑</span> 예 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
               <span class="check-box">☐</span> 아니요 &nbsp;&nbsp;&nbsp;&nbsp; 
               <span class="sub-hint">(아파트 출입 허용여부)</span>
@@ -1181,11 +1181,13 @@ function generateRegistrationFormHTML(item) {
           <tr>
             <th>연락처</th>
             <td>${escapeHtml(item.phone)}</td>
-            <th>결제</th>
-            <td>
-              <span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체 &nbsp;&nbsp;
-              <span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체 &nbsp;&nbsp;
-              <span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드
+            <th style="width: 13%;">결제</th>
+            <td style="white-space: nowrap;">
+              <span class="payment-opts">
+                <span class="payment-opt-item"><span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체</span>
+                <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
+                <span class="payment-opt-item"><span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드</span>
+              </span>
             </td>
           </tr>
           <tr>
@@ -1352,6 +1354,8 @@ window.printCustomerConfirmation = function() {
   }
   .reg-info-table td { background-color: #FFFFFF !important; color: #0F172A; font-weight: 600; }
   .reg-info-table .check-box { font-weight: 800; font-size: 9pt; color: #0284C7; }
+  .reg-info-table .payment-opts { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .reg-info-table .payment-opt-item { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
   .reg-info-table .sub-hint { font-size: 7.2pt; color: #64748B; font-weight: normal; }
 
   .reg-notes-box {
