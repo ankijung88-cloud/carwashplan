@@ -597,8 +597,14 @@ function initFormValidationAndSubmit() {
     // Extract Ultra-compact SVG Vector Signature (under 800 bytes, 100% reliable for Google Sheets)
     const signatureCanvas = document.getElementById('signatureCanvas');
     let signatureDataUrl = '';
-    if (isSignatureDrawn && signatureCanvas) {
-      signatureDataUrl = buildSignatureSvgString(signatureCanvas, window.currentSignatureStrokes || []);
+    if (signatureCanvas) {
+      if (window.currentSignatureStrokes && window.currentSignatureStrokes.length > 0) {
+        signatureDataUrl = buildSignatureSvgString(signatureCanvas, window.currentSignatureStrokes);
+      } else if (isSignatureDrawn) {
+        try {
+          signatureDataUrl = signatureCanvas.toDataURL('image/png');
+        } catch (e) {}
+      }
     }
 
     // Build New Customer Registration Record with Terms & Signature

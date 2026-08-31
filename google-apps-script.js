@@ -1,5 +1,5 @@
 /**
- * 세차 플랜 (CARWASH PLAN) - 고객 자필 전자서명 클라우드 동기화 Google Apps Script
+ * 세차 플랜 (CARWASH PLAN) - 14개 컬럼(서명 포함) Google Apps Script
  * 
  * [스프레드시트 14개 컬럼 구성]
  * A: 신청ID
@@ -15,7 +15,7 @@
  * K: 결제방식         (예: 카드)
  * L: 차량특이사항      (예: 외관: 유광 | 실내: 먼지)
  * M: 진행상태         (예: PENDING)
- * N: 서명데이터        (고객 자필 전자서명 Base64 이미지)
+ * N: 서명데이터        (고객 자필 전자서명 SVG/Base64)
  * 
  * [1분 설정 및 배포 방법]
  * 1. 구글 드라이브(drive.google.com)에서 세차플랜 스프레드시트를 엽니다.
@@ -23,7 +23,7 @@
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
  * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 전자서명 클라우드 동기화 지원 v9
+ *    - 설명: 14개 컬럼 서명데이터 완벽 지원 v11
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
  * 5. [배포] 버튼 클릭 후 승인 완료
@@ -50,11 +50,11 @@ function ensureStandardHeaders(sheet) {
   var lastCol = sheet.getLastColumn();
   var needUpdate = false;
   
-  if (lastCol < 13) {
+  if (lastCol < 14) {
     needUpdate = true;
   } else {
-    var curH = sheet.getRange(1, 1, 1, Math.min(lastCol, 14)).getValues()[0];
-    if (String(curH[7] || '').trim() !== "차량번호") {
+    var curH = sheet.getRange(1, 1, 1, 14).getValues()[0];
+    if (String(curH[7] || '').trim() !== "차량번호" || String(curH[13] || '').trim() !== "서명데이터") {
       needUpdate = true;
     }
   }
@@ -70,6 +70,12 @@ function ensureStandardHeaders(sheet) {
   }
 }
 
+// 1회성 헤더 즉시 교정 실행용 함수 (Apps Script 상단에서 [실행] 가능)
+function fixHeadersOnce() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  ensureStandardHeaders(sheet);
+}
+
 // 1. 신규 고객 신청 시 구글 시트에 서명 데이터 포함 자동 기록 (POST)
 function doPost(e) {
   try {
@@ -82,6 +88,7 @@ function doPost(e) {
     var model = data.model || data.car || "";
     var plate = data.plate || "";
     var color = data.color || "";
+    var signature = String(data.signature || "");
     
     // G열: 차종 및 색상 (예: 렉스턴 / 검정)
     var modelAndColor = model;
@@ -110,7 +117,7 @@ function doPost(e) {
       data.paymentMethod || "카드",                                                                 // K: 결제방식
       data.specialNotes || "없음",                                                                  // L: 차량특이사항
       data.status || "PENDING",                                                                     // M: 진행상태
-      data.signature || ""                                                                          // N: 고객 전자서명 Base64
+      signature                                                                                     // N: 고객 전자서명 (SVG/Base64)
     ];
     
     sheet.appendRow(rowData);
