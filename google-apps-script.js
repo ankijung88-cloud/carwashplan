@@ -1,63 +1,88 @@
 /**
- * 세차 플랜 (CARWASH PLAN) - 헤더 자동인식 스마트 Google Apps Script
+ * 세차 플랜 (CARWASH PLAN) - 13개 컬럼 자동 헤더 교정(Self-Healing) Google Apps Script
  * 
- * [스프레드시트 13개 컬럼 구성]
+ * [스프레드시트 13개 컬럼 표준 규격]
  * A: 신청ID
  * B: 신청일시
  * C: 고객명
  * D: 연락처
  * E: 이메일
  * F: 세차희망주소
- * G: 차종 및 색상  (예: 렉스턴 / 검정)
- * H: 차량번호     (예: 290루3326)
- * I: 이용플랜 및 선택옵션
- * J: 희망요일
- * K: 결제방식
- * L: 차량특이사항
- * M: 진행상태
+ * G: 차종 및 색상      (예: 렉스턴 / 검정)
+ * H: 차량번호         (예: 290루3326)
+ * I: 이용플랜 및 선택옵션 (예: 퍼펙트 (월 4회 할인 특가))
+ * J: 희망요일         (예: 화요일)
+ * K: 결제방식         (예: 카드)
+ * L: 차량특이사항      (예: 외관: 유광 | 실내: 먼지)
+ * M: 진행상태         (예: PENDING)
  * 
  * [1분 설정 및 배포 방법]
  * 1. 구글 드라이브(drive.google.com)에서 세차플랜 스프레드시트를 엽니다.
  * 2. 상단 메뉴 [확장 프로그램] > [Apps Script]를 클릭합니다.
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
- * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
+ * 4. 상단 실행 함수를 'fixHeadersOnce'로 선택하고 [실행] 버튼을 누르면 1행 헤더가 1초 만에 완벽하게 자동 교정됩니다!
+ * 5. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 세차플랜 스마트 컬럼 자동인식 v6
+ *    - 설명: 세차플랜 헤더 자동교정 v7
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
- * 5. [배포] 버튼 클릭 후 승인 완료
+ * 6. [배포] 버튼 클릭 후 승인 완료
  */
+
+var STANDARD_HEADERS = [
+  "신청ID", 
+  "신청일시", 
+  "고객명", 
+  "연락처", 
+  "이메일", 
+  "세차희망주소", 
+  "차종 및 색상", 
+  "차량번호",
+  "이용플랜 및 선택옵션", 
+  "희망요일", 
+  "결제방식", 
+  "차량특이사항", 
+  "진행상태"
+];
+
+// 1행 헤더를 13개 표준 컬럼으로 완벽하게 자동 교정하는 함수
+function ensureStandardHeaders(sheet) {
+  var lastCol = sheet.getLastColumn();
+  var needUpdate = false;
+  
+  if (lastCol < 13) {
+    needUpdate = true;
+  } else {
+    var curH = sheet.getRange(1, 1, 1, 13).getValues()[0];
+    if (String(curH[7] || '').trim() !== "차량번호") {
+      needUpdate = true;
+    }
+  }
+  
+  if (needUpdate) {
+    sheet.getRange(1, 1, 1, 13).setValues([STANDARD_HEADERS]);
+    var headerRange = sheet.getRange(1, 1, 1, 13);
+    headerRange.setBackground("#0284C7");
+    headerRange.setFontColor("#FFFFFF");
+    headerRange.setFontWeight("bold");
+    headerRange.setHorizontalAlignment("center");
+    sheet.setFrozenRows(1);
+  }
+}
+
+// 1회성 헤더 즉시 교정 실행용 함수 (Apps Script 상단에서 [실행] 가능)
+function fixHeadersOnce() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  ensureStandardHeaders(sheet);
+}
 
 // 1. 신규 고객 신청 시 구글 시트에 자동 기록 (POST)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
-    // 시트에 헤더가 없으면 13개 표준 컬럼 헤더 자동 생성
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "신청ID", 
-        "신청일시", 
-        "고객명", 
-        "연락처", 
-        "이메일", 
-        "세차희망주소", 
-        "차종 및 색상", 
-        "차량번호",
-        "이용플랜 및 선택옵션", 
-        "희망요일", 
-        "결제방식", 
-        "차량특이사항", 
-        "진행상태"
-      ]);
-      
-      var headerRange = sheet.getRange(1, 1, 1, 13);
-      headerRange.setBackground("#0284C7");
-      headerRange.setFontColor("#FFFFFF");
-      headerRange.setFontWeight("bold");
-      headerRange.setHorizontalAlignment("center");
-      sheet.setFrozenRows(1);
-    }
+    // 1행 헤더 자동 점검 및 교정
+    ensureStandardHeaders(sheet);
     
     // 전송된 JSON 데이터 파싱
     var data = JSON.parse(e.postData.contents);
@@ -66,19 +91,19 @@ function doPost(e) {
     var plate = data.plate || "";
     var color = data.color || "";
     
-    // 1. 차종 및 색상 (G열): 예: 렉스턴 / 검정
+    // G열: 차종 및 색상 (예: 렉스턴 / 검정)
     var modelAndColor = model;
     if (color) {
       modelAndColor += " / " + color;
     }
     
-    // 2. 이용플랜 및 추가옵션 (I열)
+    // I열: 이용플랜 및 추가옵션
     var planText = data.plan || data.experience || "퍼펙트 (월 4회 할인 특가)";
     if (data.extraOptions && data.extraOptions !== '없음' && !planText.includes(data.extraOptions)) {
       planText += " [옵션: " + data.extraOptions + "]";
     }
     
-    // 3. 13개 컬럼 1:1 매칭 행 데이터
+    // 13개 컬럼과 1:1 완벽 일치 행 데이터
     var rowData = [
       data.id || ("CUST-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 900 + 100)), // A: 신청ID
       data.createdAt || Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm"),         // B: 신청일시
@@ -87,7 +112,7 @@ function doPost(e) {
       data.email || "",                                                                             // E: 이메일
       data.region || "",                                                                            // F: 세차희망주소
       modelAndColor,                                                                                // G: 차종 및 색상
-      plate,                                                                                        // H: 차량번호 (개별 분리)
+      plate,                                                                                        // H: 차량번호
       planText,                                                                                     // I: 이용플랜 및 선택옵션
       data.days || "미지정",                                                                        // J: 희망요일
       data.paymentMethod || "카드",                                                                 // K: 결제방식
@@ -99,7 +124,7 @@ function doPost(e) {
     
     return ContentService.createTextOutput(JSON.stringify({ 
       result: "success", 
-      message: "고객 데이터가 13개 컬럼(차량번호 분리)에 성공적으로 등록되었습니다.",
+      message: "고객 데이터가 13개 컬럼에 정확하게 등록되었습니다.",
       id: data.id 
     })).setMimeType(ContentService.MimeType.JSON);
       
@@ -111,65 +136,35 @@ function doPost(e) {
   }
 }
 
-// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원 - 헤더 이름 기반 스마트 매핑)
+// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원)
 function doGet(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var lastRow = sheet.getLastRow();
     var customerList = [];
     
+    ensureStandardHeaders(sheet);
+    
     if (lastRow > 1) {
-      var lastCol = sheet.getLastColumn();
-      var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-      var rows = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
-      
-      // 헤더 인덱스 동적 탐색
-      var colMap = {};
-      for (var h = 0; h < headers.length; h++) {
-        var hName = String(headers[h] || '').trim();
-        colMap[hName] = h;
-      }
-      
-      var findIdx = function(keywords, defaultIdx) {
-        for (var k = 0; k < keywords.length; k++) {
-          for (var name in colMap) {
-            if (name.indexOf(keywords[k]) !== -1) return colMap[name];
-          }
-        }
-        return defaultIdx;
-      };
-
-      var idIdx = findIdx(["신청ID", "ID"], 0);
-      var dateIdx = findIdx(["일시", "시간", "날짜"], 1);
-      var nameIdx = findIdx(["고객명", "성명", "이름"], 2);
-      var phoneIdx = findIdx(["연락처", "전화", "휴대폰"], 3);
-      var emailIdx = findIdx(["이메일", "Email"], 4);
-      var regionIdx = findIdx(["주소", "장소", "지역"], 5);
-      var carIdx = findIdx(["차종 및 색상", "차종및색상", "차량정보", "차종"], 6);
-      var plateIdx = findIdx(["차량번호", "번호판"], 7);
-      var planIdx = findIdx(["이용플랜", "플랜", "선택옵션"], 8);
-      var daysIdx = findIdx(["요일"], 9);
-      var payIdx = findIdx(["결제방식", "결제"], 10);
-      var notesIdx = findIdx(["특이사항", "차량특이사항"], 11);
-      var statusIdx = findIdx(["진행상태", "상태"], 12);
+      var rows = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
       
       for (var i = 0; i < rows.length; i++) {
         var r = rows[i];
         if (!r[0] && !r[1] && !r[2]) continue;
         
-        var id = String(r[idIdx] || ("CUST-" + (i + 1)));
-        var createdAt = r[dateIdx] ? (r[dateIdx] instanceof Date ? Utilities.formatDate(r[dateIdx], "Asia/Seoul", "yyyy-MM-dd HH:mm") : String(r[dateIdx])) : "";
-        var name = String(r[nameIdx] || "");
-        var phone = String(r[phoneIdx] || "");
-        var email = String(r[emailIdx] || "");
-        var region = String(r[regionIdx] || "");
-        var modelColorRaw = String(r[carIdx] || "");
-        var plate = plateIdx !== -1 ? String(r[plateIdx] || "") : "";
-        var planText = String(r[planIdx] || "");
-        var days = String(r[daysIdx] || "");
-        var paymentMethod = String(r[payIdx] || "카드");
-        var specialNotes = String(r[notesIdx] || "");
-        var status = String(r[statusIdx] || "PENDING");
+        var id = String(r[0] || ("CUST-" + (i + 1)));
+        var createdAt = r[1] ? (r[1] instanceof Date ? Utilities.formatDate(r[1], "Asia/Seoul", "yyyy-MM-dd HH:mm") : String(r[1])) : "";
+        var name = String(r[2] || "");
+        var phone = String(r[3] || "");
+        var email = String(r[4] || "");
+        var region = String(r[5] || "");
+        var modelColorRaw = String(r[6] || "");
+        var plate = String(r[7] || "");
+        var planText = String(r[8] || "");
+        var days = String(r[9] || "");
+        var paymentMethod = String(r[10] || "카드");
+        var specialNotes = String(r[11] || "");
+        var status = String(r[12] || "PENDING");
         
         var model = modelColorRaw;
         var color = "";
@@ -180,7 +175,6 @@ function doGet(e) {
           color = parts.slice(1).join("/").replace(/색상\s*[:：]/, '').trim();
         }
         
-        // 차종/번호판/색상 분리
         var carSummary = model;
         if (plate) carSummary += " (" + plate + ")";
         if (color) carSummary += " - " + color;
