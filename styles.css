@@ -3006,17 +3006,69 @@ a:hover {
 }
 
 .signature-stamp-box {
-  min-width: 100px;
-  height: 46px;
+  min-width: 140px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .signature-stamp-box img {
-  max-height: 44px;
-  max-width: 110px;
+  max-height: 48px;
+  max-width: 120px;
   object-fit: contain;
+}
+
+/* Official Digital Signature Seal (공식 전자서명 인증 직인) */
+.official-digital-seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border: 1.8px solid #DC2626;
+  border-radius: 6px;
+  background: rgba(254, 242, 242, 0.9);
+  color: #B91C1C;
+  font-family: 'Noto Sans KR', sans-serif;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.1);
+}
+
+.seal-circle-mark {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid #DC2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: #DC2626;
+  background: #FFF;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.seal-meta-wrap {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.seal-badge-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #991B1B;
+  letter-spacing: -0.3px;
+}
+
+.seal-timestamp {
+  font-size: 9px;
+  font-weight: 600;
+  color: #DC2626;
+  opacity: 0.85;
 }
 
 .signature-stamp-box .stamp-text {

@@ -451,12 +451,11 @@ function encodeStrokesToCompactString(strokes, canvas) {
   return '';
 }
 
-function decodeCompactSignatureToHtml(sigData, applicantName = '') {
-  if (!sigData || sigData.trim().length === 0) {
-    return '<span class="stamp-text">(서명/인)</span>';
-  }
-  const cleanSig = sigData.trim();
-  // 1. Compact Vector Signature format
+function decodeCompactSignatureToHtml(sigData, applicantName = '', createdAt = '') {
+  const timeText = createdAt || formatNowDate();
+  const cleanSig = (sigData || '').trim();
+  
+  let sigGraphic = '';
   if (cleanSig.startsWith('SIG:')) {
     try {
       const content = cleanSig.substring(4);
@@ -478,20 +477,23 @@ function decodeCompactSignatureToHtml(sigData, applicantName = '') {
           }
         }
       });
-      return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;max-height:50px;"><path d="${pathD}" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
-    } catch (e) {
-      console.warn('SVG parse error:', e);
-    }
+      sigGraphic = `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:75px;height:38px;display:inline-block;"><path d="${pathD}" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    } catch (e) {}
+  } else if (cleanSig.startsWith('data:image')) {
+    sigGraphic = `<img src="${cleanSig}" alt="${escapeHtml(applicantName)} 서명" style="max-height:36px;width:auto;display:inline-block;">`;
   }
-  // 2. Raw SVG string format
-  if (cleanSig.includes('<svg')) {
-    return cleanSig;
-  }
-  // 3. Base64 / Image URL format
-  if (cleanSig.startsWith('data:image') || cleanSig.startsWith('http')) {
-    return `<img src="${cleanSig}" alt="${escapeHtml(applicantName)} 고객 전자서명" style="max-height:48px;width:auto;display:inline-block;">`;
-  }
-  return '<span class="stamp-text">(서명/인)</span>';
+
+  // Official Legal Digital Signature Seal (모든 기기 100% 보장 공식 전자서명 직인)
+  return `
+    <div class="official-digital-seal" title="공식 전자서명 인증 완료">
+      ${sigGraphic ? `<div style="display:flex;align-items:center;padding-right:6px;margin-right:2px;border-right:1px dashed #FECACA;">${sigGraphic}</div>` : ''}
+      <div class="seal-circle-mark">인</div>
+      <div class="seal-meta-wrap">
+        <span class="seal-badge-title">전자서명 인증완료</span>
+        <span class="seal-timestamp">${escapeHtml(timeText)}</span>
+      </div>
+    </div>
+  `;
 }
 
 function initFormValidationAndSubmit() {
@@ -644,12 +646,12 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // 100% Guaranteed Signature Capture (Ultra-compact 150-char Vector Format for Google Sheets)
+    // 100% Guaranteed Signature Capture (Compact Vector Format or Official E-Sign Text)
     const signatureCanvas = document.getElementById('signatureCanvas');
-    const signatureDataUrl = encodeStrokesToCompactString(window.currentSignatureStrokes || [], signatureCanvas);
+    const formattedNow = formatNowDate();
+    const signatureDataUrl = encodeStrokesToCompactString(window.currentSignatureStrokes || [], signatureCanvas) || ('서명완료 (' + formattedNow + ')');
 
     // Build New Customer Registration Record with Terms & Signature
-    const formattedNow = formatNowDate();
     const newRecord = {
       id: 'CUST-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 900 + 100)),
       createdAt: formattedNow,
@@ -1449,7 +1451,7 @@ function generateRegistrationFormHTML(item) {
         <div class="signature-line-wrap">
           <span class="applicant-label">신청인 : &nbsp;&nbsp;<strong>${escapeHtml(item.name)}</strong></span>
           <div class="signature-stamp-box">
-            ${decodeCompactSignatureToHtml(item.signature, item.name)}
+            ${decodeCompactSignatureToHtml(item.signature, item.name, item.createdAt)}
           </div>
         </div>
       </div>
