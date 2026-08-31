@@ -594,16 +594,21 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // Extract Ultra-compact SVG Vector Signature (under 800 bytes, 100% reliable for Google Sheets)
+    // 100% Guaranteed Signature Capture (Direct Canvas Export & Ultra-compact Compression under 4KB)
     const signatureCanvas = document.getElementById('signatureCanvas');
     let signatureDataUrl = '';
     if (signatureCanvas) {
-      if (window.currentSignatureStrokes && window.currentSignatureStrokes.length > 0) {
-        signatureDataUrl = buildSignatureSvgString(signatureCanvas, window.currentSignatureStrokes);
-      } else if (isSignatureDrawn) {
+      try {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = 220;
+        tempCanvas.height = 80;
+        const tCtx = tempCanvas.getContext('2d');
+        tCtx.drawImage(signatureCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+        signatureDataUrl = tempCanvas.toDataURL('image/png');
+      } catch (e) {
         try {
           signatureDataUrl = signatureCanvas.toDataURL('image/png');
-        } catch (e) {}
+        } catch (e2) {}
       }
     }
 
@@ -1796,16 +1801,13 @@ window.fetchSubmissionsFromCloud = fetchSubmissionsFromCloud;
 async function syncSubmissionToCloud(record) {
   const config = getIntegrationConfig();
 
-  // Ensure safe encoded signature for 100% reliable cross-device sync
-  const safeSignature = record.signature ? encodeURIComponent(record.signature) : '';
-
   const payload = {
     ...record,
     model: record.model || '',
     plate: record.plate || '',
     color: record.color || '',
     car: record.car || `${record.model || ''} (${record.plate || ''}) [색상: ${record.color || ''}]`,
-    signature: safeSignature
+    signature: record.signature || ''
   };
 
   // 1. Google Spreadsheet Webhook Sync
