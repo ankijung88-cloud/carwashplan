@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initEditGalleryModalLogic();
   initIntegrationSettings();
 
+  // Background Auto Cloud Sync from Google Sheets on Every Device & Page Load
+  setTimeout(() => {
+    if (typeof fetchSubmissionsFromCloud === 'function') {
+      fetchSubmissionsFromCloud(false);
+    }
+  }, 400);
+
   console.log('CARWASH PLAN Customer Landing Initialized Successfully.');
 });
 
