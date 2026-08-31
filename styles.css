@@ -3077,11 +3077,11 @@ a:hover {
 }
 
 /* ==========================================================================
-   Print Specific Rules for Standalone Single-Page A4 (정기세차 회원가입서 A4 풀페이지 꽉 찬 출력)
+   Print Specific Rules - Matched 1:1 to Customer Registration Modal Document
    ========================================================================== */
 @page {
   size: A4 portrait;
-  margin: 12mm 14mm 12mm 14mm;
+  margin: 14mm 10mm 14mm 10mm;
 }
 
 @media print {
@@ -3091,7 +3091,6 @@ a:hover {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 11pt !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -3104,7 +3103,7 @@ a:hover {
     display: block !important;
     position: static !important;
     width: 100% !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     background: #FFF !important;
   }
@@ -3126,114 +3125,166 @@ a:hover {
   #customerDetailContent {
     padding: 0 !important;
     width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
-  /* Full Page A4 Balanced Layout */
+  /* Match exact modal doc dimensions and look */
   .registration-form-doc {
     box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 6px !important;
+    padding: 20px 24px !important;
+    max-width: 680px !important;
+    width: 680px !important;
+    margin: 0 auto !important;
     box-sizing: border-box !important;
+    background: #FFFFFF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* 1. Logo and Header with top margin */
+  /* 1. Header with shield logo */
   .reg-doc-header {
-    margin-top: 8mm !important;
-    margin-bottom: 7mm !important;
+    margin-top: 4px !important;
+    margin-bottom: 12px !important;
     text-align: center !important;
   }
 
   .reg-brand-logo img {
-    width: 58px !important;
-    height: 58px !important;
-    margin: 0 auto 2.5mm auto !important;
+    width: 46px !important;
+    height: 46px !important;
+    margin: 0 auto 3px auto !important;
   }
 
   .reg-brand-name {
-    font-size: 14pt !important;
-    letter-spacing: -0.3px !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    color: #0284C7 !important;
+    letter-spacing: -0.5px !important;
   }
 
   .reg-doc-title {
-    font-size: 26pt !important;
+    font-size: 23px !important;
     font-weight: 900 !important;
-    margin: 4mm 0 5mm 0 !important;
-    letter-spacing: 2px !important;
+    color: #0F172A !important;
+    letter-spacing: 1.5px !important;
+    margin: 6px 0 10px 0 !important;
   }
 
   .reg-striped-divider {
-    height: 3.5mm !important;
-    margin-bottom: 7mm !important;
+    background: repeating-linear-gradient(45deg, #0284C7, #0284C7 5px, #BAE6FD 5px, #BAE6FD 10px) !important;
+    height: 7px !important;
+    width: 100% !important;
+    border-radius: 2px !important;
+    margin-bottom: 12px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* 2. Table Scaling & Expanded Line Height */
+  /* 2. Main Info Table */
   .reg-info-table {
-    margin-bottom: 7mm !important;
-    border-width: 1.8pt !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1.5px solid #0284C7 !important;
+    margin-bottom: 8px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .reg-info-table th,
   .reg-info-table td {
-    padding: 4.8mm 5.5mm !important;
-    font-size: 11.5pt !important;
-    line-height: 1.55 !important;
+    border: 1px solid #7DD3FC !important;
+    padding: 6px 9px !important;
+    font-size: 12.5px !important;
+    line-height: 1.4 !important;
+    vertical-align: middle !important;
   }
 
   .reg-info-table th {
-    font-size: 11.8pt !important;
+    background-color: #E0F2FE !important;
+    color: #0369A1 !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* 3. Notes Box Scaling */
+  .reg-info-table td {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    font-weight: 600 !important;
+  }
+
+  /* 3. Notes Box */
   .reg-notes-box {
-    margin-bottom: 7mm !important;
-    border-width: 1.8pt !important;
+    border: 1.5px solid #0284C7 !important;
+    border-radius: 2px !important;
+    margin-bottom: 12px !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .reg-notes-header {
-    padding: 3.2mm !important;
-    font-size: 12pt !important;
+    background: #E0F2FE !important;
+    color: #0369A1 !important;
+    font-weight: 800 !important;
+    font-size: 12.5px !important;
+    padding: 5px 9px !important;
+    text-align: center !important;
+    border-bottom: 1px solid #7DD3FC !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .reg-notes-body {
-    padding: 5mm 6mm !important;
-    gap: 3.5mm !important;
+    padding: 8px 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    background: #FFFFFF !important;
   }
 
   .note-row {
-    font-size: 11pt !important;
-    line-height: 1.5 !important;
+    display: flex !important;
+    font-size: 12px !important;
+    color: #1E293B !important;
+    line-height: 1.35 !important;
   }
 
-  /* 4. Service Guide & Policy Section */
+  /* 4. Service Guide & Notices */
   .reg-policy-section {
-    margin-bottom: 8mm !important;
-    padding-top: 1.5mm !important;
+    margin-bottom: 16px !important;
   }
 
   .reg-section-title {
-    font-size: 12.5pt !important;
-    margin-top: 4.5mm !important;
-    margin-bottom: 2.5mm !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #0284C7 !important;
+    margin-bottom: 4px !important;
+    margin-top: 10px !important;
   }
 
   .reg-policy-list {
-    gap: 2.5mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
   }
 
   .reg-policy-list li {
-    font-size: 9.8pt !important;
-    line-height: 1.65 !important;
+    font-size: 11.5px !important;
+    color: #475569 !important;
+    line-height: 1.4 !important;
   }
 
-  /* 5. Center-Aligned Bottom Consent & Red Signature Seal */
+  /* 5. Center-Aligned Footer Consent & Signature */
   .reg-footer-consent {
-    margin-top: 6mm !important;
-    padding-top: 8mm !important;
+    margin-top: 14px !important;
+    padding-top: 8px !important;
     text-align: center !important;
     display: flex !important;
     flex-direction: column !important;
@@ -3243,17 +3294,18 @@ a:hover {
   }
 
   .consent-statement {
-    font-size: 14pt !important;
+    font-size: 13.5px !important;
     font-weight: 900 !important;
-    margin-bottom: 4.5mm !important;
     color: #0F172A !important;
+    margin-bottom: 8px !important;
     text-align: center !important;
   }
 
   .consent-date {
-    font-size: 13pt !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
-    margin-bottom: 7.5mm !important;
+    color: #1E293B !important;
+    margin-bottom: 12px !important;
     letter-spacing: 2px !important;
     text-align: center !important;
   }
@@ -3262,31 +3314,27 @@ a:hover {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8mm !important;
-    padding: 0 !important;
-    margin: 0 auto !important;
+    gap: 12px !important;
     width: 100% !important;
     text-align: center !important;
   }
 
   .applicant-label {
-    font-size: 14.5pt !important;
-    font-weight: 800 !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
     color: #0F172A !important;
   }
 
   .signature-stamp-box {
-    min-width: 50mm !important;
-    height: 18mm !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
-  /* Red Electronic Signature Seal (전자서명 인증완료 빨간색 표기) */
+  /* Red Electronic Signature Seal */
   .official-digital-seal {
-    padding: 2.5mm 5mm !important;
-    border: 2px solid #DC2626 !important;
+    padding: 4px 10px !important;
+    border: 1.8px solid #DC2626 !important;
     border-radius: 6px !important;
     background: #FEF2F2 !important;
     color: #DC2626 !important;
@@ -3298,11 +3346,11 @@ a:hover {
   }
 
   .seal-circle-mark {
-    width: 32px !important;
-    height: 32px !important;
-    border: 1.8px solid #DC2626 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border: 1.6px solid #DC2626 !important;
     border-radius: 50% !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     font-weight: 900 !important;
     color: #DC2626 !important;
     background: #FFF !important;
@@ -3314,7 +3362,7 @@ a:hover {
   }
 
   .seal-badge-title {
-    font-size: 12.5px !important;
+    font-size: 11.5px !important;
     font-weight: 900 !important;
     color: #DC2626 !important;
     letter-spacing: -0.2px !important;
