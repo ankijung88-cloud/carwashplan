@@ -1125,54 +1125,65 @@ function generateRegistrationFormHTML(item) {
     }
   }
 
-  // 횟수 파싱 (월 4회, 월 2회, 월 1회)
-  let countStr = '4';
-  if (item.experience) {
-    const cMatch = item.experience.match(/월\s*(\d+)회/);
+  // 1. 차종, 차량번호, 색상 정밀 분리 복원
+  let carPlate = '';
+  if (item.plate && item.plate.match(/\d{2,3}[가-힣]\s*\d{4}/)) {
+    carPlate = item.plate.match(/\d{2,3}[가-힣]\s*\d{4}/)[0];
+  } else {
+    const allText = `${item.plate || ''} ${item.car || ''} ${item.model || ''} ${item.specialNotes || ''}`;
+    const pMatch = allText.match(/\d{2,3}[가-힣]\s*\d{4}/);
+    if (pMatch) carPlate = pMatch[0];
+  }
+
+  let carColor = (item.color || '').replace(/색상\s*[:：]/, '').trim();
+  if (!carColor) {
+    const allText = `${item.car || ''} ${item.model || ''}`;
+    const cMatch = allText.match(/(?:색상|컬러|Color)\s*[:：]\s*([^\/\[\],]+)/i) || allText.match(/\[색상:\s*([^\]]+)\]/);
     if (cMatch) {
-      countStr = cMatch[1];
-    } else if (item.experience.includes('스마트') || item.experience.includes('격주')) {
-      countStr = '2';
-    } else if (item.experience.includes('라이트') || item.experience.includes('월 1회')) {
-      countStr = '1';
+      carColor = cMatch[1].trim();
     }
   }
 
-  // 요일 정리
-  let daysStr = item.days || '월';
-  daysStr = daysStr.replace(/요일/g, '').trim();
+  let carModel = item.model || item.car || '';
+  if (carModel) {
+    carModel = carModel
+      .replace(/\d{2,3}[가-힣]\s*\d{4}/g, '')
+      .replace(/(?:색상|컬러|Color)\s*[:：]\s*[^\/\[\],]+/gi, '')
+      .replace(/\[색상:[^\]]+\]/g, '')
+      .replace(/[()\/[\]]/g, ' ')
+      .replace(/(?:월|화|수|목|금|토|일)요일/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
-  // 결제 수단 체크
+  // 2. 요일(daysStr) 정밀 추출 (특이사항 텍스트 오염 방지)
+  let daysStr = '월';
+  const rawDays = item.days || '';
+  if (rawDays && !rawDays.includes('외관:') && !rawDays.includes('실내:') && !rawDays.includes('패턴:')) {
+    daysStr = rawDays.replace(/요일/g, '').trim();
+  } else {
+    const dayMatches = `${item.days || ''} ${item.experience || ''}`.match(/(월|화|수|목|금|토|일)(?:요일)?/g);
+    if (dayMatches && dayMatches.length > 0) {
+      daysStr = Array.from(new Set(dayMatches.map(d => d.replace('요일', '')))).join(', ');
+    }
+  }
+
+  // 3. 횟수 파싱 (월 4회, 월 2회, 월 1회)
+  let countStr = '4';
+  const planCandidate = `${item.experience || ''} ${item.plan || ''} ${item.plate || ''}`;
+  if (planCandidate.includes('스마트') || planCandidate.includes('격주') || planCandidate.includes('2회')) {
+    countStr = '2';
+  } else if (planCandidate.includes('라이트') || planCandidate.includes('1회')) {
+    countStr = '1';
+  } else {
+    countStr = '4';
+  }
+
+  // 4. 결제 수단 체크
   const payment = item.paymentMethod || '';
   const isBank = payment.includes('계좌이체');
   const isAuto = payment.includes('자동이체');
   const isCard = payment.includes('카드') || (!isBank && !isAuto);
-
-  // 차종, 색상, 차량번호 파싱 (item.model, item.plate 우선)
-  let carPlate = item.plate || '';
-  let carModel = item.model || '';
-  let carColor = item.color || '';
-
-  if (!carPlate && item.car) {
-    const plateMatch = item.car.match(/(\d{2,3}[가-힣]\s*\d{4})/);
-    if (plateMatch) {
-      carPlate = plateMatch[1];
-      if (!carModel) carModel = item.car.replace(plateMatch[0], '').replace(/[()]/g, '').trim();
-    } else if (!carModel) {
-      carModel = item.car;
-    }
-  }
-
-  if (!carModel && item.car) {
-    carModel = item.car;
-  }
-
-  if (!carColor && (item.car || '').includes('(')) {
-    const colMatch = (item.car || '').match(/\(([^)]+)\)/);
-    if (colMatch && !colMatch[1].match(/\d{4}/)) {
-      carColor = colMatch[1];
-    }
-  }
 
   const specialNotes = item.specialNotes || '';
   const hasOpt = (kw) => specialNotes.includes(kw);
