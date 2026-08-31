@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <link rel="stylesheet" href="styles.css?v=100">
+  <link rel="stylesheet" href="styles.css?v=101">
 </head>
 <body>
 
@@ -328,20 +328,9 @@
                     </tbody>
                   </table>
                 </div>
-
-                <!-- Extra Options Row -->
-                <div class="plan-options-block">
-                  <span class="options-title"><i data-lucide="plus-circle" style="width:14px;height:14px;display:inline-block;vertical-align:sub;"></i> 추가 선택 옵션 (선택 가능):</span>
-                  <div class="options-grid">
-                    <label class="chip-option"><input type="checkbox" name="extraOption" value="실내세차 (+25,000원)"><span>실내세차 (+25,000원)</span></label>
-                    <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)"><span>피톤치드 케어 (+10,000원)</span></label>
-                    <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)"><span>유막 제거 (+50,000원)</span></label>
-                    <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)"><span>발수왁스 (+20,000원)</span></label>
-                  </div>
-                </div>
               </div>
 
-              <!-- Plan Selector Cards -->
+              <!-- Plan Selector Cards (월회차 플랜 선택 버튼들) -->
               <div class="radio-options-grid" style="margin-top:14px;">
                 <label class="radio-card">
                   <input type="radio" name="experience" value="퍼펙트 (월 4회 할인 특가)" checked>
@@ -364,6 +353,17 @@
                     <span class="radio-sub">월 1회 기본 관리</span>
                   </span>
                 </label>
+              </div>
+
+              <!-- Extra Options Row (추가 선택 옵션) -->
+              <div class="plan-options-block" style="margin-top:14px;">
+                <span class="options-title"><i data-lucide="plus-circle" style="width:14px;height:14px;display:inline-block;vertical-align:sub;"></i> 추가 선택 옵션 (선택 가능):</span>
+                <div class="options-grid">
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="실내세차 (+25,000원)"><span>실내세차 (+25,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)"><span>피톤치드 케어 (+10,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)"><span>유막 제거 (+50,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)"><span>발수왁스 (+20,000원)</span></label>
+                </div>
               </div>
             </div>
 
@@ -1025,6 +1025,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=100"></script>
+  <script src="app.js?v=101"></script>
 </body>
 </html>
