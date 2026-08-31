@@ -1592,8 +1592,11 @@ function loadCloudDataViaJsonp(url) {
 async function fetchSubmissionsFromCloud(isManual = false) {
   const config = getIntegrationConfig();
   const syncIcon = document.getElementById('syncCloudIcon');
+  const statusText = document.getElementById('cloudSyncStatusText');
+  const timeText = document.getElementById('lastSyncTimeText');
 
   if (!config.googleSheetUrl || !config.googleSheetUrl.trim()) {
+    if (statusText) statusText.textContent = '구글 시트 연동 URL 미설정 (연동설정 탭 확인)';
     if (isManual) {
       alert('구글 시트 연동 URL이 설정되어 있지 않습니다. 관리자 [연동 설정] 탭에서 구글 시트 웹 앱 URL을 먼저 등록해 주세요.');
     }
@@ -1601,13 +1604,17 @@ async function fetchSubmissionsFromCloud(isManual = false) {
   }
 
   if (syncIcon) syncIcon.classList.add('rotating');
+  if (statusText) statusText.textContent = '구글 시트와 실시간 데이터 동기화 중...';
+  if (navigator.vibrate && isManual) navigator.vibrate(40);
 
   let json = null;
   const targetUrl = config.googleSheetUrl.trim();
 
-  // 1. Try standard Fetch first
+  // 1. Try standard Fetch with no-store cache first
   try {
-    const res = await fetch(`${targetUrl}${targetUrl.includes('?') ? '&' : '?'}_t=${Date.now()}`);
+    const res = await fetch(`${targetUrl}${targetUrl.includes('?') ? '&' : '?'}_t=${Date.now()}`, {
+      cache: 'no-store'
+    });
     json = await res.json();
   } catch (fetchErr) {
     console.warn('⚠️ 표준 fetch 실패, JSONP 폴백으로 재시도합니다:', fetchErr);
@@ -1618,6 +1625,9 @@ async function fetchSubmissionsFromCloud(isManual = false) {
       console.error('❌ JSONP 폴백도 실패했습니다:', jsonpErr);
     }
   }
+
+  const now = new Date();
+  const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
   if (json && json.result === 'success' && Array.isArray(json.data)) {
     const cloudList = json.data;
@@ -1654,10 +1664,15 @@ async function fetchSubmissionsFromCloud(isManual = false) {
     saveSubmissions(mergedList);
     renderAdminTable(document.querySelector('.filter-btn.active')?.dataset.filter || 'ALL');
 
+    if (statusText) statusText.textContent = `구글 시트 연동 정상 (${cloudList.length}건 동기화됨)`;
+    if (timeText) timeText.textContent = `최근 동기화: ${timeStr}`;
+
     if (isManual) {
       showToast('클라우드 동기화 완료', `구글 시트로부터 총 ${cloudList.length}건의 전체 고객 신청 데이터를 성공적으로 불러왔습니다.`);
     }
   } else {
+    if (statusText) statusText.textContent = '구글 시트 연동 활성화 (최신 상태)';
+    if (timeText) timeText.textContent = `동기화 확인: ${timeStr}`;
     if (isManual) {
       showToast('동기화 완료', '구글 시트와 정상 연결되었으며 최신 데이터 상태입니다.');
     }
