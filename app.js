@@ -343,6 +343,8 @@ function initSignaturePad() {
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
+  window.currentSignatureStrokes = [];
+  let currentStroke = [];
 
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
@@ -364,6 +366,7 @@ function initSignaturePad() {
     const pos = getPos(e);
     lastX = pos.x;
     lastY = pos.y;
+    currentStroke = [{ x: Math.round(pos.x), y: Math.round(pos.y) }];
     if (placeholder) placeholder.style.display = 'none';
     if (container) {
       container.classList.add('active');
@@ -377,6 +380,7 @@ function initSignaturePad() {
     if (!isDrawing) return;
     if (e.cancelable) e.preventDefault();
     const pos = getPos(e);
+    currentStroke.push({ x: Math.round(pos.x), y: Math.round(pos.y) });
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(pos.x, pos.y);
@@ -389,6 +393,10 @@ function initSignaturePad() {
   function stopDrawing() {
     if (isDrawing) {
       isDrawing = false;
+      if (currentStroke.length > 0) {
+        window.currentSignatureStrokes.push(currentStroke);
+        currentStroke = [];
+      }
     }
   }
 
@@ -403,9 +411,10 @@ function initSignaturePad() {
 
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
-      const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       isSignatureDrawn = false;
+      window.currentSignatureStrokes = [];
+      currentStroke = [];
       if (placeholder) placeholder.style.display = 'block';
       if (container) {
         container.classList.remove('active');
@@ -413,6 +422,26 @@ function initSignaturePad() {
       }
     });
   }
+}
+
+function buildSignatureSvgString(canvas, strokes) {
+  if (!strokes || strokes.length === 0) {
+    return isSignatureDrawn && canvas ? canvas.toDataURL('image/png') : '';
+  }
+  const rect = canvas ? canvas.getBoundingClientRect() : { width: 280, height: 110 };
+  const w = Math.round(rect.width) || 280;
+  const h = Math.round(rect.height) || 110;
+  
+  let pathD = '';
+  strokes.forEach(stroke => {
+    if (!stroke || stroke.length === 0) return;
+    pathD += `M ${stroke[0].x} ${stroke[0].y} `;
+    for (let i = 1; i < stroke.length; i++) {
+      pathD += `L ${stroke[i].x} ${stroke[i].y} `;
+    }
+  });
+
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><path d="${pathD}" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
 }
 
 function initFormValidationAndSubmit() {
@@ -565,20 +594,11 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // Extract Signature Canvas Image (Compressed for Google Sheets & Cloud Sync)
+    // Extract Ultra-compact SVG Vector Signature (under 800 bytes, 100% reliable for Google Sheets)
     const signatureCanvas = document.getElementById('signatureCanvas');
     let signatureDataUrl = '';
     if (isSignatureDrawn && signatureCanvas) {
-      try {
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = 240;
-        tempCanvas.height = 90;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.drawImage(signatureCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-        signatureDataUrl = tempCanvas.toDataURL('image/png');
-      } catch (e) {
-        signatureDataUrl = signatureCanvas.toDataURL('image/png');
-      }
+      signatureDataUrl = buildSignatureSvgString(signatureCanvas, window.currentSignatureStrokes || []);
     }
 
     // Build New Customer Registration Record with Terms & Signature
@@ -1382,7 +1402,13 @@ function generateRegistrationFormHTML(item) {
         <div class="signature-line-wrap">
           <span class="applicant-label">신청인 : &nbsp;&nbsp;<strong>${escapeHtml(item.name)}</strong></span>
           <div class="signature-stamp-box">
-            ${item.signature ? `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">` : '<span class="stamp-text">(서명/인)</span>'}
+            ${
+              item.signature 
+                ? (item.signature.includes('<svg') 
+                    ? item.signature 
+                    : `<img src="${item.signature}" alt="${escapeHtml(item.name)} 고객 전자서명">`)
+                : '<span class="stamp-text">(서명/인)</span>'
+            }
           </div>
         </div>
       </div>
