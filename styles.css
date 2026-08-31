@@ -3141,14 +3141,17 @@ a:hover {
     box-sizing: border-box !important;
   }
 
+  /* 1. Logo and Header with top margin */
   .reg-doc-header {
-    margin-bottom: 6mm !important;
+    margin-top: 8mm !important;
+    margin-bottom: 7mm !important;
+    text-align: center !important;
   }
 
   .reg-brand-logo img {
-    width: 56px !important;
-    height: 56px !important;
-    margin-bottom: 2.5mm !important;
+    width: 58px !important;
+    height: 58px !important;
+    margin: 0 auto 2.5mm auto !important;
   }
 
   .reg-brand-name {
@@ -3165,72 +3168,78 @@ a:hover {
 
   .reg-striped-divider {
     height: 3.5mm !important;
-    margin-bottom: 6.5mm !important;
+    margin-bottom: 7mm !important;
   }
 
-  /* Table Scaling */
+  /* 2. Table Scaling & Expanded Line Height */
   .reg-info-table {
-    margin-bottom: 6mm !important;
+    margin-bottom: 7mm !important;
     border-width: 1.8pt !important;
   }
 
   .reg-info-table th,
   .reg-info-table td {
-    padding: 4.2mm 5mm !important;
+    padding: 4.8mm 5.5mm !important;
     font-size: 11.5pt !important;
-    line-height: 1.45 !important;
+    line-height: 1.55 !important;
   }
 
   .reg-info-table th {
     font-size: 11.8pt !important;
   }
 
-  /* Notes Box */
+  /* 3. Notes Box Scaling */
   .reg-notes-box {
-    margin-bottom: 6.5mm !important;
+    margin-bottom: 7mm !important;
     border-width: 1.8pt !important;
   }
 
   .reg-notes-header {
-    padding: 3mm !important;
+    padding: 3.2mm !important;
     font-size: 12pt !important;
   }
 
   .reg-notes-body {
-    padding: 4.5mm 5.5mm !important;
-    gap: 3.2mm !important;
+    padding: 5mm 6mm !important;
+    gap: 3.5mm !important;
   }
 
   .note-row {
-    font-size: 10.8pt !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
   }
 
-  /* Service Guide & Policy Section */
+  /* 4. Service Guide & Policy Section */
   .reg-policy-section {
-    margin-bottom: 7.5mm !important;
+    margin-bottom: 8mm !important;
     padding-top: 1.5mm !important;
   }
 
   .reg-section-title {
     font-size: 12.5pt !important;
-    margin-top: 4mm !important;
+    margin-top: 4.5mm !important;
     margin-bottom: 2.5mm !important;
   }
 
   .reg-policy-list {
-    gap: 2.2mm !important;
+    gap: 2.5mm !important;
   }
 
   .reg-policy-list li {
     font-size: 9.8pt !important;
-    line-height: 1.55 !important;
+    line-height: 1.65 !important;
   }
 
-  /* Bottom Consent & Signature */
+  /* 5. Center-Aligned Bottom Consent & Red Signature Seal */
   .reg-footer-consent {
-    margin-top: 4mm !important;
-    padding-top: 6mm !important;
+    margin-top: 6mm !important;
+    padding-top: 8mm !important;
     text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
   }
 
   .consent-statement {
@@ -3238,48 +3247,84 @@ a:hover {
     font-weight: 900 !important;
     margin-bottom: 4.5mm !important;
     color: #0F172A !important;
+    text-align: center !important;
   }
 
   .consent-date {
     font-size: 13pt !important;
     font-weight: 700 !important;
-    margin-bottom: 7mm !important;
+    margin-bottom: 7.5mm !important;
     letter-spacing: 2px !important;
+    text-align: center !important;
   }
 
   .signature-line-wrap {
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 6mm !important;
-    padding-right: 4mm !important;
+    justify-content: center !important;
+    gap: 8mm !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    text-align: center !important;
   }
 
   .applicant-label {
     font-size: 14.5pt !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
   }
 
   .signature-stamp-box {
     min-width: 50mm !important;
     height: 18mm !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
+  /* Red Electronic Signature Seal (전자서명 인증완료 빨간색 표기) */
   .official-digital-seal {
-    padding: 2.5mm 4.5mm !important;
+    padding: 2.5mm 5mm !important;
+    border: 2px solid #DC2626 !important;
+    border-radius: 6px !important;
+    background: #FEF2F2 !important;
+    color: #DC2626 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .seal-circle-mark {
     width: 32px !important;
     height: 32px !important;
+    border: 1.8px solid #DC2626 !important;
+    border-radius: 50% !important;
     font-size: 12px !important;
+    font-weight: 900 !important;
+    color: #DC2626 !important;
+    background: #FFF !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .seal-badge-title {
-    font-size: 12px !important;
+    font-size: 12.5px !important;
+    font-weight: 900 !important;
+    color: #DC2626 !important;
+    letter-spacing: -0.2px !important;
   }
 
   .seal-timestamp {
     font-size: 9.5px !important;
+    font-weight: 700 !important;
+    color: #DC2626 !important;
+    opacity: 0.95 !important;
   }
 }
 
