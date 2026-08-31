@@ -1635,7 +1635,7 @@ function escapeHtml(str) {
    ========================================================================== */
 const INTEGRATION_CONFIG_KEY = 'carwashplan_integration_config';
 
-const LATEST_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwL-cPMDBR18HrD0s5NwnntkiSXVYuXjkKSN83QldpLTgVtcK0fvMOZf9EVraVioA/exec';
+const LATEST_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxsjyfmBMr4Dnm-61pZTLpAkWyA3HT3KUJ2brftFrqFyOSiN2hXfGKedidrIxqf5lU/exec';
 
 function getIntegrationConfig() {
   const defaults = {
@@ -1647,7 +1647,7 @@ function getIntegrationConfig() {
     const data = localStorage.getItem(INTEGRATION_CONFIG_KEY);
     if (!data) return defaults;
     const parsed = JSON.parse(data);
-    // Auto-migrate legacy URLs to the latest 13-column URL
+    // Auto-migrate legacy URLs to the latest URL
     if (parsed.googleSheetUrl !== LATEST_GOOGLE_SHEET_URL) {
       parsed.googleSheetUrl = LATEST_GOOGLE_SHEET_URL;
       saveIntegrationConfig(parsed);
