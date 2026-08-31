@@ -1548,7 +1548,40 @@ function saveIntegrationConfig(cfg) {
   localStorage.setItem(INTEGRATION_CONFIG_KEY, JSON.stringify(cfg));
 }
 
-/* Real-time Bidirectional Cloud Data Sync (구글 스프레드시트 양방향 실시간 동기화) */
+/* Real-time Bidirectional Cloud Data Sync with Dual Loader (Fetch + JSONP Fallback) */
+function loadCloudDataViaJsonp(url) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'carwash_cloud_cb_' + Math.floor(Math.random() * 1000000);
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error('JSONP Request Timeout'));
+    }, 10000);
+
+    function cleanup() {
+      if (timeout) clearTimeout(timeout);
+      delete window[callbackName];
+      const script = document.getElementById(callbackName);
+      if (script && script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[callbackName] = function(data) {
+      cleanup();
+      resolve(data);
+    };
+
+    const script = document.createElement('script');
+    script.id = callbackName;
+    const delimiter = url.includes('?') ? '&' : '?';
+    script.src = `${url}${delimiter}callback=${callbackName}&_t=${Date.now()}`;
+    script.onerror = function(e) {
+      cleanup();
+      reject(new Error('JSONP Script Load Error'));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
 async function fetchSubmissionsFromCloud(isManual = false) {
   const config = getIntegrationConfig();
   const syncIcon = document.getElementById('syncCloudIcon');
@@ -1562,66 +1595,82 @@ async function fetchSubmissionsFromCloud(isManual = false) {
 
   if (syncIcon) syncIcon.classList.add('rotating');
 
+  let json = null;
+  const targetUrl = config.googleSheetUrl.trim();
+
+  // 1. Try standard Fetch first
   try {
-    const res = await fetch(config.googleSheetUrl.trim());
-    const json = await res.json();
-
-    if (json && json.result === 'success' && Array.isArray(json.data)) {
-      const cloudList = json.data;
-      const localList = getSubmissions();
-
-      // Merge Cloud List with Local List by Unique ID
-      const map = new Map();
-
-      // 1. Add local records first
-      localList.forEach(item => {
-        if (item.id) map.set(item.id, item);
-      });
-
-      // 2. Overwrite or Add cloud records (Cloud is ground truth across all mobile/PC devices)
-      cloudList.forEach(item => {
-        if (item.id) {
-          const existing = map.get(item.id);
-          if (existing) {
-            map.set(item.id, {
-              ...item,
-              signature: item.signature || existing.signature || '',
-              status: existing.status || item.status || 'PENDING'
-            });
-          } else {
-            map.set(item.id, item);
-          }
-        }
-      });
-
-      const mergedList = Array.from(map.values());
-      // Sort by creation date desc
-      mergedList.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-
-      saveSubmissions(mergedList);
-      renderAdminTable(document.querySelector('.filter-btn.active')?.dataset.filter || 'ALL');
-
-      if (isManual) {
-        showToast('클라우드 동기화 완료', `구글 시트로부터 총 ${cloudList.length}건의 전체 고객 신청 데이터를 성공적으로 동기화했습니다.`);
-      }
-    } else {
-      if (isManual) {
-        showToast('동기화 완료', '구글 시트와 정상 연결되었으며 최신 데이터 상태입니다.');
-      }
+    const res = await fetch(`${targetUrl}${targetUrl.includes('?') ? '&' : '?'}_t=${Date.now()}`);
+    json = await res.json();
+  } catch (fetchErr) {
+    console.warn('⚠️ 표준 fetch 실패, JSONP 폴백으로 재시도합니다:', fetchErr);
+    // 2. Fallback to JSONP (100% Cross-Origin Compatibility across all Mobile/Desktop browsers)
+    try {
+      json = await loadCloudDataViaJsonp(targetUrl);
+    } catch (jsonpErr) {
+      console.error('❌ JSONP 폴백도 실패했습니다:', jsonpErr);
     }
-  } catch (err) {
-    console.error('❌ 클라우드 데이터 동기화 오류:', err);
-    if (isManual) {
-      showToast('동기화 안내', '구글 시트 서버 응답을 확인 중입니다. 잠시 후 다시 시도해 주세요.');
-    }
-  } finally {
-    if (syncIcon) syncIcon.classList.remove('rotating');
   }
+
+  if (json && json.result === 'success' && Array.isArray(json.data)) {
+    const cloudList = json.data;
+    const localList = getSubmissions();
+
+    // Merge Cloud List with Local List by Unique ID
+    const map = new Map();
+
+    // 1. Add local records first
+    localList.forEach(item => {
+      if (item.id) map.set(item.id, item);
+    });
+
+    // 2. Overwrite or Add cloud records (Cloud is ground truth across all devices)
+    cloudList.forEach(item => {
+      if (item.id) {
+        const existing = map.get(item.id);
+        if (existing) {
+          map.set(item.id, {
+            ...item,
+            signature: item.signature || existing.signature || '',
+            status: existing.status || item.status || 'PENDING'
+          });
+        } else {
+          map.set(item.id, item);
+        }
+      }
+    });
+
+    const mergedList = Array.from(map.values());
+    // Sort by creation date desc
+    mergedList.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+    saveSubmissions(mergedList);
+    renderAdminTable(document.querySelector('.filter-btn.active')?.dataset.filter || 'ALL');
+
+    if (isManual) {
+      showToast('클라우드 동기화 완료', `구글 시트로부터 총 ${cloudList.length}건의 전체 고객 신청 데이터를 성공적으로 불러왔습니다.`);
+    }
+  } else {
+    if (isManual) {
+      showToast('동기화 완료', '구글 시트와 정상 연결되었으며 최신 데이터 상태입니다.');
+    }
+  }
+
+  if (syncIcon) syncIcon.classList.remove('rotating');
 }
 window.fetchSubmissionsFromCloud = fetchSubmissionsFromCloud;
 
 async function syncSubmissionToCloud(record) {
   const config = getIntegrationConfig();
+
+  // Ensure full car info including color is included in transmission
+  const payload = {
+    ...record,
+    model: record.model || '',
+    plate: record.plate || '',
+    color: record.color || '',
+    car: record.car || `${record.model || ''} (${record.plate || ''}) [색상: ${record.color || ''}]`
+  };
 
   // 1. Google Spreadsheet Webhook Sync
   if (config.googleSheetUrl && config.googleSheetUrl.trim()) {
@@ -1630,9 +1679,9 @@ async function syncSubmissionToCloud(record) {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(record)
+        body: JSON.stringify(payload)
       });
-      console.log('✅ [구글 시트] 고객 데이터 실시간 전송 완료:', record.id);
+      console.log('✅ [구글 시트] 고객 데이터(색상 포함) 실시간 전송 완료:', record.id);
     } catch (err) {
       console.error('❌ [구글 시트] 전송 오류:', err);
     }
