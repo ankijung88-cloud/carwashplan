@@ -565,9 +565,21 @@ function initFormValidationAndSubmit() {
       proofList.length ? `증빙: ${proofList.join(',')}` : ''
     ].filter(Boolean).join(' | ');
 
-    // Extract Signature Canvas Image
+    // Extract Signature Canvas Image (Compressed for Google Sheets & Cloud Sync)
     const signatureCanvas = document.getElementById('signatureCanvas');
-    const signatureDataUrl = isSignatureDrawn && signatureCanvas ? signatureCanvas.toDataURL('image/png') : '';
+    let signatureDataUrl = '';
+    if (isSignatureDrawn && signatureCanvas) {
+      try {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = 240;
+        tempCanvas.height = 90;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(signatureCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+        signatureDataUrl = tempCanvas.toDataURL('image/png');
+      } catch (e) {
+        signatureDataUrl = signatureCanvas.toDataURL('image/png');
+      }
+    }
 
     // Build New Customer Registration Record with Terms & Signature
     const formattedNow = formatNowDate();
