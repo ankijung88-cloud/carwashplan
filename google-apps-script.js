@@ -1,7 +1,7 @@
 /**
- * 세차 플랜 (CARWASH PLAN) - 13개 컬럼 자동 헤더 교정(Self-Healing) Google Apps Script
+ * 세차 플랜 (CARWASH PLAN) - 고객 자필 전자서명 클라우드 동기화 Google Apps Script
  * 
- * [스프레드시트 13개 컬럼 표준 규격]
+ * [스프레드시트 14개 컬럼 구성]
  * A: 신청ID
  * B: 신청일시
  * C: 고객명
@@ -15,18 +15,18 @@
  * K: 결제방식         (예: 카드)
  * L: 차량특이사항      (예: 외관: 유광 | 실내: 먼지)
  * M: 진행상태         (예: PENDING)
+ * N: 서명데이터        (고객 자필 전자서명 Base64 이미지)
  * 
  * [1분 설정 및 배포 방법]
  * 1. 구글 드라이브(drive.google.com)에서 세차플랜 스프레드시트를 엽니다.
  * 2. 상단 메뉴 [확장 프로그램] > [Apps Script]를 클릭합니다.
  * 3. 기존 코드를 모두 지우고 이 파일의 전체 코드를 복사하여 붙여넣고 저장(Ctrl+S)합니다.
- * 4. 상단 실행 함수를 'fixHeadersOnce'로 선택하고 [실행] 버튼을 누르면 1행 헤더가 1초 만에 완벽하게 자동 교정됩니다!
- * 5. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
+ * 4. 오른쪽 위 파란색 [배포] > [새 배포] 클릭
  *    - 유형(톱니바퀴): [웹 앱]
- *    - 설명: 세차플랜 헤더 자동교정 v7
+ *    - 설명: 전자서명 클라우드 동기화 지원 v9
  *    - 다음 사용자로 실행: 나 (내 Google 계정)
  *    - 액세스 권한: [모든 사용자 (Anyone)] ★ 반드시 선택!
- * 6. [배포] 버튼 클릭 후 승인 완료
+ * 5. [배포] 버튼 클릭 후 승인 완료
  */
 
 var STANDARD_HEADERS = [
@@ -42,10 +42,10 @@ var STANDARD_HEADERS = [
   "희망요일", 
   "결제방식", 
   "차량특이사항", 
-  "진행상태"
+  "진행상태",
+  "서명데이터"
 ];
 
-// 1행 헤더를 13개 표준 컬럼으로 완벽하게 자동 교정하는 함수
 function ensureStandardHeaders(sheet) {
   var lastCol = sheet.getLastColumn();
   var needUpdate = false;
@@ -53,15 +53,15 @@ function ensureStandardHeaders(sheet) {
   if (lastCol < 13) {
     needUpdate = true;
   } else {
-    var curH = sheet.getRange(1, 1, 1, 13).getValues()[0];
+    var curH = sheet.getRange(1, 1, 1, Math.min(lastCol, 14)).getValues()[0];
     if (String(curH[7] || '').trim() !== "차량번호") {
       needUpdate = true;
     }
   }
   
   if (needUpdate) {
-    sheet.getRange(1, 1, 1, 13).setValues([STANDARD_HEADERS]);
-    var headerRange = sheet.getRange(1, 1, 1, 13);
+    sheet.getRange(1, 1, 1, 14).setValues([STANDARD_HEADERS]);
+    var headerRange = sheet.getRange(1, 1, 1, 14);
     headerRange.setBackground("#0284C7");
     headerRange.setFontColor("#FFFFFF");
     headerRange.setFontWeight("bold");
@@ -70,18 +70,10 @@ function ensureStandardHeaders(sheet) {
   }
 }
 
-// 1회성 헤더 즉시 교정 실행용 함수 (Apps Script 상단에서 [실행] 가능)
-function fixHeadersOnce() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  ensureStandardHeaders(sheet);
-}
-
-// 1. 신규 고객 신청 시 구글 시트에 자동 기록 (POST)
+// 1. 신규 고객 신청 시 구글 시트에 서명 데이터 포함 자동 기록 (POST)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // 1행 헤더 자동 점검 및 교정
     ensureStandardHeaders(sheet);
     
     // 전송된 JSON 데이터 파싱
@@ -103,7 +95,7 @@ function doPost(e) {
       planText += " [옵션: " + data.extraOptions + "]";
     }
     
-    // 13개 컬럼과 1:1 완벽 일치 행 데이터
+    // 14개 컬럼과 1:1 완벽 일치 행 데이터 (N열에 서명데이터 저장)
     var rowData = [
       data.id || ("CUST-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 900 + 100)), // A: 신청ID
       data.createdAt || Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm"),         // B: 신청일시
@@ -117,14 +109,15 @@ function doPost(e) {
       data.days || "미지정",                                                                        // J: 희망요일
       data.paymentMethod || "카드",                                                                 // K: 결제방식
       data.specialNotes || "없음",                                                                  // L: 차량특이사항
-      data.status || "PENDING"                                                                      // M: 진행상태
+      data.status || "PENDING",                                                                     // M: 진행상태
+      data.signature || ""                                                                          // N: 고객 전자서명 Base64
     ];
     
     sheet.appendRow(rowData);
     
     return ContentService.createTextOutput(JSON.stringify({ 
       result: "success", 
-      message: "고객 데이터가 13개 컬럼에 정확하게 등록되었습니다.",
+      message: "고객 데이터 및 전자서명이 구글 시트에 성공적으로 등록되었습니다.",
       id: data.id 
     })).setMimeType(ContentService.MimeType.JSON);
       
@@ -136,7 +129,7 @@ function doPost(e) {
   }
 }
 
-// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원)
+// 2. 관리자 페이지 실시간 조회 (GET + JSONP 지원 - 서명 데이터 반환)
 function doGet(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -146,7 +139,8 @@ function doGet(e) {
     ensureStandardHeaders(sheet);
     
     if (lastRow > 1) {
-      var rows = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
+      var lastCol = Math.max(sheet.getLastColumn(), 14);
+      var rows = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
       
       for (var i = 0; i < rows.length; i++) {
         var r = rows[i];
@@ -165,6 +159,7 @@ function doGet(e) {
         var paymentMethod = String(r[10] || "카드");
         var specialNotes = String(r[11] || "");
         var status = String(r[12] || "PENDING");
+        var signature = String(r[13] || ""); // N열의 서명데이터 추출
         
         var model = modelColorRaw;
         var color = "";
@@ -195,7 +190,7 @@ function doGet(e) {
           paymentMethod: paymentMethod,
           specialNotes: specialNotes,
           status: status,
-          signature: "",
+          signature: signature, // 모든 기기(웹/모바일)에 서명 데이터 제공
           termsAgreed: {
             service: true,
             privacy: true,
