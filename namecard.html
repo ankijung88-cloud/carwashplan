@@ -104,7 +104,7 @@
     /* Front Card Design */
     .card-front {
       background: radial-gradient(circle at 10% 10%, #1E293B 0%, #0F172A 60%, #080D1A 100%);
-      padding: 26px 28px;
+      padding: 22px 26px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -161,35 +161,37 @@
       align-items: flex-end;
     }
     .person-info h3 {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 900;
       letter-spacing: -0.5px;
       color: #FFF;
     }
     .person-info .role {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--accent);
       font-weight: 600;
       margin-top: 2px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: block;
     }
     .contact-list {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3.5px;
     }
     .contact-item {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: #CBD5E1;
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
     .contact-item i {
       width: 12px;
       height: 12px;
       color: var(--accent);
+      flex-shrink: 0;
     }
 
     .service-tags {
@@ -459,7 +461,7 @@
       /* Front Card Print Specifics */
       .print-row .card-front {
         background: radial-gradient(circle at 10% 10%, #1E293B 0%, #0F172A 60%, #080D1A 100%) !important;
-        padding: 3.8mm 4.8mm !important;
+        padding: 3.5mm 4.5mm !important;
         color: #FFFFFF !important;
       }
 
@@ -488,30 +490,31 @@
       }
 
       .print-row .person-info h3 {
-        font-size: 9.5pt !important;
+        font-size: 9pt !important;
         line-height: 1.1 !important;
       }
 
       .print-row .person-info .role {
-        font-size: 5.2pt !important;
-        margin-top: 0.4mm !important;
-        margin-bottom: 1.2mm !important;
+        font-size: 5pt !important;
+        margin-top: 0.3mm !important;
+        margin-bottom: 0.8mm !important;
         color: #38BDF8 !important;
       }
 
       .print-row .contact-list {
-        gap: 0.6mm !important;
+        gap: 0.5mm !important;
       }
 
       .print-row .contact-item {
-        font-size: 4.5pt !important;
-        gap: 1mm !important;
+        font-size: 4pt !important;
+        gap: 0.8mm !important;
         color: #E2E8F0 !important;
+        white-space: nowrap !important;
       }
 
       .print-row .contact-item i {
-        width: 2.6mm !important;
-        height: 2.6mm !important;
+        width: 2.3mm !important;
+        height: 2.3mm !important;
         color: #38BDF8 !important;
       }
 
@@ -621,9 +624,10 @@
             <div class="front-bottom">
               <div class="person-info">
                 <h3 class="dyn-name">안기정</h3>
-                <span class="role dyn-role">디테일링 마스터 / 영업</span>
+                <span class="role dyn-role">디테일링 마스터 / 대표</span>
                 <div class="contact-list">
-                  <div class="contact-item"><i data-lucide="phone"></i> <span class="dyn-phone">010-1234-5678</span></div>
+                  <div class="contact-item"><i data-lucide="phone"></i> <span>정기케어 문의 : <strong class="dyn-phone">010-8302-7157</strong></span></div>
+                  <div class="contact-item"><i data-lucide="clock"></i> <span>운영시간 : <strong class="dyn-hours">PM 6:00 ~ AM 5:00 (평일 야간)</strong></span></div>
                   <div class="contact-item"><i data-lucide="mail"></i> <span class="dyn-email">contact@carwashplan.com</span></div>
                   <div class="contact-item"><i data-lucide="globe"></i> <span>carwashplan.vercel.app</span></div>
                 </div>
@@ -682,8 +686,13 @@
       </div>
 
       <div class="input-grp">
-        <label for="inputPhone">연락처</label>
-        <input type="text" id="inputPhone" value="010-1234-5678">
+        <label for="inputPhone">정기케어 문의 (연락처)</label>
+        <input type="text" id="inputPhone" value="010-8302-7157">
+      </div>
+
+      <div class="input-grp">
+        <label for="inputHours">운영시간</label>
+        <input type="text" id="inputHours" value="PM 6:00 ~ AM 5:00 (평일 야간)">
       </div>
 
       <div class="input-grp">
@@ -729,7 +738,7 @@
     lucide.createIcons();
 
     // Generate single front card HTML template
-    function getFrontCardHTML(name, role, phone, email) {
+    function getFrontCardHTML(name, role, phone, hours, email) {
       return `
         <div class="biz-card card-front">
           <div class="front-top">
@@ -748,7 +757,8 @@
               <h3 class="dyn-name">${name}</h3>
               <span class="role dyn-role">${role}</span>
               <div class="contact-list">
-                <div class="contact-item"><i data-lucide="phone"></i> <span class="dyn-phone">${phone}</span></div>
+                <div class="contact-item"><i data-lucide="phone"></i> <span>정기케어 문의 : <strong class="dyn-phone">${phone}</strong></span></div>
+                <div class="contact-item"><i data-lucide="clock"></i> <span>운영시간 : <strong class="dyn-hours">${hours}</strong></span></div>
                 <div class="contact-item"><i data-lucide="mail"></i> <span class="dyn-email">${email}</span></div>
                 <div class="contact-item"><i data-lucide="globe"></i> <span>carwashplan.vercel.app</span></div>
               </div>
@@ -795,13 +805,14 @@
     function renderPrintSheet() {
       const name = document.getElementById('inputName').value || '안기정';
       const role = document.getElementById('inputRole').value || '디테일링 마스터 / 대표';
-      const phone = document.getElementById('inputPhone').value || '010-1234-5678';
+      const phone = document.getElementById('inputPhone').value || '010-8302-7157';
+      const hours = document.getElementById('inputHours').value || 'PM 6:00 ~ AM 5:00 (평일 야간)';
       const email = document.getElementById('inputEmail').value || 'contact@carwashplan.com';
 
       for (let i = 1; i <= 5; i++) {
         const rowEl = document.getElementById(`printRow${i}`);
         if (rowEl) {
-          rowEl.innerHTML = getFrontCardHTML(name, role, phone, email) + getBackCardHTML();
+          rowEl.innerHTML = getFrontCardHTML(name, role, phone, hours, email) + getBackCardHTML();
         }
       }
       if (window.lucide) lucide.createIcons();
@@ -812,17 +823,19 @@
       const name = document.getElementById('inputName').value;
       const role = document.getElementById('inputRole').value;
       const phone = document.getElementById('inputPhone').value;
+      const hours = document.getElementById('inputHours').value;
       const email = document.getElementById('inputEmail').value;
 
       document.querySelectorAll('.dyn-name').forEach(el => el.textContent = name);
       document.querySelectorAll('.dyn-role').forEach(el => el.textContent = role);
       document.querySelectorAll('.dyn-phone').forEach(el => el.textContent = phone);
+      document.querySelectorAll('.dyn-hours').forEach(el => el.textContent = hours);
       document.querySelectorAll('.dyn-email').forEach(el => el.textContent = email);
 
       renderPrintSheet();
     }
 
-    ['inputName', 'inputRole', 'inputPhone', 'inputEmail'].forEach(id => {
+    ['inputName', 'inputRole', 'inputPhone', 'inputHours', 'inputEmail'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('input', updateAllCardFields);
     });
