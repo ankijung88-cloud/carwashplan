@@ -1597,15 +1597,24 @@ function escapeHtml(str) {
    ========================================================================== */
 const INTEGRATION_CONFIG_KEY = 'carwashplan_integration_config';
 
+const LATEST_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwL-cPMDBR18HrD0s5NwnntkiSXVYuXjkKSN83QldpLTgVtcK0fvMOZf9EVraVioA/exec';
+
 function getIntegrationConfig() {
   const defaults = {
-    googleSheetUrl: 'https://script.google.com/macros/s/AKfycbznhZPBaaYzpe_lcbct6-lThNhyGjrtkqQzv0yeqPtxqoTUpt8ae4bm-EHMtt7Wbyo/exec',
+    googleSheetUrl: LATEST_GOOGLE_SHEET_URL,
     telegramToken: '',
     telegramChatId: ''
   };
   try {
     const data = localStorage.getItem(INTEGRATION_CONFIG_KEY);
-    return data ? { ...defaults, ...JSON.parse(data) } : defaults;
+    if (!data) return defaults;
+    const parsed = JSON.parse(data);
+    // Auto-migrate legacy URLs to the latest 13-column URL
+    if (parsed.googleSheetUrl !== LATEST_GOOGLE_SHEET_URL) {
+      parsed.googleSheetUrl = LATEST_GOOGLE_SHEET_URL;
+      saveIntegrationConfig(parsed);
+    }
+    return { ...defaults, ...parsed };
   } catch (e) {
     return defaults;
   }
