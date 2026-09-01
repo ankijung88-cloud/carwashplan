@@ -1351,28 +1351,28 @@ function generateRegistrationFormHTML(item) {
       <table class="reg-info-table">
         <tbody>
           <tr>
-            <th style="width: 14%;">이름</th>
-            <td style="width: 31%; font-weight: 700;">${escapeHtml(item.name)}</td>
-            <th style="width: 18%;">횟수 / 요일</th>
-            <td style="width: 37%; white-space: nowrap;">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+            <th class="th-label">이름</th>
+            <td class="td-name">${escapeHtml(item.name)}</td>
+            <th class="th-schedule">횟수 / 요일</th>
+            <td class="td-schedule">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
           </tr>
           <tr>
-            <th>주소</th>
-            <td colspan="3">${escapeHtml(item.region)}</td>
+            <th class="th-label">주소</th>
+            <td colspan="3" class="td-address">${escapeHtml(item.region)}</td>
           </tr>
           <tr>
-            <th>출입 동의</th>
-            <td colspan="3" style="white-space: nowrap;">
-              <span class="check-box checked">☑</span> 예 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-              <span class="check-box">☐</span> 아니요 &nbsp;&nbsp;&nbsp;&nbsp; 
+            <th class="th-label">출입 동의</th>
+            <td colspan="3" class="td-access">
+              <span class="access-opt"><span class="check-box checked">☑</span> 예</span>
+              <span class="access-opt"><span class="check-box">☐</span> 아니요</span>
               <span class="sub-hint">(아파트 출입 허용여부)</span>
             </td>
           </tr>
           <tr>
-            <th>연락처</th>
-            <td>${escapeHtml(item.phone)}</td>
-            <th style="width: 13%;">결제</th>
-            <td style="white-space: nowrap;">
+            <th class="th-label">연락처</th>
+            <td class="td-phone">${escapeHtml(item.phone)}</td>
+            <th class="th-pay">결제</th>
+            <td class="td-pay">
               <span class="payment-opts">
                 <span class="payment-opt-item"><span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
@@ -1381,10 +1381,10 @@ function generateRegistrationFormHTML(item) {
             </td>
           </tr>
           <tr>
-            <th>차종 / 색상</th>
-            <td>${escapeHtml(carModel || item.car)} ${carColor ? `/ ${escapeHtml(carColor)}` : ''}</td>
-            <th>차량번호</th>
-            <td><strong>${escapeHtml(carPlate || '-')}</strong></td>
+            <th class="th-label">차종 / 색상</th>
+            <td class="td-car">${escapeHtml(carModel || item.car)} ${carColor ? `/ ${escapeHtml(carColor)}` : ''}</td>
+            <th class="th-plate">차량번호</th>
+            <td class="td-plate"><strong>${escapeHtml(carPlate || '-')}</strong></td>
           </tr>
         </tbody>
       </table>

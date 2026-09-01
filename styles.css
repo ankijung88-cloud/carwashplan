@@ -2943,18 +2943,34 @@ a:hover {
 }
 
 /* ==========================================================================
-   Official Paper Registration Form & Print Styles (정기세차 회원가입서 공식 서식)
+   Official Paper Registration Form & Modal Styles (정기세차 회원가입서 공식 서식)
    ========================================================================== */
+.customer-detail-modal-container {
+  max-width: 620px;
+  width: 94%;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.customer-detail-modal-body {
+  padding: 18px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .registration-form-doc {
   background: #FFFFFF;
   color: #0F172A;
   font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-  padding: 22px 24px;
+  padding: 20px 22px;
   border-radius: var(--radius-md);
   border: 1px solid #CBD5E1;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   max-width: 680px;
+  width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .reg-doc-header {
@@ -2999,15 +3015,17 @@ a:hover {
   border-collapse: collapse;
   border: 1.5px solid #0284C7;
   margin-bottom: 8px;
+  table-layout: auto;
 }
 
 .reg-info-table th,
 .reg-info-table td {
   border: 1px solid #7DD3FC;
-  padding: 6px 9px;
-  font-size: 12.5px;
+  padding: 6px 8px;
+  font-size: 12px;
   line-height: 1.4;
   vertical-align: middle;
+  box-sizing: border-box;
 }
 
 .reg-info-table th {
@@ -3018,24 +3036,46 @@ a:hover {
   white-space: nowrap;
 }
 
+.reg-info-table th.th-label { width: 16%; }
+.reg-info-table th.th-schedule { width: 22%; }
+.reg-info-table th.th-pay { width: 14%; }
+.reg-info-table th.th-plate { width: 18%; }
+
 .reg-info-table td {
   background-color: #FFFFFF;
   color: #0F172A;
   font-weight: 600;
+  word-break: keep-all;
 }
+
+.reg-info-table td.td-name { font-weight: 700; }
+.reg-info-table td.td-schedule { font-size: 11.5px; }
 
 .reg-info-table .check-box {
   font-family: inherit;
   font-weight: 800;
   font-size: 13px;
   color: #0284C7;
+  line-height: 1;
+}
+
+.reg-info-table .td-access {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.reg-info-table .access-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 12px;
 }
 
 .reg-info-table .payment-opts {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  white-space: nowrap;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .reg-info-table .payment-opt-item {
@@ -3043,12 +3083,14 @@ a:hover {
   align-items: center;
   gap: 3px;
   white-space: nowrap;
+  font-size: 11.5px;
 }
 
 .reg-info-table .sub-hint {
-  font-size: 11.5px;
+  font-size: 11px;
   color: #64748B;
   font-weight: normal;
+  display: inline-block;
 }
 
 @keyframes spin {
@@ -3080,16 +3122,16 @@ a:hover {
 }
 
 .reg-notes-body {
-  padding: 7px 12px;
+  padding: 7px 10px;
   background: #FFFFFF;
-  font-size: 11.8px;
-  line-height: 1.55;
+  font-size: 11.5px;
+  line-height: 1.5;
 }
 
 .note-row {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 2px;
 }
 
@@ -3100,12 +3142,13 @@ a:hover {
 .note-lbl {
   font-weight: 700;
   color: #0F172A;
-  min-width: 62px;
+  min-width: 58px;
+  flex-shrink: 0;
 }
 
 .note-opts {
   display: flex;
-  gap: 12px;
+  gap: 8px 12px;
   flex-wrap: wrap;
   color: #334155;
 }
@@ -3122,18 +3165,19 @@ a:hover {
 }
 
 .reg-section-title {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
   color: #0284C7;
   display: flex;
   align-items: center;
   gap: 5px;
+  margin-top: 4px;
   margin-bottom: 3px;
 }
 
 .reg-section-title .sub {
   color: #0284C7;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -3141,13 +3185,13 @@ a:hover {
   list-style: none;
   padding-left: 0;
   margin: 0;
-  font-size: 11px;
-  line-height: 1.45;
+  font-size: 10.5px;
+  line-height: 1.42;
   color: #334155;
 }
 
 .reg-policy-list li {
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .reg-policy-list strong {
@@ -3162,50 +3206,50 @@ a:hover {
 /* Bottom Consent & Signature */
 .reg-footer-consent {
   text-align: center;
-  margin-top: 14px;
-  padding-top: 8px;
+  margin-top: 12px;
+  padding-top: 6px;
 }
 
 .consent-statement {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 800;
   color: #0F172A;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .consent-date {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #0F172A;
   letter-spacing: 2px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .signature-line-wrap {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  padding-right: 18px;
+  gap: 10px;
+  padding-right: 10px;
 }
 
 .applicant-label {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   color: #0F172A;
 }
 
 .signature-stamp-box {
-  min-width: 140px;
-  height: 52px;
+  min-width: 130px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .signature-stamp-box img {
-  max-height: 48px;
-  max-width: 120px;
+  max-height: 44px;
+  max-width: 110px;
   object-fit: contain;
 }
 
@@ -3213,8 +3257,8 @@ a:hover {
 .official-digital-seal {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 10px;
+  gap: 7px;
+  padding: 4px 8px;
   border: 1.8px solid #DC2626;
   border-radius: 6px;
   background: rgba(254, 242, 242, 0.9);
@@ -3225,14 +3269,14 @@ a:hover {
 }
 
 .seal-circle-mark {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border: 1.5px solid #DC2626;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 900;
   color: #DC2626;
   background: #FFF;
@@ -3244,26 +3288,237 @@ a:hover {
   display: flex;
   flex-direction: column;
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .seal-badge-title {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 800;
   color: #991B1B;
   letter-spacing: -0.3px;
 }
 
 .seal-timestamp {
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 600;
   color: #DC2626;
   opacity: 0.85;
 }
 
 .signature-stamp-box .stamp-text {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #94A3B8;
+}
+
+/* ==========================================================================
+   Mobile Responsive Screen Rules for Registration Document Modal
+   ========================================================================== */
+@media (max-width: 640px) {
+  .customer-detail-modal-container {
+    width: 96% !important;
+    max-height: 92vh !important;
+    margin: 8px auto !important;
+    border-radius: 12px !important;
+  }
+
+  .customer-detail-modal-body {
+    padding: 10px 8px !important;
+  }
+
+  .registration-form-doc {
+    padding: 12px 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .reg-doc-header {
+    margin-bottom: 8px !important;
+  }
+
+  .reg-brand-logo img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .reg-brand-name {
+    font-size: 12px !important;
+  }
+
+  .reg-doc-title {
+    font-size: 17px !important;
+    letter-spacing: 0.5px !important;
+    margin: 4px 0 6px 0 !important;
+  }
+
+  .reg-striped-divider {
+    height: 5px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .reg-info-table th,
+  .reg-info-table td {
+    padding: 4.5px 4px !important;
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  .reg-info-table th {
+    font-size: 10px !important;
+  }
+
+  .reg-info-table td.td-schedule {
+    font-size: 10px !important;
+  }
+
+  .reg-info-table .check-box {
+    font-size: 11px !important;
+  }
+
+  .reg-info-table .access-opt {
+    margin-right: 6px !important;
+  }
+
+  .reg-info-table .payment-opts {
+    gap: 3px 6px !important;
+  }
+
+  .reg-info-table .payment-opt-item {
+    font-size: 10px !important;
+    gap: 2px !important;
+  }
+
+  .reg-info-table .sub-hint {
+    font-size: 9px !important;
+    display: block !important;
+    margin-top: 1px !important;
+  }
+
+  .reg-notes-header {
+    font-size: 11px !important;
+    padding: 3px !important;
+  }
+
+  .reg-notes-body {
+    padding: 5px 6px !important;
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+  }
+
+  .note-row {
+    gap: 4px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .note-lbl {
+    min-width: 48px !important;
+    font-size: 10px !important;
+  }
+
+  .note-opts {
+    gap: 3px 6px !important;
+    font-size: 9.8px !important;
+  }
+
+  .reg-section-title {
+    font-size: 11px !important;
+    margin-top: 3px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .reg-section-title .sub {
+    font-size: 9.5px !important;
+  }
+
+  .reg-policy-list {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+  }
+
+  .reg-policy-list li {
+    margin-bottom: 1.5px !important;
+  }
+
+  .reg-footer-consent {
+    margin-top: 8px !important;
+    padding-top: 4px !important;
+  }
+
+  .consent-statement {
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .consent-date {
+    font-size: 10.5px !important;
+    letter-spacing: 1px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .signature-line-wrap {
+    justify-content: center !important;
+    padding-right: 0 !important;
+    gap: 6px !important;
+  }
+
+  .applicant-label {
+    font-size: 11px !important;
+  }
+
+  .official-digital-seal {
+    padding: 3px 6px !important;
+    gap: 5px !important;
+  }
+
+  .seal-circle-mark {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 9.5px !important;
+  }
+
+  .seal-badge-title {
+    font-size: 9.5px !important;
+  }
+
+  .seal-timestamp {
+    font-size: 7.5px !important;
+  }
+}
+
+/* Extra small devices (예: 360px 이하 화면) */
+@media (max-width: 380px) {
+  .customer-detail-modal-body {
+    padding: 6px 3px !important;
+  }
+
+  .registration-form-doc {
+    padding: 8px 6px !important;
+  }
+
+  .reg-doc-title {
+    font-size: 15px !important;
+  }
+
+  .reg-info-table th,
+  .reg-info-table td {
+    padding: 3.5px 2px !important;
+    font-size: 9.5px !important;
+  }
+
+  .reg-info-table th {
+    font-size: 9px !important;
+  }
+
+  .note-lbl {
+    min-width: 44px !important;
+    font-size: 9px !important;
+  }
+
+  .note-opts {
+    font-size: 9px !important;
+  }
+
+  .reg-policy-list {
+    font-size: 8.5px !important;
+  }
 }
 
 /* ==========================================================================
