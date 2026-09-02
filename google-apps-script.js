@@ -101,8 +101,12 @@ function doPost(e) {
       modelAndColor += " / " + color;
     }
     
-    // I열: 이용플랜 및 추가옵션
+    // I열: 이용플랜 및 추가옵션 (선택금액 포함)
     var planText = data.plan || data.experience || "퍼펙트 (월 4회 할인 특가)";
+    var price = String(data.price || "").trim();
+    if (price && !planText.includes(price)) {
+      planText += " [" + price + "]";
+    }
     if (data.extraOptions && data.extraOptions !== '없음' && !planText.includes(data.extraOptions)) {
       planText += " [옵션: " + data.extraOptions + "]";
     }
@@ -200,6 +204,9 @@ function doGet(e) {
 
         var specialReqMatch = specialNotes.match(/(?:요청|요청사항)\s*[:：]\s*([^|]+)/);
         var specialRequest = specialReqMatch ? specialReqMatch[1].trim() : "없음";
+
+        var priceMatch = planText.match(/(\d{2,3},\d{3}원)/);
+        var price = priceMatch ? priceMatch[1] : "";
         
         customerList.push({
           id: id,
@@ -213,6 +220,7 @@ function doGet(e) {
           color: color,
           car: carSummary || modelColorRaw,
           experience: planText,
+          price: price,
           days: days,
           paymentMethod: paymentMethod,
           specialNotes: specialNotes,

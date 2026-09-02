@@ -1233,12 +1233,47 @@ a:hover {
   padding: 10px 8px;
   border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.price-cell {
+  cursor: pointer;
+  position: relative;
+  font-weight: 600;
+  user-select: none;
+}
+
+.price-cell:hover {
+  background: rgba(14, 165, 233, 0.22) !important;
+  color: #FFF;
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.price-cell.selected {
+  background: rgba(14, 165, 233, 0.35) !important;
+  color: #FFF !important;
+  font-weight: 800 !important;
+  box-shadow: inset 0 0 0 2px var(--primary), 0 0 12px rgba(14, 165, 233, 0.4);
+}
+
+.price-cell.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.72rem;
+  color: var(--accent);
+  font-weight: 900;
 }
 
 .plan-price-table .highlight-col {
-  background: rgba(14, 165, 233, 0.15);
+  background: rgba(14, 165, 233, 0.12);
   border-left: 1px solid var(--border-glow);
   border-right: 1px solid var(--border-glow);
+}
+
+.plan-price-table .highlight-col.selected {
+  background: rgba(14, 165, 233, 0.38) !important;
 }
 
 .old-price {
@@ -1251,6 +1286,46 @@ a:hover {
   color: #F43F5E;
   font-weight: 800;
   font-size: 0.92rem;
+}
+
+/* Selected Plan & Price Badge Display Box */
+.selected-plan-badge-box {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(30, 41, 59, 0.7) 100%);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.15);
+}
+
+.selected-plan-badge-box .badge-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.selected-plan-badge-box .badge-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+}
+
+.selected-plan-badge-box .badge-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+}
+
+.selected-plan-badge-box .badge-tip {
+  font-size: 0.75rem;
+  color: #94A3B8;
 }
 
 .plan-options-block {

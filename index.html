@@ -316,31 +316,42 @@
                     <tbody>
                       <tr>
                         <td><strong>소형·중형</strong></td>
-                        <td>31,900원</td>
-                        <td>44,000원</td>
-                        <td class="highlight-col"><del class="old-price">88,000원</del> <span class="new-price">66,000원</span></td>
+                        <td class="price-cell" data-car="소형·중형" data-plan="라이트 (월 1회)" data-price="31,900원" data-plan-val="라이트 (월 1회)">31,900원</td>
+                        <td class="price-cell" data-car="소형·중형" data-plan="스마트 (격주)" data-price="44,000원" data-plan-val="스마트 (격주 / 월 2회)">44,000원</td>
+                        <td class="highlight-col price-cell selected" data-car="소형·중형" data-plan="퍼펙트 (월 4회)" data-price="66,000원" data-plan-val="퍼펙트 (월 4회 할인 특가)"><del class="old-price">88,000원</del> <span class="new-price">66,000원</span></td>
                       </tr>
                       <tr>
                         <td><strong>대형 세단</strong></td>
-                        <td>35,900원</td>
-                        <td>49,500원</td>
-                        <td class="highlight-col"><del class="old-price">99,000원</del> <span class="new-price">77,000원</span></td>
+                        <td class="price-cell" data-car="대형 세단" data-plan="라이트 (월 1회)" data-price="35,900원" data-plan-val="라이트 (월 1회)">35,900원</td>
+                        <td class="price-cell" data-car="대형 세단" data-plan="스마트 (격주)" data-price="49,500원" data-plan-val="스마트 (격주 / 월 2회)">49,500원</td>
+                        <td class="highlight-col price-cell" data-car="대형 세단" data-plan="퍼펙트 (월 4회)" data-price="77,000원" data-plan-val="퍼펙트 (월 4회 할인 특가)"><del class="old-price">99,000원</del> <span class="new-price">77,000원</span></td>
                       </tr>
                       <tr>
                         <td><strong>SUV</strong></td>
-                        <td>39,900원</td>
-                        <td>55,000원</td>
-                        <td class="highlight-col"><del class="old-price">110,000원</del> <span class="new-price">88,000원</span></td>
+                        <td class="price-cell" data-car="SUV" data-plan="라이트 (월 1회)" data-price="39,900원" data-plan-val="라이트 (월 1회)">39,900원</td>
+                        <td class="price-cell" data-car="SUV" data-plan="스마트 (격주)" data-price="55,000원" data-plan-val="스마트 (격주 / 월 2회)">55,000원</td>
+                        <td class="highlight-col price-cell" data-car="SUV" data-plan="퍼펙트 (월 4회)" data-price="88,000원" data-plan-val="퍼펙트 (월 4회 할인 특가)"><del class="old-price">110,000원</del> <span class="new-price">88,000원</span></td>
                       </tr>
                       <tr>
                         <td><strong>대형 SUV / 카니발</strong></td>
-                        <td>43,900원</td>
-                        <td>60,500원</td>
-                        <td class="highlight-col"><del class="old-price">120,000원</del> <span class="new-price">99,000원</span></td>
+                        <td class="price-cell" data-car="대형 SUV / 카니발" data-plan="라이트 (월 1회)" data-price="43,900원" data-plan-val="라이트 (월 1회)">43,900원</td>
+                        <td class="price-cell" data-car="대형 SUV / 카니발" data-plan="스마트 (격주)" data-price="60,500원" data-plan-val="스마트 (격주 / 월 2회)">60,500원</td>
+                        <td class="highlight-col price-cell" data-car="대형 SUV / 카니발" data-plan="퍼펙트 (월 4회)" data-price="99,000원" data-plan-val="퍼펙트 (월 4회 할인 특가)"><del class="old-price">120,000원</del> <span class="new-price">99,000원</span></td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
+
+                <!-- Selected Plan & Price Badge Display -->
+                <div class="selected-plan-badge-box" id="selectedPlanBadgeBox">
+                  <div class="badge-content">
+                    <span class="badge-label"><i data-lucide="check-circle-2" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 선택 요금:</span>
+                    <strong class="badge-value" id="selectedPlanPriceDisplay">소형·중형 / 퍼펙트 (월 4회) — 월 66,000원</strong>
+                  </div>
+                  <span class="badge-tip">※ 요금표의 금액을 클릭하여 원하시는 차종과 플랜 요금을 직접 선택하실 수 있습니다.</span>
+                </div>
+                <input type="hidden" id="selectedCarType" name="selectedCarType" value="소형·중형">
+                <input type="hidden" id="selectedPrice" name="selectedPrice" value="66,000원">
               </div>
 
               <!-- Plan Selector Cards (월회차 플랜 선택 버튼들) -->

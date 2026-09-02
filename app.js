@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initVideoPlayerBox();
   initGalleryCarousel();
   initSignaturePad();
+  initPriceTableSelection();
   initFormValidationAndSubmit();
   initAdminManager();
   initCustomerDetailModal();
@@ -496,6 +497,62 @@ function decodeCompactSignatureToHtml(sigData, applicantName = '', createdAt = '
   `;
 }
 
+function initPriceTableSelection() {
+  const priceCells = document.querySelectorAll('.plan-price-table .price-cell');
+  const planRadios = document.querySelectorAll('input[name="experience"]');
+  const selectedCarTypeInput = document.getElementById('selectedCarType');
+  const selectedPriceInput = document.getElementById('selectedPrice');
+  const displayBox = document.getElementById('selectedPlanPriceDisplay');
+
+  function updateSelection(cell) {
+    if (!cell) return;
+    priceCells.forEach(c => c.classList.remove('selected'));
+    cell.classList.add('selected');
+
+    const car = cell.dataset.car || '소형·중형';
+    const plan = cell.dataset.plan || '퍼펙트 (월 4회)';
+    const price = cell.dataset.price || '66,000원';
+    const planVal = cell.dataset.planVal || '퍼펙트 (월 4회 할인 특가)';
+
+    if (selectedCarTypeInput) selectedCarTypeInput.value = car;
+    if (selectedPriceInput) selectedPriceInput.value = price;
+    if (displayBox) {
+      displayBox.innerHTML = `${car} / ${plan} — <span style="color:#38BDF8;font-size:1.02rem;">월 ${price}</span>`;
+    }
+
+    // Sync radio card below
+    const targetRadio = document.querySelector(`input[name="experience"][value="${planVal}"]`);
+    if (targetRadio && !targetRadio.checked) {
+      targetRadio.checked = true;
+    }
+  }
+
+  priceCells.forEach(cell => {
+    cell.addEventListener('click', () => {
+      updateSelection(cell);
+    });
+  });
+
+  planRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return;
+      const currentCar = selectedCarTypeInput?.value || '소형·중형';
+      const targetCell = Array.from(priceCells).find(c => c.dataset.car === currentCar && c.dataset.planVal === radio.value) ||
+                         Array.from(priceCells).find(c => c.dataset.planVal === radio.value);
+      if (targetCell) {
+        updateSelection(targetCell);
+      }
+    });
+  });
+
+  window.resetPriceTableSelection = function() {
+    const defaultCell = document.querySelector('.plan-price-table .price-cell[data-car="소형·중형"][data-plan-val="퍼펙트 (월 4회 할인 특가)"]');
+    if (defaultCell) {
+      updateSelection(defaultCell);
+    }
+  };
+}
+
 function initFormValidationAndSubmit() {
   const form = document.getElementById('signupForm');
   const phoneInput = document.getElementById('memberPhone');
@@ -628,6 +685,8 @@ function initFormValidationAndSubmit() {
 
     // Service Plan & Payment Method & Special Notes & Extra Options Selected
     const planVal = document.querySelector('input[name="experience"]:checked')?.value || '퍼펙트 (월 4회 할인 특가)';
+    const selectedPriceVal = document.getElementById('selectedPrice')?.value?.trim() || '66,000원';
+    const selectedCarTypeVal = document.getElementById('selectedCarType')?.value?.trim() || '소형·중형';
     const paymentMethodVal = document.querySelector('input[name="paymentMethod"]:checked')?.value || '카드';
     const selectedDaysStr = Array.from(checkedDayEls).map(cb => cb.value).join(', ');
     const extraOpts = Array.from(document.querySelectorAll('input[name="extraOption"]:checked')).map(cb => cb.value).join(', ');
@@ -665,9 +724,11 @@ function initFormValidationAndSubmit() {
       model: modelVal,
       color: colorVal,
       car: `${modelVal} (${plateVal}) / 색상: ${colorVal}`,
+      carType: selectedCarTypeVal,
+      price: selectedPriceVal,
       plan: planVal,
       extraOptions: extraOpts || '없음',
-      experience: planVal + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
+      experience: planVal + ` [금액: ${selectedPriceVal}]` + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
       days: selectedDaysStr,
       exteriorState: exteriorList.join(', ') || '없음',
       interiorEnv: interiorList.join(', ') || '없음',
@@ -699,6 +760,9 @@ function initFormValidationAndSubmit() {
 
     // Form & Signature Reset
     form.reset();
+    if (typeof window.resetPriceTableSelection === 'function') {
+      window.resetPriceTableSelection();
+    }
     if (checkAll) checkAll.checked = false;
     if (signatureCanvas) {
       const ctx = signatureCanvas.getContext('2d');
@@ -1197,6 +1261,12 @@ function renderAdminTable(filter = 'ALL') {
       displayDays = dMatches ? Array.from(new Set(dMatches)).join(', ') : '월요일';
     }
 
+    let displayPrice = item.price || '';
+    if (!displayPrice && item.experience) {
+      const pMatch = item.experience.match(/(\d{2,3},\d{3}원)/);
+      if (pMatch) displayPrice = pMatch[1];
+    }
+
     return `
       <tr>
         <td>
@@ -1211,7 +1281,7 @@ function renderAdminTable(filter = 'ALL') {
         <td>
           <div style="font-weight: 600;">${escapeHtml(item.region)}</div>
           <div style="font-size: 0.75rem; color: var(--accent); font-weight:600;">${escapeHtml(displayCar)}</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(displayPlan)}${displayDays ? ` (${escapeHtml(displayDays)})` : ''}</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(displayPlan)}${displayPrice ? ` [${escapeHtml(displayPrice)}]` : ''}${displayDays ? ` (${escapeHtml(displayDays)})` : ''}</div>
         </td>
         <td>
           <div><span class="bank-badge" style="background:var(--primary-light); color:var(--accent); font-weight:800;">${escapeHtml(displayPay)}</span></div>
@@ -1335,6 +1405,16 @@ function generateRegistrationFormHTML(item) {
   const isAuto = payment.includes('자동이체');
   const isCard = payment.includes('카드') || (!isBank && !isAuto);
 
+  // 5. 선택 금액 파싱
+  let priceStr = item.price || '';
+  if (!priceStr && item.experience) {
+    const pMatch = item.experience.match(/(\d{2,3},\d{3}원)/);
+    if (pMatch) priceStr = pMatch[1];
+  }
+  if (!priceStr) {
+    priceStr = countStr === '4' ? '66,000원' : (countStr === '2' ? '44,000원' : '31,900원');
+  }
+
   const specialNotes = item.specialNotes || '';
   const hasOpt = (kw) => specialNotes.includes(kw);
 
@@ -1368,7 +1448,7 @@ function generateRegistrationFormHTML(item) {
             <th class="th-label">이름</th>
             <td class="td-name">${escapeHtml(item.name)}</td>
             <th class="th-schedule">횟수 / 요일</th>
-            <td class="td-schedule">월 ( <strong>${countStr}</strong> )회, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+            <td class="td-schedule">월 ( <strong>${countStr}</strong> )회 / <strong style="color:#0284C7;">${escapeHtml(priceStr)}</strong>, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
           </tr>
           <tr>
             <th class="th-label">주소</th>
@@ -1385,13 +1465,14 @@ function generateRegistrationFormHTML(item) {
           <tr>
             <th class="th-label">연락처</th>
             <td class="td-phone">${escapeHtml(item.phone)}</td>
-            <th class="th-pay">결제</th>
+            <th class="th-pay">결제 / 금액</th>
             <td class="td-pay">
               <span class="payment-opts">
                 <span class="payment-opt-item"><span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드</span>
               </span>
+              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px;">(${escapeHtml(priceStr)})</span>
             </td>
           </tr>
           <tr>
