@@ -637,13 +637,15 @@ function initFormValidationAndSubmit() {
     const usageList = Array.from(document.querySelectorAll('input[name="usagePattern"]:checked')).map(cb => cb.value);
     const featureList = Array.from(document.querySelectorAll('input[name="carFeatures"]:checked')).map(cb => cb.value);
     const proofList = Array.from(document.querySelectorAll('input[name="proofRequest"]:checked')).map(cb => cb.value);
+    const customReq = document.getElementById('specialRequest')?.value?.trim() || '';
 
     const specialNotesList = [
       exteriorList.length ? `외관: ${exteriorList.join(',')}` : '',
       interiorList.length ? `실내: ${interiorList.join(',')}` : '',
       usageList.length ? `패턴: ${usageList.join(',')}` : '',
       featureList.length ? `특징: ${featureList.join(',')}` : '',
-      proofList.length ? `증빙: ${proofList.join(',')}` : ''
+      proofList.length ? `증빙: ${proofList.join(',')}` : '',
+      customReq ? `요청: ${customReq}` : ''
     ].filter(Boolean).join(' | ');
 
     // 100% Guaranteed Signature Capture (Compact Vector Format or Official E-Sign Text)
@@ -672,6 +674,7 @@ function initFormValidationAndSubmit() {
       usagePattern: usageList.join(', ') || '없음',
       carFeatures: featureList.join(', ') || '없음',
       proofRequest: proofList.join(', ') || '없음',
+      specialRequest: customReq || '없음',
       specialNotes: specialNotesList || '없음',
       paymentMethod: paymentMethodVal,
       termsAgreed: {
@@ -1335,6 +1338,17 @@ function generateRegistrationFormHTML(item) {
   const specialNotes = item.specialNotes || '';
   const hasOpt = (kw) => specialNotes.includes(kw);
 
+  let customRequest = item.specialRequest || '';
+  if (!customRequest && specialNotes) {
+    const reqMatch = specialNotes.match(/(?:요청|요청사항)\s*[:：]\s*([^|]+)/);
+    if (reqMatch) {
+      customRequest = reqMatch[1].trim();
+    }
+  }
+  if (!customRequest || customRequest === '없음') {
+    customRequest = '없음';
+  }
+
   return `
     <div class="registration-form-doc">
       <!-- Top Brand Logo & Title -->
@@ -1433,6 +1447,10 @@ function generateRegistrationFormHTML(item) {
               <span>${hasOpt('현금영수증') ? '☑' : '☐'} 현금영수증</span>
               <span>${hasOpt('세금계산서') ? '☑' : '☐'} 세금계산서</span>
             </span>
+          </div>
+          <div class="note-row note-custom-row">
+            <span class="note-lbl">요청사항:</span>
+            <span class="note-val">${escapeHtml(customRequest)}</span>
           </div>
         </div>
       </div>
@@ -1574,6 +1592,7 @@ window.printCustomerConfirmation = function() {
   .note-lbl { font-weight: 700; color: #0F172A; min-width: 54px; }
   .note-opts { display: flex; gap: 10px; flex-wrap: wrap; color: #334155; }
   .note-opts span { display: inline-flex; align-items: center; gap: 2px; }
+  .note-val { color: #0F172A; font-weight: 600; word-break: break-all; }
 
   /* 4. Policy Section */
   .reg-policy-section { margin-bottom: 16px; page-break-inside: avoid; }

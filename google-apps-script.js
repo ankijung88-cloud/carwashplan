@@ -107,6 +107,16 @@ function doPost(e) {
       planText += " [옵션: " + data.extraOptions + "]";
     }
     
+    // L열: 차량특이사항 (선택항목 및 추가 요청사항)
+    var specialNotes = String(data.specialNotes || "").trim();
+    var specialRequest = String(data.specialRequest || "").trim();
+    if (specialRequest && specialRequest !== "없음" && !specialNotes.includes(specialRequest)) {
+      specialNotes += (specialNotes && specialNotes !== "없음" ? " | " : "") + "요청: " + specialRequest;
+    }
+    if (!specialNotes) {
+      specialNotes = "없음";
+    }
+    
     // 14개 컬럼과 1:1 완벽 일치 행 데이터 (N열 14번째 셀에 서명데이터 확실하게 기록)
     var rowData = [
       data.id || ("CUST-" + new Date().getFullYear() + "-" + Math.floor(Math.random() * 900 + 100)), // A: 신청ID
@@ -120,7 +130,7 @@ function doPost(e) {
       planText,                                                                                     // I: 이용플랜 및 선택옵션
       data.days || "미지정",                                                                        // J: 희망요일
       data.paymentMethod || "카드",                                                                 // K: 결제방식
-      data.specialNotes || "없음",                                                                  // L: 차량특이사항
+      specialNotes,                                                                                 // L: 차량특이사항
       data.status || "PENDING",                                                                     // M: 진행상태
       signature                                                                                     // N: 고객 전자서명 (서명완료)
     ];
@@ -187,6 +197,9 @@ function doGet(e) {
         var carSummary = model;
         if (plate) carSummary += " (" + plate + ")";
         if (color) carSummary += " - " + color;
+
+        var specialReqMatch = specialNotes.match(/(?:요청|요청사항)\s*[:：]\s*([^|]+)/);
+        var specialRequest = specialReqMatch ? specialReqMatch[1].trim() : "없음";
         
         customerList.push({
           id: id,
@@ -203,6 +216,7 @@ function doGet(e) {
           days: days,
           paymentMethod: paymentMethod,
           specialNotes: specialNotes,
+          specialRequest: specialRequest,
           status: status,
           signature: signature, // 모든 기기(웹/모바일)에 서명 데이터 제공
           termsAgreed: {

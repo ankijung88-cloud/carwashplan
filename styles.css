@@ -1398,6 +1398,36 @@ a:hover {
   flex-wrap: wrap;
 }
 
+.notes-input-wrap {
+  flex: 1;
+  min-width: 220px;
+}
+
+.notes-custom-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.notes-custom-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.25);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.notes-custom-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
 .chip-option {
   cursor: pointer;
   user-select: none;
@@ -2743,6 +2773,11 @@ a:hover {
     box-sizing: border-box;
   }
 
+  .notes-input-wrap {
+    width: 100%;
+    min-width: unset;
+  }
+
   /* Payment Method Cards */
   .payment-options-grid {
     grid-template-columns: 1fr 1fr;
@@ -3408,6 +3443,12 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 2px;
+}
+
+.note-val {
+  color: #0F172A;
+  font-weight: 600;
+  word-break: break-all;
 }
 
 /* Policy & Notices */
