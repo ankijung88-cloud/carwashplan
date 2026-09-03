@@ -3394,13 +3394,13 @@ a:hover {
   color: #0369A1;
   font-weight: 800;
   text-align: center;
-  white-space: nowrap;
+  white-space: nowrap !important;
 }
 
-.reg-info-table th.th-label { width: 16%; }
-.reg-info-table th.th-schedule { width: 22%; }
-.reg-info-table th.th-pay { width: 14%; }
-.reg-info-table th.th-plate { width: 18%; }
+.reg-info-table th.th-label { width: 15%; }
+.reg-info-table th.th-schedule { width: 17%; }
+.reg-info-table th.th-pay { width: 15%; }
+.reg-info-table th.th-plate { width: 15%; }
 
 .reg-info-table td {
   background-color: #FFFFFF;
@@ -3409,8 +3409,11 @@ a:hover {
   word-break: keep-all;
 }
 
-.reg-info-table td.td-name { font-weight: 700; }
+.reg-info-table td.td-name { font-weight: 700; white-space: nowrap; width: 35%; }
+.reg-info-table td.td-phone { font-weight: 700; white-space: nowrap !important; word-break: keep-all !important; letter-spacing: -0.3px; width: 35%; }
+.reg-info-table td.td-plate { font-weight: 700; white-space: nowrap !important; width: 35%; }
 .reg-info-table td.td-schedule { font-size: 11.5px; }
+.reg-info-table td.td-pay { width: 35%; }
 
 .reg-info-table .check-box {
   font-family: inherit;
@@ -3732,8 +3735,19 @@ a:hover {
     font-size: 10px !important;
   }
 
-  .reg-info-table td.td-schedule {
+  .reg-info-table td.td-phone {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
     font-size: 10px !important;
+    letter-spacing: -0.4px !important;
+  }
+
+  .reg-info-table td.td-name {
+    white-space: nowrap !important;
+  }
+
+  .reg-info-table td.td-plate {
+    white-space: nowrap !important;
   }
 
   .reg-info-table .check-box {

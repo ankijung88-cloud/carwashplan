@@ -1625,23 +1625,23 @@ function generateRegistrationFormHTML(item) {
             </td>
           </tr>
           <tr>
-            <th class="th-label">연락처</th>
-            <td class="td-phone">${escapeHtml(item.phone)}</td>
-            <th class="th-pay">결제 / 금액</th>
-            <td class="td-pay">
+            <th class="th-label" style="white-space:nowrap; width:15%;">연락처</th>
+            <td class="td-phone" style="white-space:nowrap; word-break:keep-all; font-weight:700; width:35%;">${escapeHtml(item.phone)}</td>
+            <th class="th-pay" style="white-space:nowrap; width:15%;">결제 / 금액</th>
+            <td class="td-pay" style="width:35%;">
               <span class="payment-opts">
                 <span class="payment-opt-item"><span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드</span>
               </span>
-              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px;">(${escapeHtml(totalPriceStr)}${optionPriceNum > 0 ? ` <span style="font-size:8.5pt; color:#64748B; font-weight:600;">[기본 ${basePriceStr} + 옵션 ${optionPriceStr}]</span>` : ''})</span>
+              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px; white-space:nowrap;">(${escapeHtml(totalPriceStr)}${optionPriceNum > 0 ? ` <span style="font-size:8.5pt; color:#64748B; font-weight:600;">[기본 ${basePriceStr} + 옵션 ${optionPriceStr}]</span>` : ''})</span>
             </td>
           </tr>
           <tr>
-            <th class="th-label">차종 / 색상</th>
-            <td class="td-car">${escapeHtml(carModel || item.car)} ${carColor ? `/ ${escapeHtml(carColor)}` : ''}</td>
-            <th class="th-plate">차량번호</th>
-            <td class="td-plate"><strong>${escapeHtml(carPlate || '-')}</strong></td>
+            <th class="th-label" style="white-space:nowrap; width:15%;">차종 / 색상</th>
+            <td class="td-car" style="width:35%; word-break:keep-all;">${escapeHtml(carModel || item.car)} ${carColor ? `/ ${escapeHtml(carColor)}` : ''}</td>
+            <th class="th-plate" style="white-space:nowrap; width:15%;">차량번호</th>
+            <td class="td-plate" style="white-space:nowrap; width:35%;"><strong>${escapeHtml(carPlate || '-')}</strong></td>
           </tr>
         </tbody>
       </table>
@@ -1816,10 +1816,13 @@ window.printCustomerConfirmation = function() {
     border: 1px solid #7DD3FC; padding: 6px 9px; font-size: 9.5pt; line-height: 1.45; vertical-align: middle;
   }
   .reg-info-table th {
-    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; text-align: center; white-space: nowrap;
+    background-color: #E0F2FE !important; color: #0369A1; font-weight: 800; text-align: center; white-space: nowrap !important;
     -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .reg-info-table td { background-color: #FFFFFF !important; color: #0F172A; font-weight: 600; }
+  .reg-info-table td.td-phone { white-space: nowrap !important; word-break: keep-all !important; font-weight: 700; letter-spacing: -0.2px; }
+  .reg-info-table td.td-name { white-space: nowrap !important; }
+  .reg-info-table td.td-plate { white-space: nowrap !important; }
   .reg-info-table .check-box { font-weight: 800; font-size: 10.5pt; color: #0284C7; }
   .reg-info-table .payment-opts { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
   .reg-info-table .payment-opt-item { display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
