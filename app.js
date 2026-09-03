@@ -497,12 +497,93 @@ function decodeCompactSignatureToHtml(sigData, applicantName = '', createdAt = '
   `;
 }
 
+// Price helper functions
+function parsePriceNumber(str) {
+  if (!str) return 0;
+  const numStr = String(str).replace(/[^0-9]/g, '');
+  return parseInt(numStr, 10) || 0;
+}
+
+function formatPriceKRW(num) {
+  return Number(num || 0).toLocaleString('ko-KR') + '원';
+}
+
+function calculateCurrentPlanAndOptions() {
+  const selectedCarTypeInput = document.getElementById('selectedCarType');
+  const selectedPriceInput = document.getElementById('selectedPrice');
+  const selectedBasePriceInput = document.getElementById('selectedBasePrice');
+  const selectedOptionPriceInput = document.getElementById('selectedOptionPrice');
+  const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
+  const displayBox = document.getElementById('selectedPlanPriceDisplay');
+
+  // 1. Get currently selected cell or base price
+  const activeCell = document.querySelector('.plan-price-table .price-cell.selected');
+  let baseCar = activeCell?.dataset?.car || selectedCarTypeInput?.value || '소형·중형';
+  let basePlan = activeCell?.dataset?.plan || '퍼펙트 (월 4회)';
+  let basePriceStr = activeCell?.dataset?.price || selectedBasePriceInput?.value || '66,000원';
+  let basePriceNum = parsePriceNumber(basePriceStr);
+
+  // 2. Sum up checked extra options
+  const checkedOptionEls = document.querySelectorAll('input[name="extraOption"]:checked');
+  let optionTotalNum = 0;
+  const optionList = [];
+
+  checkedOptionEls.forEach(el => {
+    let optPrice = parseInt(el.dataset.price, 10);
+    if (isNaN(optPrice) || optPrice <= 0) {
+      optPrice = parsePriceNumber(el.value);
+    }
+    optionTotalNum += optPrice;
+    optionList.push(el.value);
+  });
+
+  const totalNum = basePriceNum + optionTotalNum;
+  const basePriceFormatted = formatPriceKRW(basePriceNum);
+  const optionPriceFormatted = formatPriceKRW(optionTotalNum);
+  const totalPriceFormatted = formatPriceKRW(totalNum);
+
+  // Update hidden inputs
+  if (selectedCarTypeInput) selectedCarTypeInput.value = baseCar;
+  if (selectedPriceInput) selectedPriceInput.value = totalPriceFormatted;
+  if (selectedBasePriceInput) selectedBasePriceInput.value = basePriceFormatted;
+  if (selectedOptionPriceInput) selectedOptionPriceInput.value = optionPriceFormatted;
+  if (selectedTotalPriceInput) selectedTotalPriceInput.value = totalPriceFormatted;
+
+  // Update Display Badge
+  if (displayBox) {
+    if (optionTotalNum > 0) {
+      displayBox.innerHTML = `
+        <div>
+          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;font-size:1.02rem;font-weight:800;">총 ${totalPriceFormatted}</span> <span style="font-size:0.84rem;color:#94A3B8;font-weight:500;">(기본 ${basePriceFormatted} + 옵션 ${optionPriceFormatted})</span>
+        </div>
+        <div style="margin-top:6px;font-size:0.84rem;color:#E0F2FE;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="background:rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.4);color:#38BDF8;padding:1px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;">선택한 옵션</span>
+          <span style="color:#F1F5F9;font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
+        </div>
+      `;
+    } else {
+      displayBox.innerHTML = `${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;font-size:1.02rem;font-weight:800;">월 ${basePriceFormatted}</span>`;
+    }
+  }
+
+  return {
+    car: baseCar,
+    plan: basePlan,
+    basePrice: basePriceFormatted,
+    basePriceNum: basePriceNum,
+    optionPrice: optionPriceFormatted,
+    optionPriceNum: optionTotalNum,
+    totalPrice: totalPriceFormatted,
+    totalPriceNum: totalNum,
+    extraOptions: optionList.join(', ')
+  };
+}
+
 function initPriceTableSelection() {
   const priceCells = document.querySelectorAll('.plan-price-table .price-cell');
   const planRadios = document.querySelectorAll('input[name="experience"]');
+  const optionCheckboxes = document.querySelectorAll('input[name="extraOption"]');
   const selectedCarTypeInput = document.getElementById('selectedCarType');
-  const selectedPriceInput = document.getElementById('selectedPrice');
-  const displayBox = document.getElementById('selectedPlanPriceDisplay');
 
   function updateSelection(cell) {
     if (!cell) return;
@@ -510,21 +591,17 @@ function initPriceTableSelection() {
     cell.classList.add('selected');
 
     const car = cell.dataset.car || '소형·중형';
-    const plan = cell.dataset.plan || '퍼펙트 (월 4회)';
-    const price = cell.dataset.price || '66,000원';
     const planVal = cell.dataset.planVal || '퍼펙트 (월 4회 할인 특가)';
 
     if (selectedCarTypeInput) selectedCarTypeInput.value = car;
-    if (selectedPriceInput) selectedPriceInput.value = price;
-    if (displayBox) {
-      displayBox.innerHTML = `${car} / ${plan} — <span style="color:#38BDF8;font-size:1.02rem;">월 ${price}</span>`;
-    }
 
     // Sync radio card below
     const targetRadio = document.querySelector(`input[name="experience"][value="${planVal}"]`);
     if (targetRadio && !targetRadio.checked) {
       targetRadio.checked = true;
     }
+
+    calculateCurrentPlanAndOptions();
   }
 
   priceCells.forEach(cell => {
@@ -541,7 +618,16 @@ function initPriceTableSelection() {
                          Array.from(priceCells).find(c => c.dataset.planVal === radio.value);
       if (targetCell) {
         updateSelection(targetCell);
+      } else {
+        calculateCurrentPlanAndOptions();
       }
+    });
+  });
+
+  // Attach change listeners to extra options to recalculate total dynamically
+  optionCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      calculateCurrentPlanAndOptions();
     });
   });
 
@@ -549,8 +635,13 @@ function initPriceTableSelection() {
     const defaultCell = document.querySelector('.plan-price-table .price-cell[data-car="소형·중형"][data-plan-val="퍼펙트 (월 4회 할인 특가)"]');
     if (defaultCell) {
       updateSelection(defaultCell);
+    } else {
+      calculateCurrentPlanAndOptions();
     }
   };
+
+  // Initial calculation on load
+  calculateCurrentPlanAndOptions();
 }
 
 function initFormValidationAndSubmit() {
@@ -684,12 +775,13 @@ function initFormValidationAndSubmit() {
     }
 
     // Service Plan & Payment Method & Special Notes & Extra Options Selected
+    const calc = calculateCurrentPlanAndOptions();
     const planVal = document.querySelector('input[name="experience"]:checked')?.value || '퍼펙트 (월 4회 할인 특가)';
-    const selectedPriceVal = document.getElementById('selectedPrice')?.value?.trim() || '66,000원';
-    const selectedCarTypeVal = document.getElementById('selectedCarType')?.value?.trim() || '소형·중형';
+    const selectedPriceVal = calc.totalPrice || document.getElementById('selectedPrice')?.value?.trim() || '66,000원';
+    const selectedCarTypeVal = document.getElementById('selectedCarType')?.value?.trim() || calc.car || '소형·중형';
     const paymentMethodVal = document.querySelector('input[name="paymentMethod"]:checked')?.value || '카드';
     const selectedDaysStr = Array.from(checkedDayEls).map(cb => cb.value).join(', ');
-    const extraOpts = Array.from(document.querySelectorAll('input[name="extraOption"]:checked')).map(cb => cb.value).join(', ');
+    const extraOpts = calc.extraOptions || Array.from(document.querySelectorAll('input[name="extraOption"]:checked')).map(cb => cb.value).join(', ');
 
     const exteriorList = Array.from(document.querySelectorAll('input[name="exteriorState"]:checked')).map(cb => cb.value);
     const interiorList = Array.from(document.querySelectorAll('input[name="interiorEnv"]:checked')).map(cb => cb.value);
@@ -725,10 +817,13 @@ function initFormValidationAndSubmit() {
       color: colorVal,
       car: `${modelVal} (${plateVal}) / 색상: ${colorVal}`,
       carType: selectedCarTypeVal,
-      price: selectedPriceVal,
+      price: calc.totalPrice,
+      basePrice: calc.basePrice,
+      optionPrice: calc.optionPrice,
+      totalPrice: calc.totalPrice,
       plan: planVal,
       extraOptions: extraOpts || '없음',
-      experience: planVal + ` [금액: ${selectedPriceVal}]` + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
+      experience: `${planVal} [총금액: ${calc.totalPrice}${calc.optionPriceNum > 0 ? ` (기본 ${calc.basePrice} + 옵션 ${calc.optionPrice})` : ''}]` + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
       days: selectedDaysStr,
       exteriorState: exteriorList.join(', ') || '없음',
       interiorEnv: interiorList.join(', ') || '없음',
@@ -1267,6 +1362,12 @@ function renderAdminTable(filter = 'ALL') {
       if (pMatch) displayPrice = pMatch[1];
     }
 
+    let extraOptsList = item.extraOptions && item.extraOptions !== '없음' ? item.extraOptions : '';
+    if (!extraOptsList && item.experience) {
+      const optM = item.experience.match(/\[(?:추가옵션|선택옵션|옵션)\s*[:：]\s*([^\]]+)\]/);
+      if (optM) extraOptsList = optM[1].trim();
+    }
+
     return `
       <tr>
         <td>
@@ -1282,6 +1383,7 @@ function renderAdminTable(filter = 'ALL') {
           <div style="font-weight: 600;">${escapeHtml(item.region)}</div>
           <div style="font-size: 0.75rem; color: var(--accent); font-weight:600;">${escapeHtml(displayCar)}</div>
           <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(displayPlan)}${displayPrice ? ` [${escapeHtml(displayPrice)}]` : ''}${displayDays ? ` (${escapeHtml(displayDays)})` : ''}</div>
+          ${extraOptsList ? `<div style="font-size: 0.72rem; color: #38BDF8; font-weight: 600; margin-top: 2px;"><i data-lucide="plus-circle" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:2px;"></i>옵션: ${escapeHtml(extraOptsList)}</div>` : ''}
         </td>
         <td>
           <div><span class="bank-badge" style="background:var(--primary-light); color:var(--accent); font-weight:800;">${escapeHtml(displayPay)}</span></div>
@@ -1405,14 +1507,66 @@ function generateRegistrationFormHTML(item) {
   const isAuto = payment.includes('자동이체');
   const isCard = payment.includes('카드') || (!isBank && !isAuto);
 
-  // 5. 선택 금액 파싱
-  let priceStr = item.price || '';
-  if (!priceStr && item.experience) {
-    const pMatch = item.experience.match(/(\d{2,3},\d{3}원)/);
-    if (pMatch) priceStr = pMatch[1];
+  // 5. 선택 금액 및 옵션 금액 정밀 합산 계산 (출장세차 요금안내표 선택 금액 + 선택 옵션 금액 합계)
+  let basePriceNum = 0;
+  let optionPriceNum = 0;
+  let totalPriceNum = 0;
+
+  if (item.basePrice) {
+    basePriceNum = parsePriceNumber(item.basePrice);
   }
-  if (!priceStr) {
-    priceStr = countStr === '4' ? '66,000원' : (countStr === '2' ? '44,000원' : '31,900원');
+  if (item.optionPrice) {
+    optionPriceNum = parsePriceNumber(item.optionPrice);
+  }
+  if (item.totalPrice) {
+    totalPriceNum = parsePriceNumber(item.totalPrice);
+  }
+
+  // Fallback: Check extra options text for option amounts (+25,000원 등)
+  const extraOptText = `${item.extraOptions || ''} ${item.experience || ''} ${item.specialNotes || ''}`;
+  if (optionPriceNum === 0) {
+    const optPriceMatches = extraOptText.match(/\+(\d{1,3}(?:,\d{3})*|\d+)원/g);
+    if (optPriceMatches) {
+      optPriceMatches.forEach(m => {
+        optionPriceNum += parsePriceNumber(m);
+      });
+    }
+  }
+
+  // Base price fallback based on count or raw price
+  if (basePriceNum === 0) {
+    if (item.price) {
+      const rawPriceNum = parsePriceNumber(item.price);
+      if (rawPriceNum > 0) {
+        if (totalPriceNum === 0) {
+          // If raw price is greater than standard base and options exist, check breakdown
+          basePriceNum = rawPriceNum;
+        } else {
+          basePriceNum = rawPriceNum;
+        }
+      }
+    }
+    if (basePriceNum === 0) {
+      basePriceNum = countStr === '4' ? 66000 : (countStr === '2' ? 44000 : 31900);
+    }
+  }
+
+  if (totalPriceNum === 0) {
+    totalPriceNum = basePriceNum + optionPriceNum;
+  } else if (optionPriceNum > 0 && totalPriceNum === basePriceNum) {
+    // If totalPrice was only basePrice, sum them together
+    totalPriceNum = basePriceNum + optionPriceNum;
+  }
+
+  const basePriceStr = formatPriceKRW(basePriceNum);
+  const optionPriceStr = formatPriceKRW(optionPriceNum);
+  const totalPriceStr = formatPriceKRW(totalPriceNum);
+
+  // Clean extra options list for display
+  let extraOptionsDisplay = (item.extraOptions && item.extraOptions !== '없음') ? item.extraOptions : '';
+  if (!extraOptionsDisplay && item.experience) {
+    const optMatch = item.experience.match(/\[(?:추가옵션|선택옵션|옵션)\s*[:：]\s*([^\]]+)\]/);
+    if (optMatch) extraOptionsDisplay = optMatch[1].trim();
   }
 
   const specialNotes = item.specialNotes || '';
@@ -1448,7 +1602,15 @@ function generateRegistrationFormHTML(item) {
             <th class="th-label">이름</th>
             <td class="td-name">${escapeHtml(item.name)}</td>
             <th class="th-schedule">횟수 / 요일</th>
-            <td class="td-schedule">월 ( <strong>${countStr}</strong> )회 / <strong style="color:#0284C7;">${escapeHtml(priceStr)}</strong>, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+            <td class="td-schedule">월 ( <strong>${countStr}</strong> )회 / <strong style="color:#0284C7;">${escapeHtml(totalPriceStr)}</strong>, ( <strong>${escapeHtml(daysStr)}</strong> )요일</td>
+          </tr>
+          <tr>
+            <th class="th-label">선택 옵션</th>
+            <td colspan="3" class="td-options">
+              ${extraOptionsDisplay 
+                ? `<strong style="color:#0284C7; font-size:9.5pt;">${escapeHtml(extraOptionsDisplay)}</strong> <span style="color:#0369A1; font-weight:700; font-size:8.5pt; margin-left:6px;">[기본 ${basePriceStr} + 옵션 ${optionPriceStr} = 합계 ${totalPriceStr}]</span>` 
+                : `<span style="color:#64748B; font-weight:normal;">선택 옵션 없음 (기본 출장세차 서비스)</span>`}
+            </td>
           </tr>
           <tr>
             <th class="th-label">주소</th>
@@ -1472,7 +1634,7 @@ function generateRegistrationFormHTML(item) {
                 <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드</span>
               </span>
-              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px;">(${escapeHtml(priceStr)})</span>
+              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px;">(${escapeHtml(totalPriceStr)}${optionPriceNum > 0 ? ` <span style="font-size:8.5pt; color:#64748B; font-weight:600;">[기본 ${basePriceStr} + 옵션 ${optionPriceStr}]</span>` : ''})</span>
             </td>
           </tr>
           <tr>
@@ -1488,6 +1650,11 @@ function generateRegistrationFormHTML(item) {
       <div class="reg-notes-box">
         <div class="reg-notes-header">특이사항</div>
         <div class="reg-notes-body">
+          ${extraOptionsDisplay ? `
+          <div class="note-row" style="padding-bottom: 4px; margin-bottom: 4px; border-bottom: 1px dashed #BAE6FD;">
+            <span class="note-lbl" style="color: #0284C7; font-weight: 800;">선택옵션:</span>
+            <span class="note-val" style="color: #0284C7; font-weight: 800;">${escapeHtml(extraOptionsDisplay)} <span style="font-size: 8.5pt; color: #64748B; font-weight: 600;">(기본 ${basePriceStr} + 옵션 ${optionPriceStr} = 총 ${totalPriceStr})</span></span>
+          </div>` : ''}
           <div class="note-row">
             <span class="note-lbl">외관상태:</span>
             <span class="note-opts">

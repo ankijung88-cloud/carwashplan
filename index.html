@@ -352,6 +352,9 @@
                 </div>
                 <input type="hidden" id="selectedCarType" name="selectedCarType" value="소형·중형">
                 <input type="hidden" id="selectedPrice" name="selectedPrice" value="66,000원">
+                <input type="hidden" id="selectedBasePrice" name="selectedBasePrice" value="66,000원">
+                <input type="hidden" id="selectedOptionPrice" name="selectedOptionPrice" value="0원">
+                <input type="hidden" id="selectedTotalPrice" name="selectedTotalPrice" value="66,000원">
               </div>
 
               <!-- Plan Selector Cards (월회차 플랜 선택 버튼들) -->
@@ -383,10 +386,10 @@
               <div class="plan-options-block" style="margin-top:14px;">
                 <span class="options-title"><i data-lucide="plus-circle" style="width:14px;height:14px;display:inline-block;vertical-align:sub;"></i> 추가 선택 옵션 (선택 가능):</span>
                 <div class="options-grid">
-                  <label class="chip-option"><input type="checkbox" name="extraOption" value="실내세차 (+25,000원)"><span>실내세차 (+25,000원)</span></label>
-                  <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)"><span>피톤치드 케어 (+10,000원)</span></label>
-                  <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)"><span>유막 제거 (+50,000원)</span></label>
-                  <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)"><span>발수왁스 (+20,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="실내세차 (+25,000원)" data-price="25000"><span>실내세차 (+25,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)" data-price="10000"><span>피톤치드 케어 (+10,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)" data-price="50000"><span>유막 제거 (+50,000원)</span></label>
+                  <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)" data-price="20000"><span>발수왁스 (+20,000원)</span></label>
                 </div>
               </div>
             </div>
@@ -1084,6 +1087,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=113"></script>
+  <script src="app.js?v=117"></script>
 </body>
 </html>
