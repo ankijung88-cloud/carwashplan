@@ -508,6 +508,28 @@ function formatPriceKRW(num) {
   return Number(num || 0).toLocaleString('ko-KR') + '원';
 }
 
+const PRICING_MATRIX = {
+  '대형 SUV / 카니발': { '4': 99000, '2': 60500, '1': 43900, 'label': '대형 SUV / 카니발' },
+  'SUV': { '4': 88000, '2': 55000, '1': 39900, 'label': 'SUV' },
+  '대형 세단': { '4': 77000, '2': 49500, '1': 35900, 'label': '대형 세단' },
+  '소형·중형': { '4': 66000, '2': 44000, '1': 31900, 'label': '소형·중형' }
+};
+
+function detectCarTypeFromText(text) {
+  if (!text) return '소형·중형';
+  const clean = String(text).toUpperCase();
+  if (/카니발|펠리세이드|팰리세이드|모하비|GV80|트래버스|타호|에스컬레이드|대형\s*SUV|대형SUV|카니발/i.test(clean)) {
+    return '대형 SUV / 카니발';
+  }
+  if (/SUV|쏘렌토|싼타페|산타페|투싼|스포티지|스포티지R|QM6|GV70|토레스|셀토스|코나|티볼리|니로|트랙스|베뉴|XM3/i.test(clean)) {
+    return 'SUV';
+  }
+  if (/G80|G90|K9|K8|그랜저|그랜져|K7|제네시스|대형\s*세단|대형세단|E클래스|E-CLASS|5시리즈|520D|520I|530I|A6|G70/i.test(clean)) {
+    return '대형 세단';
+  }
+  return '소형·중형';
+}
+
 function calculateCurrentPlanAndOptions() {
   const selectedCarTypeInput = document.getElementById('selectedCarType');
   const selectedPriceInput = document.getElementById('selectedPrice');
@@ -516,12 +538,17 @@ function calculateCurrentPlanAndOptions() {
   const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
   const displayBox = document.getElementById('selectedPlanPriceDisplay');
 
-  // 1. Get currently selected cell or base price
+  // 1. Get currently selected cell in table
   const activeCell = document.querySelector('.plan-price-table .price-cell.selected');
   let baseCar = activeCell?.dataset?.car || selectedCarTypeInput?.value || '소형·중형';
   let basePlan = activeCell?.dataset?.plan || '퍼펙트 (월 4회)';
   let basePriceStr = activeCell?.dataset?.price || selectedBasePriceInput?.value || '66,000원';
   let basePriceNum = parsePriceNumber(basePriceStr);
+
+  if (basePriceNum === 0) {
+    basePriceNum = (PRICING_MATRIX[baseCar] && PRICING_MATRIX[baseCar]['4']) || 66000;
+    basePriceStr = formatPriceKRW(basePriceNum);
+  }
 
   // 2. Sum up checked extra options
   const checkedOptionEls = document.querySelectorAll('input[name="extraOption"]:checked');
@@ -584,6 +611,9 @@ function initPriceTableSelection() {
   const planRadios = document.querySelectorAll('input[name="experience"]');
   const optionCheckboxes = document.querySelectorAll('input[name="extraOption"]');
   const selectedCarTypeInput = document.getElementById('selectedCarType');
+  const selectedBasePriceInput = document.getElementById('selectedBasePrice');
+  const selectedPriceInput = document.getElementById('selectedPrice');
+  const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
 
   function updateSelection(cell) {
     if (!cell) return;
@@ -592,8 +622,12 @@ function initPriceTableSelection() {
 
     const car = cell.dataset.car || '소형·중형';
     const planVal = cell.dataset.planVal || '퍼펙트 (월 4회 할인 특가)';
+    const price = cell.dataset.price || '66,000원';
 
     if (selectedCarTypeInput) selectedCarTypeInput.value = car;
+    if (selectedBasePriceInput) selectedBasePriceInput.value = price;
+    if (selectedPriceInput) selectedPriceInput.value = price;
+    if (selectedTotalPriceInput) selectedTotalPriceInput.value = price;
 
     // Sync radio card below
     const targetRadio = document.querySelector(`input[name="experience"][value="${planVal}"]`);
@@ -605,7 +639,8 @@ function initPriceTableSelection() {
   }
 
   priceCells.forEach(cell => {
-    cell.addEventListener('click', () => {
+    cell.addEventListener('click', (e) => {
+      e.stopPropagation();
       updateSelection(cell);
     });
   });
@@ -1478,6 +1513,13 @@ function generateRegistrationFormHTML(item) {
       .trim();
   }
 
+  // 1.1 차종 매트릭스 감지 (대형 SUV / 카니발, SUV, 대형 세단, 소형·중형)
+  let detectedCarType = item.carType || '';
+  if (!detectedCarType || detectedCarType === '소형·중형') {
+    const rawCarText = `${item.carType || ''} ${item.model || ''} ${item.car || ''} ${item.specialNotes || ''}`;
+    detectedCarType = detectCarTypeFromText(rawCarText);
+  }
+
   // 2. 요일(daysStr) 정밀 추출 (특이사항 텍스트 오염 방지)
   let daysStr = '월';
   const rawDays = item.days || '';
@@ -1512,17 +1554,10 @@ function generateRegistrationFormHTML(item) {
   let optionPriceNum = 0;
   let totalPriceNum = 0;
 
-  if (item.basePrice) {
-    basePriceNum = parsePriceNumber(item.basePrice);
-  }
+  // A) 옵션 금액 파싱
   if (item.optionPrice) {
     optionPriceNum = parsePriceNumber(item.optionPrice);
   }
-  if (item.totalPrice) {
-    totalPriceNum = parsePriceNumber(item.totalPrice);
-  }
-
-  // Fallback: Check extra options text for option amounts (+25,000원 등)
   const extraOptText = `${item.extraOptions || ''} ${item.experience || ''} ${item.specialNotes || ''}`;
   if (optionPriceNum === 0) {
     const optPriceMatches = extraOptText.match(/\+(\d{1,3}(?:,\d{3})*|\d+)원/g);
@@ -1533,28 +1568,43 @@ function generateRegistrationFormHTML(item) {
     }
   }
 
-  // Base price fallback based on count or raw price
-  if (basePriceNum === 0) {
-    if (item.price) {
-      const rawPriceNum = parsePriceNumber(item.price);
-      if (rawPriceNum > 0) {
-        if (totalPriceNum === 0) {
-          // If raw price is greater than standard base and options exist, check breakdown
-          basePriceNum = rawPriceNum;
-        } else {
-          basePriceNum = rawPriceNum;
-        }
-      }
+  // B) 기본 금액 파싱
+  if (item.basePrice) {
+    basePriceNum = parsePriceNumber(item.basePrice);
+  }
+
+  // C) 총 금액 / price 필드 파싱
+  if (item.totalPrice) {
+    totalPriceNum = parsePriceNumber(item.totalPrice);
+  } else if (item.price) {
+    const p = parsePriceNumber(item.price);
+    if (p > 0) {
+      totalPriceNum = p;
     }
-    if (basePriceNum === 0) {
-      basePriceNum = countStr === '4' ? 66000 : (countStr === '2' ? 44000 : 31900);
+  }
+
+  // D) experience 텍스트에서 금액 파싱 (예: "[금액: 99,000원]", "[총금액: 99,000원]", "[99,000원]")
+  if (totalPriceNum === 0 && item.experience) {
+    const pMatches = item.experience.match(/(\d{2,3},\d{3}원)/g);
+    if (pMatches && pMatches.length > 0) {
+      totalPriceNum = parsePriceNumber(pMatches[0]);
+    }
+  }
+
+  // E) 요금표 매트릭스 기반 기본가 산출 (대형SUV 99,000원, SUV 88,000원, 대형세단 77,000원, 소형 66,000원)
+  const matrixBase = (PRICING_MATRIX[detectedCarType] && PRICING_MATRIX[detectedCarType][countStr]) || (countStr === '4' ? 66000 : (countStr === '2' ? 44000 : 31900));
+
+  if (basePriceNum === 0) {
+    if (totalPriceNum > 0) {
+      basePriceNum = optionPriceNum > 0 ? Math.max(0, totalPriceNum - optionPriceNum) : totalPriceNum;
+    } else {
+      basePriceNum = matrixBase;
     }
   }
 
   if (totalPriceNum === 0) {
     totalPriceNum = basePriceNum + optionPriceNum;
   } else if (optionPriceNum > 0 && totalPriceNum === basePriceNum) {
-    // If totalPrice was only basePrice, sum them together
     totalPriceNum = basePriceNum + optionPriceNum;
   }
 
