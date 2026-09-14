@@ -740,10 +740,10 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
-    // 3. Email Check
+    // 3. Email Check (선택 입력: 입력된 경우에만 형식 검사)
     const emailVal = document.getElementById('memberEmail').value.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailVal || !emailRegex.test(emailVal)) {
+    if (emailVal && !emailRegex.test(emailVal)) {
       setError('memberEmail');
       isValid = false;
     }
