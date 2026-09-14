@@ -618,11 +618,15 @@ function initPriceTableSelection() {
   function updateSelection(cell) {
     if (!cell) return;
     priceCells.forEach(c => c.classList.remove('selected'));
-    cell.classList.add('selected');
 
     const car = cell.dataset.car || '소형·중형';
     const planVal = cell.dataset.planVal || '퍼펙트 (월 4회 할인 특가)';
     const price = cell.dataset.price || '66,000원';
+
+    // Highlight all matching price cells across all tables on the page
+    document.querySelectorAll(`.price-cell[data-car="${car}"][data-plan-val="${planVal}"]`).forEach(c => {
+      c.classList.add('selected');
+    });
 
     if (selectedCarTypeInput) selectedCarTypeInput.value = car;
     if (selectedBasePriceInput) selectedBasePriceInput.value = price;

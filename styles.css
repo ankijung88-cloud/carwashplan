@@ -419,7 +419,121 @@ a:hover {
   color: var(--text-muted);
 }
 
-/* Hero Visual Banner */
+/* Hero Pricing Card */
+.hero-pricing-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.82) 0%, rgba(15, 23, 42, 0.92) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.38);
+  border-radius: var(--radius-lg);
+  padding: 26px 28px;
+  max-width: 860px;
+  margin: 0 auto;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45), 0 0 30px rgba(14, 165, 233, 0.18);
+  backdrop-filter: blur(16px);
+  text-align: center;
+}
+
+.hero-pricing-header {
+  margin-bottom: 18px;
+}
+
+.hero-pricing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(14, 165, 233, 0.14);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+}
+
+.hero-pricing-badge i {
+  width: 15px;
+  height: 15px;
+}
+
+.hero-pricing-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
+
+.hero-pricing-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.hero-plan-table-wrapper {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.hero-price-table th {
+  padding: 12px 10px;
+  font-size: 0.88rem;
+}
+
+.hero-price-table td {
+  padding: 12px 10px;
+  font-size: 0.88rem;
+}
+
+.hero-pricing-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.hero-pricing-perks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+}
+
+.perk-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #E2E8F0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 9999px;
+}
+
+.perk-item i {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.hero-pricing-cta-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-main-cta {
+  min-width: 280px;
+  padding: 15px 32px;
+  font-size: 1.05rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Legacy Hero Visual Banner Fallback */
 .hero-visual-wrapper {
   position: relative;
   border-radius: var(--radius-lg);
@@ -2561,6 +2675,35 @@ a:hover {
     font-size: 0.65rem;
     white-space: nowrap;
     margin-top: 2px;
+  }
+
+  .hero-pricing-card {
+    padding: 18px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-pricing-title {
+    font-size: 1.15rem;
+  }
+
+  .hero-pricing-desc {
+    font-size: 0.78rem;
+  }
+
+  .hero-pricing-perks {
+    gap: 6px;
+  }
+
+  .perk-item {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+  }
+
+  .hero-main-cta {
+    width: 100%;
+    min-width: unset;
+    font-size: 0.95rem;
+    padding: 14px 18px;
   }
 
   .hero-visual-wrapper {
