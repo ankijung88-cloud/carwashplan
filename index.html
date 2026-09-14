@@ -334,6 +334,23 @@
                 </div>
               </div>
 
+              <!-- Requested Discount Input (요청할인금액 직접 입력) -->
+              <div class="custom-discount-block" style="margin-top: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-md); padding: 12px 14px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 4px;">
+                  <label for="customDiscountPrice" style="margin: 0; font-size: 0.88rem; font-weight: 700; color: #38BDF8; display: flex; align-items: center; gap: 5px;">
+                    <i data-lucide="badge-percent" style="width: 15px; height: 15px;"></i>
+                    요청할인금액 <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">(선택)</span>
+                  </label>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">직접 할인 희망 금액을 입력해주세요.</span>
+                </div>
+                <div class="input-wrapper" style="position: relative;">
+                  <i data-lucide="tag" class="input-icon"></i>
+                  <input type="text" id="customDiscountPrice" name="customDiscountPrice" placeholder="예: 5,000 (금액 직접 입력)">
+                </div>
+              </div>
+
+              <input type="hidden" id="selectedDiscountPrice" name="selectedDiscountPrice" value="0원">
+
               <!-- Real-time Selected Plan & Calculated Total Price Badge Box (예상 월 이용 금액) -->
               <div class="selected-plan-badge-box" id="selectedPlanBadgeBox" style="margin-top:16px;">
                 <div class="badge-content">
