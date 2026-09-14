@@ -538,19 +538,29 @@ function calculateCurrentPlanAndOptions() {
   const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
   const displayBox = document.getElementById('selectedPlanPriceDisplay');
 
-  // 1. Get currently selected cell in table
-  const activeCell = document.querySelector('.plan-price-table .price-cell.selected');
-  let baseCar = activeCell?.dataset?.car || selectedCarTypeInput?.value || '소형·중형';
-  let basePlan = activeCell?.dataset?.plan || '퍼펙트 (월 4회)';
-  let basePriceStr = activeCell?.dataset?.price || selectedBasePriceInput?.value || '66,000원';
-  let basePriceNum = parsePriceNumber(basePriceStr);
-
-  if (basePriceNum === 0) {
-    basePriceNum = (PRICING_MATRIX[baseCar] && PRICING_MATRIX[baseCar]['4']) || 66000;
-    basePriceStr = formatPriceKRW(basePriceNum);
+  // 1. Get plan from radio or default to '퍼펙트'
+  const planRadio = document.querySelector('input[name="experience"]:checked')?.value || '퍼펙트 (월 4회 할인 특가)';
+  let planCount = '4';
+  let basePlan = '퍼펙트 (월 4회)';
+  if (planRadio.includes('1') || planRadio.includes('라이트')) {
+    planCount = '1';
+    basePlan = '라이트 (월 1회)';
+  } else if (planRadio.includes('2') || planRadio.includes('격주') || planRadio.includes('스마트')) {
+    planCount = '2';
+    basePlan = '스마트 (격주)';
   }
 
-  // 2. Sum up checked extra options
+  // 2. Detect car type from car model input if filled, otherwise use selectedCarTypeInput or '소형·중형'
+  const modelVal = document.getElementById('carModel')?.value?.trim();
+  let baseCar = selectedCarTypeInput?.value || '소형·중형';
+  if (modelVal) {
+    baseCar = detectCarTypeFromText(modelVal);
+  }
+
+  let basePriceNum = (PRICING_MATRIX[baseCar] && PRICING_MATRIX[baseCar][planCount]) || 66000;
+  let basePriceStr = formatPriceKRW(basePriceNum);
+
+  // 3. Sum up checked extra options
   const checkedOptionEls = document.querySelectorAll('input[name="extraOption"]:checked');
   let optionTotalNum = 0;
   const optionList = [];
@@ -607,59 +617,13 @@ function calculateCurrentPlanAndOptions() {
 }
 
 function initPriceTableSelection() {
-  const priceCells = document.querySelectorAll('.plan-price-table .price-cell');
   const planRadios = document.querySelectorAll('input[name="experience"]');
   const optionCheckboxes = document.querySelectorAll('input[name="extraOption"]');
-  const selectedCarTypeInput = document.getElementById('selectedCarType');
-  const selectedBasePriceInput = document.getElementById('selectedBasePrice');
-  const selectedPriceInput = document.getElementById('selectedPrice');
-  const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
-
-  function updateSelection(cell) {
-    if (!cell) return;
-    priceCells.forEach(c => c.classList.remove('selected'));
-
-    const car = cell.dataset.car || '소형·중형';
-    const planVal = cell.dataset.planVal || '퍼펙트 (월 4회 할인 특가)';
-    const price = cell.dataset.price || '66,000원';
-
-    // Highlight all matching price cells across all tables on the page
-    document.querySelectorAll(`.price-cell[data-car="${car}"][data-plan-val="${planVal}"]`).forEach(c => {
-      c.classList.add('selected');
-    });
-
-    if (selectedCarTypeInput) selectedCarTypeInput.value = car;
-    if (selectedBasePriceInput) selectedBasePriceInput.value = price;
-    if (selectedPriceInput) selectedPriceInput.value = price;
-    if (selectedTotalPriceInput) selectedTotalPriceInput.value = price;
-
-    // Sync radio card below
-    const targetRadio = document.querySelector(`input[name="experience"][value="${planVal}"]`);
-    if (targetRadio && !targetRadio.checked) {
-      targetRadio.checked = true;
-    }
-
-    calculateCurrentPlanAndOptions();
-  }
-
-  priceCells.forEach(cell => {
-    cell.addEventListener('click', (e) => {
-      e.stopPropagation();
-      updateSelection(cell);
-    });
-  });
+  const carModelInput = document.getElementById('carModel');
 
   planRadios.forEach(radio => {
     radio.addEventListener('change', () => {
-      if (!radio.checked) return;
-      const currentCar = selectedCarTypeInput?.value || '소형·중형';
-      const targetCell = Array.from(priceCells).find(c => c.dataset.car === currentCar && c.dataset.planVal === radio.value) ||
-                         Array.from(priceCells).find(c => c.dataset.planVal === radio.value);
-      if (targetCell) {
-        updateSelection(targetCell);
-      } else {
-        calculateCurrentPlanAndOptions();
-      }
+      calculateCurrentPlanAndOptions();
     });
   });
 
@@ -670,13 +634,14 @@ function initPriceTableSelection() {
     });
   });
 
-  window.resetPriceTableSelection = function() {
-    const defaultCell = document.querySelector('.plan-price-table .price-cell[data-car="소형·중형"][data-plan-val="퍼펙트 (월 4회 할인 특가)"]');
-    if (defaultCell) {
-      updateSelection(defaultCell);
-    } else {
+  if (carModelInput) {
+    carModelInput.addEventListener('input', () => {
       calculateCurrentPlanAndOptions();
-    }
+    });
+  }
+
+  window.resetPriceTableSelection = function() {
+    calculateCurrentPlanAndOptions();
   };
 
   // Initial calculation on load
