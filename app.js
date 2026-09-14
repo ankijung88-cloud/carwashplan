@@ -1671,14 +1671,13 @@ function generateRegistrationFormHTML(item) {
           <tr>
             <th class="th-label" style="white-space:nowrap; width:15%;">연락처</th>
             <td class="td-phone" style="white-space:nowrap; word-break:keep-all; font-weight:700; width:35%;">${escapeHtml(item.phone)}</td>
-            <th class="th-pay" style="white-space:nowrap; width:15%;">결제 / 금액</th>
+            <th class="th-pay" style="white-space:nowrap; width:15%;">결제방법</th>
             <td class="td-pay" style="width:35%;">
               <span class="payment-opts">
                 <span class="payment-opt-item"><span class="check-box ${isBank ? 'checked' : ''}">${isBank ? '☑' : '☐'}</span> 계좌이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isAuto ? 'checked' : ''}">${isAuto ? '☑' : '☐'}</span> 자동이체</span>
                 <span class="payment-opt-item"><span class="check-box ${isCard ? 'checked' : ''}">${isCard ? '☑' : '☐'}</span> 카드</span>
               </span>
-              <span style="font-weight:800; color:#0369A1; margin-left:6px; font-size:11.5px; white-space:nowrap;">(${escapeHtml(totalPriceStr)}${optionPriceNum > 0 ? ` <span style="font-size:8.5pt; color:#64748B; font-weight:600;">[기본 ${basePriceStr} + 옵션 ${optionPriceStr}]</span>` : ''})</span>
             </td>
           </tr>
           <tr>
