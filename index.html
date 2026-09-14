@@ -150,54 +150,7 @@
     </section>
 
 
-    <!-- Customer Features & Photo Gallery Section -->
-    <section class="section gallery-section">
-      <!-- Interactive Horizontal Loop Photo Gallery (30 Photos) -->
-      <div class="gallery-carousel-container" id="galleryCarouselContainer">
-        <div class="gallery-carousel-header">
-          <div class="gallery-header-left">
-            <h3 class="gallery-carousel-title"><i data-lucide="images"></i> 출장세차 프리미엄 케어 갤러리</h3>
-            <p class="gallery-carousel-subtitle">사진을 클릭하시면 시공 원본 고화질 이미지와 케어 설명을 확대하여 확인하실 수 있습니다.</p>
-          </div>
-          <div class="gallery-counter-badge" id="galleryCounterBadge">
-            <i data-lucide="camera"></i> <span id="currentCardIndex">1</span> / <span id="totalCardCount">5</span>
-          </div>
-        </div>
-        
-        <div class="gallery-loop-wrapper">
-          <button class="gallery-nav-btn prev-btn" id="galleryPrevBtn" aria-label="이전 사진"><i data-lucide="chevron-left"></i></button>
-          
-          <div class="gallery-track-container" id="galleryTrackContainer">
-            <div class="gallery-track" id="galleryTrack">
-              <!-- Dynamically populated via app.js with 30 Photos -->
-            </div>
-          </div>
 
-          <button class="gallery-nav-btn next-btn" id="galleryNextBtn" aria-label="다음 사진"><i data-lucide="chevron-right"></i></button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Photo Lightbox Modal with 30 Photos Carousel Navigation -->
-    <div id="photoModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-      <div class="modal-container photo-modal-container">
-        <div class="modal-header">
-          <div class="photo-modal-header-info">
-            <h3 class="modal-title" id="photoModalTitle">사진 상세보기</h3>
-            <span class="modal-counter-tag" id="modalPhotoCounter">1 / 30</span>
-          </div>
-          <button id="closePhotoBtn" class="close-btn" aria-label="닫기"><i data-lucide="x"></i></button>
-        </div>
-        <div class="modal-body photo-modal-body">
-          <div class="photo-lightbox-view">
-            <button class="modal-nav-btn modal-prev-btn" id="modalPrevBtn" aria-label="이전 사진"><i data-lucide="chevron-left"></i></button>
-            <img id="photoModalImg" src="" alt="세차 사진 확대보기">
-            <button class="modal-nav-btn modal-next-btn" id="modalNextBtn" aria-label="다음 사진"><i data-lucide="chevron-right"></i></button>
-          </div>
-          <p class="photo-modal-desc" id="photoModalDesc"></p>
-        </div>
-      </div>
-    </div>
 
 
 
