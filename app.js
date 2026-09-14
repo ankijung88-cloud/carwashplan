@@ -600,14 +600,13 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
   const optionPriceFormatted = formatPriceKRW(optionTotalNum);
   const totalPriceFormatted = formatPriceKRW(totalNum);
 
-  // 9% Special Discount Calculation (정기회원 9% 특별 할인)
-  const discountRate = 0.09;
-  const discountedTotalNum = Math.round(totalNum * (1 - discountRate));
+  // 부가세 할인 계산 (VAT 부가세 상당액 할인: 공급가액 적용)
+  const discountedTotalNum = Math.round(totalNum / 1.1);
   const discountSavedNum = totalNum - discountedTotalNum;
   const discountedTotalFormatted = formatPriceKRW(discountedTotalNum);
   const discountSavedFormatted = formatPriceKRW(discountSavedNum);
 
-  const discountedBaseNum = Math.round(basePriceNum * (1 - discountRate));
+  const discountedBaseNum = Math.round(basePriceNum / 1.1);
   const discountedBaseFormatted = formatPriceKRW(discountedBaseNum);
 
   // Update hidden inputs
@@ -617,7 +616,7 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
   if (selectedOptionPriceInput) selectedOptionPriceInput.value = optionPriceFormatted;
   if (selectedTotalPriceInput) selectedTotalPriceInput.value = discountedTotalFormatted;
 
-  // Update Display Badge with 9% Discount Emphasis
+  // Update Display Badge with 부가세 할인 Emphasis
   if (displayBox) {
     if (optionTotalNum > 0) {
       displayBox.innerHTML = `
@@ -626,7 +625,7 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
             ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
           </span>
           <del style="color:#94A3B8; font-size:0.92rem; font-weight:600; text-decoration:line-through;">총 ${totalPriceFormatted}</del>
-          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">9% 할인</span>
+          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">부가세 할인</span>
           <span style="color:#F43F5E; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(244,63,94,0.4);">총 ${discountedTotalFormatted}</span>
         </div>
         <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
@@ -638,7 +637,7 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
         </div>
         <div style="font-size:0.78rem; color:#34D399; margin-top:5px; font-weight:700; display:flex; align-items:center; gap:4px;">
           <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
-          <span>정기회원 9% 특별 할인 적용 완료! (총 ${discountSavedFormatted} 할인)</span>
+          <span>정기회원 부가세 할인 적용 완료! (총 ${discountSavedFormatted} 할인)</span>
         </div>
       `;
     } else {
@@ -648,12 +647,12 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
             ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
           </span>
           <del style="color:#94A3B8; font-size:0.92rem; font-weight:600; text-decoration:line-through;">월 ${basePriceFormatted}</del>
-          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">9% 할인</span>
+          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">부가세 할인</span>
           <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">월 ${discountedBaseFormatted}</span>
         </div>
         <div style="font-size:0.78rem; color:#34D399; margin-top:5px; font-weight:700; display:flex; align-items:center; gap:4px;">
           <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
-          <span>정기회원 9% 특별 할인 적용 완료! (월 ${discountSavedFormatted} 할인 혜택)</span>
+          <span>정기회원 부가세 할인 적용 완료! (월 ${discountSavedFormatted} 할인 혜택)</span>
         </div>
       `;
     }
