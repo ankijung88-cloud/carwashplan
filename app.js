@@ -824,15 +824,8 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
-    // 6. Preferred Days Check
+    // 6. Preferred Days (선택 항목)
     const checkedDayEls = document.querySelectorAll('input[name="preferredDays"]:checked');
-    const dayErr = document.getElementById('dayError');
-    if (checkedDayEls.length === 0) {
-      if (dayErr) dayErr.style.display = 'block';
-      isValid = false;
-    } else {
-      if (dayErr) dayErr.style.display = 'none';
-    }
 
     // 7. Required Terms Check
     let allTermsChecked = true;
@@ -856,7 +849,7 @@ function initFormValidationAndSubmit() {
     const selectedPriceVal = calc.totalPrice || document.getElementById('selectedPrice')?.value?.trim() || '66,000원';
     const selectedCarTypeVal = document.getElementById('selectedCarType')?.value?.trim() || calc.car || '소형·중형';
     const paymentMethodVal = document.querySelector('input[name="paymentMethod"]:checked')?.value || '카드';
-    const selectedDaysStr = Array.from(checkedDayEls).map(cb => cb.value).join(', ');
+    const selectedDaysStr = checkedDayEls.length > 0 ? Array.from(checkedDayEls).map(cb => cb.value).join(', ') : '미지정 (조율 가능)';
     const extraOpts = calc.extraOptions || Array.from(document.querySelectorAll('input[name="extraOption"]:checked')).map(cb => cb.value).join(', ');
 
     const exteriorList = Array.from(document.querySelectorAll('input[name="exteriorState"]:checked')).map(cb => cb.value);

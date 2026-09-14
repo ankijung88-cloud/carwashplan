@@ -353,12 +353,12 @@
               </div>
             </div>
 
-            <!-- Preferred Car Wash Day Selection -->
+            <!-- Preferred Car Wash Day Selection (선택 항목) -->
             <div class="input-group">
-              <label>희망 세차 요일 선택 (복수 선택 가능) <span class="req">*</span></label>
+              <label><i data-lucide="calendar" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 희망 세차 요일 선택 <span style="font-size:0.8rem;color:var(--text-muted);font-weight:normal;">(선택 / 복수 선택 가능)</span></label>
               <div class="day-selector-grid">
                 <label class="day-chip">
-                  <input type="checkbox" name="preferredDays" value="월요일" checked>
+                  <input type="checkbox" name="preferredDays" value="월요일">
                   <span class="day-box">월</span>
                 </label>
                 <label class="day-chip">
@@ -386,7 +386,6 @@
                   <span class="day-box">일</span>
                 </label>
               </div>
-              <span class="error-msg" id="dayError">최소 1개 이상의 희망 세차 요일을 선택해주세요.</span>
             </div>
 
             <!-- Special Remarks Section (특이사항) -->
