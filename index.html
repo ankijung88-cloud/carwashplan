@@ -334,29 +334,22 @@
                 </div>
               </div>
 
-              <!-- Requested Discount Input (요청할인금액 직접 입력) -->
-              <div class="custom-discount-block" style="margin-top: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-md); padding: 12px 14px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 4px;">
-                  <label for="customDiscountPrice" style="margin: 0; font-size: 0.88rem; font-weight: 700; color: #38BDF8; display: flex; align-items: center; gap: 5px;">
-                    <i data-lucide="badge-percent" style="width: 15px; height: 15px;"></i>
-                    요청할인금액 <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">(선택)</span>
-                  </label>
-                  <span style="font-size: 0.75rem; color: var(--text-muted);">직접 할인 희망 금액을 입력해주세요.</span>
-                </div>
-                <div class="input-wrapper" style="position: relative;">
-                  <i data-lucide="tag" class="input-icon"></i>
-                  <input type="text" id="customDiscountPrice" name="customDiscountPrice" placeholder="예: 5,000 (금액 직접 입력)">
-                </div>
-              </div>
+              <input type="hidden" id="discountRequestedInput" name="discountRequested" value="N">
 
-              <input type="hidden" id="selectedDiscountPrice" name="selectedDiscountPrice" value="0원">
-
-              <!-- Real-time Selected Plan & Calculated Total Price Badge Box (예상 월 이용 금액) -->
+              <!-- Real-time Selected Plan & Calculated Total Price Badge Box (예상 월 이용 금액 & 할인요청 버튼) -->
               <div class="selected-plan-badge-box" id="selectedPlanBadgeBox" style="margin-top:16px;">
-                <div class="badge-content">
-                  <span class="badge-label"><i data-lucide="calculator" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 예상 월 이용 금액:</span>
-                  <div class="badge-value" id="selectedPlanPriceDisplay">
-                    <!-- Populated dynamically in real-time -->
+                <div class="badge-content" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                  <div style="flex: 1; min-width: 220px;">
+                    <span class="badge-label"><i data-lucide="calculator" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 예상 월 이용 금액:</span>
+                    <div class="badge-value" id="selectedPlanPriceDisplay">
+                      <!-- Populated dynamically in real-time -->
+                    </div>
+                  </div>
+                  <div style="flex-shrink: 0;">
+                    <button type="button" id="requestDiscountBtn" class="btn-discount-request" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color: #FFFFFF; border: 1px solid rgba(56,189,248,0.5); padding: 9px 15px; border-radius: 8px; font-size: 0.88rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(2,132,199,0.35); transition: all 0.2s ease;">
+                      <i data-lucide="badge-percent" style="width: 15px; height: 15px;"></i>
+                      <span id="requestDiscountBtnText">할인요청</span>
+                    </button>
                   </div>
                 </div>
               </div>

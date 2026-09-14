@@ -600,59 +600,29 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
   const optionPriceFormatted = formatPriceKRW(optionTotalNum);
   const totalPriceFormatted = formatPriceKRW(totalNum);
 
-  // 4. Custom Requested Discount Calculation (요청할인금액 직접 입력 반영)
-  const discountInput = document.getElementById('customDiscountPrice');
-  const selectedDiscountInput = document.getElementById('selectedDiscountPrice');
-  let customDiscountNum = 0;
-  if (discountInput && discountInput.value) {
-    customDiscountNum = parsePriceNumber(discountInput.value) || 0;
-  }
-
-  // 할인금액은 총액을 초과할 수 없음
-  if (customDiscountNum > totalNum) {
-    customDiscountNum = totalNum;
-  }
-
-  const finalTotalNum = Math.max(0, totalNum - customDiscountNum);
-  const customDiscountFormatted = formatPriceKRW(customDiscountNum);
-  const finalTotalFormatted = formatPriceKRW(finalTotalNum);
-
-  // Update hidden inputs
+  // Update hidden inputs (원래의 정규 금액 유지)
   if (selectedCarTypeInput) selectedCarTypeInput.value = baseCar;
-  if (selectedPriceInput) selectedPriceInput.value = finalTotalFormatted;
+  if (selectedPriceInput) selectedPriceInput.value = totalPriceFormatted;
   if (selectedBasePriceInput) selectedBasePriceInput.value = basePriceFormatted;
   if (selectedOptionPriceInput) selectedOptionPriceInput.value = optionPriceFormatted;
-  if (selectedTotalPriceInput) selectedTotalPriceInput.value = finalTotalFormatted;
-  if (selectedDiscountInput) selectedDiscountInput.value = customDiscountFormatted;
+  if (selectedTotalPriceInput) selectedTotalPriceInput.value = totalPriceFormatted;
 
-  // Update Display Badge with 요청할인금액 Emphasis
+  // Update Display Badge
   if (displayBox) {
-    if (customDiscountNum > 0) {
+    if (optionTotalNum > 0) {
       displayBox.innerHTML = `
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <span style="font-size:1.05rem; font-weight:800; color:#FFFFFF;">
             ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
           </span>
-          <del style="color:#94A3B8; font-size:0.92rem; font-weight:600; text-decoration:line-through;">정상가 ${totalPriceFormatted}</del>
-          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">요청할인 적용</span>
-          <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">${finalTotalFormatted}</span>
+          <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">총 ${totalPriceFormatted}</span>
         </div>
-        ${optionTotalNum > 0 ? `
-          <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
-            (기본 요금 ${basePriceFormatted} + 추가 옵션 ${optionPriceFormatted} - 요청할인 ${customDiscountFormatted})
-          </div>
-          <div style="margin-top:6px; font-size:0.82rem; color:#E0F2FE; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="background:rgba(56,189,248,0.25); border:1px solid rgba(56,189,248,0.4); color:#38BDF8; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">선택된 추가옵션</span>
-            <span style="color:#F1F5F9; font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
-          </div>
-        ` : `
-          <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
-            (정상 요금 ${totalPriceFormatted} - 요청할인 ${customDiscountFormatted})
-          </div>
-        `}
-        <div style="font-size:0.78rem; color:#34D399; margin-top:5px; font-weight:700; display:flex; align-items:center; gap:4px;">
-          <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
-          <span>요청할인 ${customDiscountFormatted} 적용 완료!</span>
+        <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
+          (기본 요금 ${basePriceFormatted} + 추가 옵션 ${optionPriceFormatted})
+        </div>
+        <div style="margin-top:6px; font-size:0.82rem; color:#E0F2FE; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="background:rgba(56,189,248,0.25); border:1px solid rgba(56,189,248,0.4); color:#38BDF8; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">선택된 추가옵션</span>
+          <span style="color:#F1F5F9; font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
         </div>
       `;
     } else {
@@ -661,17 +631,8 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
           <span style="font-size:1.05rem; font-weight:800; color:#FFFFFF;">
             ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
           </span>
-          <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">${totalPriceFormatted}</span>
+          <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">월 ${basePriceFormatted}</span>
         </div>
-        ${optionTotalNum > 0 ? `
-          <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
-            (기본 요금 ${basePriceFormatted} + 추가 옵션 ${optionPriceFormatted})
-          </div>
-          <div style="margin-top:6px; font-size:0.82rem; color:#E0F2FE; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="background:rgba(56,189,248,0.25); border:1px solid rgba(56,189,248,0.4); color:#38BDF8; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">선택된 추가옵션</span>
-            <span style="color:#F1F5F9; font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
-          </div>
-        ` : ''}
       `;
     }
     if (window.lucide) lucide.createIcons();
@@ -684,10 +645,8 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
     basePriceNum: basePriceNum,
     optionPrice: optionPriceFormatted,
     optionPriceNum: optionTotalNum,
-    discountAmount: customDiscountFormatted,
-    discountAmountNum: customDiscountNum,
-    totalPrice: finalTotalFormatted,
-    totalPriceNum: finalTotalNum,
+    totalPrice: totalPriceFormatted,
+    totalPriceNum: totalNum,
     originalTotalPrice: totalPriceFormatted,
     originalTotalPriceNum: totalNum,
     extraOptions: optionList.join(', ')
@@ -698,7 +657,9 @@ function initPriceTableSelection() {
   const planRadios = document.querySelectorAll('input[name="experience"]');
   const optionCheckboxes = document.querySelectorAll('input[name="extraOption"]');
   const carModelInput = document.getElementById('carModel');
-  const customDiscountInput = document.getElementById('customDiscountPrice');
+  const requestDiscountBtn = document.getElementById('requestDiscountBtn');
+  const discountRequestedInput = document.getElementById('discountRequestedInput');
+  const requestDiscountBtnText = document.getElementById('requestDiscountBtnText');
   const carChips = document.querySelectorAll('.car-type-chip');
   const selectedCarTypeInput = document.getElementById('selectedCarType');
 
@@ -738,22 +699,31 @@ function initPriceTableSelection() {
     });
   }
 
-  // Custom Requested Discount Real-time Input Handler
-  if (customDiscountInput) {
-    customDiscountInput.addEventListener('input', (e) => {
-      let rawVal = e.target.value.replace(/[^0-9]/g, '');
-      if (rawVal) {
-        let num = parseInt(rawVal, 10);
-        e.target.value = num.toLocaleString() + '원';
-      } else {
-        e.target.value = '';
+  // Discount Request Button Click Handler (할인요청 버튼 클릭 시 멘트 표시)
+  if (requestDiscountBtn) {
+    requestDiscountBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (discountRequestedInput) {
+        discountRequestedInput.value = 'Y';
       }
-      calculateCurrentPlanAndOptions(false);
+      requestDiscountBtn.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+      requestDiscountBtn.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+      requestDiscountBtn.style.boxShadow = '0 4px 14px rgba(16, 185, 129, 0.4)';
+      if (requestDiscountBtnText) {
+        requestDiscountBtnText.textContent = '할인요청 접수됨 ✓';
+      }
+      showToast('할인요청 접수', '금액할인요청이 접수되었습니다');
     });
   }
 
   window.resetPriceTableSelection = function() {
-    if (customDiscountInput) customDiscountInput.value = '';
+    if (discountRequestedInput) discountRequestedInput.value = 'N';
+    if (requestDiscountBtn) {
+      requestDiscountBtn.style.background = 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)';
+      requestDiscountBtn.style.borderColor = 'rgba(56,189,248,0.5)';
+      requestDiscountBtn.style.boxShadow = '0 4px 12px rgba(2,132,199,0.35)';
+      if (requestDiscountBtnText) requestDiscountBtnText.textContent = '할인요청';
+    }
     calculateCurrentPlanAndOptions(true);
   };
 
@@ -920,11 +890,11 @@ function initFormValidationAndSubmit() {
       price: calc.totalPrice,
       basePrice: calc.basePrice,
       optionPrice: calc.optionPrice,
-      discountPrice: calc.discountAmount || '0원',
       totalPrice: calc.totalPrice,
+      discountRequested: (document.getElementById('discountRequestedInput')?.value === 'Y' ? '신청됨' : '미신청'),
       plan: planVal,
       extraOptions: extraOpts || '없음',
-      experience: `${planVal} [총금액: ${calc.totalPrice}${calc.optionPriceNum > 0 ? ` (기본 ${calc.basePrice} + 옵션 ${calc.optionPrice})` : ''}${calc.discountAmountNum > 0 ? ` [요청할인: -${calc.discountAmount}]` : ''}]` + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
+      experience: `${planVal} [총금액: ${calc.totalPrice}${calc.optionPriceNum > 0 ? ` (기본 ${calc.basePrice} + 옵션 ${calc.optionPrice})` : ''}]` + (document.getElementById('discountRequestedInput')?.value === 'Y' ? ' [★금액할인요청: 접수됨]' : '') + (extraOpts ? ` [추가옵션: ${extraOpts}]` : ''),
       days: selectedDaysStr,
       exteriorState: exteriorList.join(', ') || '없음',
       interiorEnv: interiorList.join(', ') || '없음',
