@@ -600,49 +600,80 @@ function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
   const optionPriceFormatted = formatPriceKRW(optionTotalNum);
   const totalPriceFormatted = formatPriceKRW(totalNum);
 
+  // 10% Special Discount Calculation (정기회원 10% 특별 할인)
+  const discountRate = 0.10;
+  const discountedTotalNum = Math.round(totalNum * (1 - discountRate));
+  const discountSavedNum = totalNum - discountedTotalNum;
+  const discountedTotalFormatted = formatPriceKRW(discountedTotalNum);
+  const discountSavedFormatted = formatPriceKRW(discountSavedNum);
+
+  const discountedBaseNum = Math.round(basePriceNum * (1 - discountRate));
+  const discountedBaseFormatted = formatPriceKRW(discountedBaseNum);
+
   // Update hidden inputs
   if (selectedCarTypeInput) selectedCarTypeInput.value = baseCar;
-  if (selectedPriceInput) selectedPriceInput.value = totalPriceFormatted;
-  if (selectedBasePriceInput) selectedBasePriceInput.value = basePriceFormatted;
+  if (selectedPriceInput) selectedPriceInput.value = discountedTotalFormatted;
+  if (selectedBasePriceInput) selectedBasePriceInput.value = discountedBaseFormatted;
   if (selectedOptionPriceInput) selectedOptionPriceInput.value = optionPriceFormatted;
-  if (selectedTotalPriceInput) selectedTotalPriceInput.value = totalPriceFormatted;
+  if (selectedTotalPriceInput) selectedTotalPriceInput.value = discountedTotalFormatted;
 
-  // Update Display Badge
+  // Update Display Badge with 10% Discount Emphasis
   if (displayBox) {
     if (optionTotalNum > 0) {
       displayBox.innerHTML = `
-        <div style="font-size:1.05rem; font-weight:800; color:#38BDF8;">
-          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#F43F5E;">총 ${totalPriceFormatted}</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:1.05rem; font-weight:800; color:#FFFFFF;">
+            ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
+          </span>
+          <del style="color:#94A3B8; font-size:0.92rem; font-weight:600; text-decoration:line-through;">총 ${totalPriceFormatted}</del>
+          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">10% 할인</span>
+          <span style="color:#F43F5E; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(244,63,94,0.4);">총 ${discountedTotalFormatted}</span>
         </div>
-        <div style="font-size:0.82rem; color:#94A3B8; margin-top:4px;">
-          (플랜 기본 요금 ${basePriceFormatted} + 추가 옵션 ${optionPriceFormatted})
+        <div style="font-size:0.8rem; color:#94A3B8; margin-top:4px;">
+          (기본 요금 ${discountedBaseFormatted} + 추가 옵션 ${optionPriceFormatted} / 정상가 ${totalPriceFormatted})
         </div>
         <div style="margin-top:6px; font-size:0.82rem; color:#E0F2FE; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
           <span style="background:rgba(56,189,248,0.25); border:1px solid rgba(56,189,248,0.4); color:#38BDF8; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">선택된 추가옵션</span>
           <span style="color:#F1F5F9; font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
         </div>
+        <div style="font-size:0.78rem; color:#34D399; margin-top:5px; font-weight:700; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
+          <span>정기회원 10% 특별 할인 적용 완료! (총 ${discountSavedFormatted} 할인)</span>
+        </div>
       `;
     } else {
       displayBox.innerHTML = `
-        <div style="font-size:1.05rem; font-weight:800; color:#38BDF8;">
-          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;">월 ${basePriceFormatted}</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:1.05rem; font-weight:800; color:#FFFFFF;">
+            ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — 
+          </span>
+          <del style="color:#94A3B8; font-size:0.92rem; font-weight:600; text-decoration:line-through;">월 ${basePriceFormatted}</del>
+          <span style="background:linear-gradient(135deg, #EF4444 0%, #E11D48 100%); color:#FFFFFF; font-size:0.75rem; font-weight:900; padding:2px 7px; border-radius:4px; box-shadow:0 2px 6px rgba(239,68,68,0.4);">10% 할인</span>
+          <span style="color:#38BDF8; font-size:1.22rem; font-weight:900; text-shadow:0 0 12px rgba(56,189,248,0.4);">월 ${discountedBaseFormatted}</span>
         </div>
-        <div style="font-size:0.8rem; color:#94A3B8; margin-top:2px;">
-          (추가 옵션 없음 / 정기 출장세차 기본 요금 적용)
+        <div style="font-size:0.78rem; color:#34D399; margin-top:5px; font-weight:700; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
+          <span>정기회원 10% 특별 할인 적용 완료! (월 ${discountSavedFormatted} 할인 혜택)</span>
         </div>
       `;
     }
+    if (window.lucide) lucide.createIcons();
   }
 
   return {
     car: baseCar,
     plan: basePlan,
-    basePrice: basePriceFormatted,
-    basePriceNum: basePriceNum,
+    basePrice: discountedBaseFormatted,
+    basePriceNum: discountedBaseNum,
+    originalBasePrice: basePriceFormatted,
+    originalBasePriceNum: basePriceNum,
     optionPrice: optionPriceFormatted,
     optionPriceNum: optionTotalNum,
-    totalPrice: totalPriceFormatted,
-    totalPriceNum: totalNum,
+    totalPrice: discountedTotalFormatted,
+    totalPriceNum: discountedTotalNum,
+    originalTotalPrice: totalPriceFormatted,
+    originalTotalPriceNum: totalNum,
+    discountAmount: discountSavedFormatted,
     extraOptions: optionList.join(', ')
   };
 }
