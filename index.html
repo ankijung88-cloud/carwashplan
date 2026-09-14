@@ -227,11 +227,7 @@
                 <label for="carModel">보유 차종 (모델명) <span class="req">*</span></label>
                 <div class="input-wrapper">
                   <i data-lucide="car" class="input-icon"></i>
-                  <input type="text" id="carModel" name="model" placeholder="예: 제네시스 G80, 쏘렌토, 카니발, 아반떼" required>
-                </div>
-                <div id="carTypeAutoBadge" style="font-size:0.78rem; color:#38BDF8; margin-top:5px; font-weight:600; display:flex; align-items:center; gap:4px;">
-                  <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
-                  <span>차종 자동분류: <strong id="carTypeDetectedLabel" style="color:#FFF; background:rgba(14,165,233,0.25); border:1px solid rgba(14,165,233,0.4); padding:1px 6px; border-radius:4px;">소형·중형</strong></span>
+                  <input type="text" id="carModel" name="model" placeholder="예: 렉스턴, 쏘렌토, G80, 카니발, 아반떼" required>
                 </div>
                 <span class="error-msg" id="modelError">보유 차종을 입력해주세요.</span>
               </div>
@@ -243,6 +239,25 @@
                   <input type="text" id="carColor" name="color" placeholder="예: 블랙 (검정) / 화이트 (흰색)" required>
                 </div>
                 <span class="error-msg" id="colorError">차량 색상을 입력해주세요.</span>
+              </div>
+            </div>
+
+            <!-- Interactive Car Type Category Chips (자동 감지 및 수동 선택) -->
+            <div class="input-group" style="margin-top: -4px;">
+              <div class="car-type-selector-block">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 4px;">
+                  <span style="font-size: 0.8rem; color: #38BDF8; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                    <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i>
+                    차종 구분 (모델명 입력 시 자동 분류 & 직접 클릭 변경 가능):
+                  </span>
+                  <span style="font-size: 0.76rem; color: var(--text-muted);">현재 분류: <strong id="carTypeDetectedLabel" style="color: #FFF; background: rgba(14,165,233,0.3); border: 1px solid rgba(14,165,233,0.5); padding: 1px 7px; border-radius: 4px;">소형·중형</strong></span>
+                </div>
+                <div class="car-type-chips-grid" id="carTypeChipsGrid">
+                  <button type="button" class="car-type-chip active" data-car="소형·중형">소형·중형</button>
+                  <button type="button" class="car-type-chip" data-car="대형 세단">대형 세단</button>
+                  <button type="button" class="car-type-chip" data-car="SUV">SUV</button>
+                  <button type="button" class="car-type-chip" data-car="대형 SUV / 카니발">대형 SUV / 카니발</button>
+                </div>
               </div>
             </div>
 

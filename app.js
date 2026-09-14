@@ -519,25 +519,25 @@ function detectCarTypeFromText(text) {
   if (!text) return '소형·중형';
   const clean = String(text).toUpperCase().replace(/\s+/g, '');
 
-  // 1. 대형 SUV / 카니발
-  if (/카니발|팰리세이드|펠리세이드|모하비|GV80|EV9|트래버스|타호|에스컬레이드|익스플로러|X7|GLS|Q7|Q8|레인지로버|스타리아|스타렉스|대형SUV|하이리무진|시에나|오디세이/i.test(clean)) {
+  // 1. 대형 SUV / 카니발 (대형 SUV, 픽업트럭, 미니밴, 대형 승합 등)
+  if (/렉스턴|REXTON|G4렉스턴|스포츠칸|렉스턴스포츠|렉스턴칸|칸\b|팰리세이드|펠리세이드|PALISADE|카니발|CARNIVAL|하이리무진|리무진|모하비|MOHAVE|베라크루즈|맥스크루즈|GV80|EV9|스타리아|STARIA|스타렉스|STAREX|트래버스|TRAVERSE|타호|TAHOE|서버번|실버라도|콜로라도|COLORADO|에스컬레이드|ESCALADE|익스플로러|EXPLORER|익스페디션|에비에이터|AVIATOR|네비게이터|NAVIGATOR|X7|GLS|G바겐|G클래스|G63|Q7|Q8|SQ7|SQ8|레인지로버|RANGERover|보그|디펜더|DEFENDER|디스커버리|DISCOVERY|그랜드체로키|글래디에이터|시에나|SIENNA|오디세이|ODYSSEY|알파드|포터|봉고|대형SUV|대형\s*SUV|픽업/i.test(clean)) {
     return '대형 SUV / 카니발';
   }
 
-  // 2. SUV (중형·준중형·소형 SUV)
-  if (/SUV|쏘렌토|소렌토|싼타페|산타페|투싼|스포티지|QM6|GV70|토레스|액티언|셀토스|코나|티볼리|니로|트랙스|트레일블레이저|베뉴|XM3|EV6|아이오닉5|아이오닉6|GV60|X3|X4|X5|X6|GLC|GLE|GLA|GLB|Q3|Q5|마칸|카이엔|모델Y|MODELY|모델X|MODELX|XC60|XC90|XC40|푸조3008|푸조5008|체로키|랭글러/i.test(clean)) {
+  // 2. SUV (중형·준중형·소형 SUV 및 CUV)
+  if (/SUV|쏘렌토|소렌토|SORENTO|싼타페|산타페|SANTAFE|투싼|TUCSON|스포티지|SPORTAGE|QM6|QM5|QM3|XM3|아르카나|토레스|TORRES|액티언|ACTYON|코란도|KORANDO|무쏘|티볼리|TIVOLI|셀토스|SELTOS|니로|NIRO|코나|KONA|베뉴|VENUE|스토닉|STONIC|쏘울|SOUL|트랙스|TRAX|트레일블레이저|TRAILBLAZER|이쿼녹스|EQUINOX|캡티바|CAPTIVA|윈스톰|GV70|GV60|EV6|EV3|EV4|아이오닉5|아이오닉6|IONIQ|X1|X2|X3|X4|X5|X6|IX|GLA|GLB|GLC|GLE|EQA|EQB|EQC|EQE\s*SUV|EQS\s*SUV|Q2|Q3|Q4|Q5|E-TRON|이트론|마칸|MACAN|카이엔|CAYENNE|모델Y|MODELY|모델X|MODELX|XC40|XC60|XC90|C40|티구안|TIGUAN|투아렉|TOUAREG|티록|체로키|CHEROKEE|컴패스|COMPASS|레니게이드|RENEGADE|랭글러|WRANGLER|브롱코|BRONCO|노틸러스|코세어|NX|RX|UX|RZ|이보크|EVOQUE|벨라|VELAR/i.test(clean)) {
     return 'SUV';
   }
 
-  // 3. 대형 세단
-  if (/G80|G90|EQ900|에쿠스|체어맨|K9|K8|그랜저|그랜져|K7|제네시스|GENESIS|E클래스|E-CLASS|ECLASS|S클래스|S-CLASS|SCLASS|5시리즈|7시리즈|520D|520I|530I|730D|740I|A6|A7|A8|파나메라|타이칸|모델S|MODELS|대형세단|준대형/i.test(clean)) {
+  // 3. 대형 세단 (준대형 / 대형 / 프리미엄 플래그십 세단)
+  if (/G80|G90|EQ900|에쿠스|EQUUS|체어맨|CHAIRMAN|K9|K8|그랜저|그랜져|GRANDEUR|K7|제네시스|GENESIS|G70|오피러스|아슬란|다이나스티|E클래스|E-CLASS|ECLASS|E200|E220|E250|E300|E350|E450|S클래스|S-CLASS|SCLASS|S350|S400|S450|S500|S560|S580|S600|마이바흐|MAYBACH|CLS|EQS|5시리즈|5-SERIES|5SERIES|520|520D|520I|523|525|528|530|530I|530E|535|540|550|M5|I5|7시리즈|7-SERIES|7SERIES|730|740|745|750|760|I7|6시리즈|6GT|8시리즈|A6|S6|RS6|A7|S7|RS7|A8|S8|파나메라|PANAMERA|타이칸|TAYCAN|모델S|MODELS|S90|V90|아테온|ARTEON|페이톤|파사트|PASSAT|300C|CT6|CTS|XF|XJ|ES|ES300H|LS|LS500|대형세단|준대형/i.test(clean)) {
     return '대형 세단';
   }
 
   return '소형·중형';
 }
 
-function calculateCurrentPlanAndOptions() {
+function calculateCurrentPlanAndOptions(autoDetectFromModel = true) {
   const selectedCarTypeInput = document.getElementById('selectedCarType');
   const selectedPriceInput = document.getElementById('selectedPrice');
   const selectedBasePriceInput = document.getElementById('selectedBasePrice');
@@ -545,6 +545,7 @@ function calculateCurrentPlanAndOptions() {
   const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
   const displayBox = document.getElementById('selectedPlanPriceDisplay');
   const carTypeDetectedLabel = document.getElementById('carTypeDetectedLabel');
+  const carChips = document.querySelectorAll('.car-type-chip');
 
   // 1. Get plan from radio or default to '퍼펙트'
   const planRadio = document.querySelector('input[name="experience"]:checked')?.value || '퍼펙트 (월 4회 할인 특가)';
@@ -558,19 +559,24 @@ function calculateCurrentPlanAndOptions() {
     basePlan = '스마트 (격주)';
   }
 
-  // 2. Detect car type from car model input if filled, otherwise use selectedCarTypeInput or '소형·중형'
+  // 2. Detect car type from car model input if filled and auto-detect is active
   const modelVal = document.getElementById('carModel')?.value?.trim();
-  let baseCar = '소형·중형';
-  if (modelVal) {
+  let baseCar = selectedCarTypeInput?.value || '소형·중형';
+  if (modelVal && autoDetectFromModel) {
     baseCar = detectCarTypeFromText(modelVal);
-  } else if (selectedCarTypeInput?.value) {
-    baseCar = selectedCarTypeInput.value;
   }
 
-  // Update detected car badge on UI
+  // Update detected car badge and chip selection on UI
   if (carTypeDetectedLabel) {
     carTypeDetectedLabel.textContent = baseCar;
   }
+  carChips.forEach(c => {
+    if (c.dataset.car === baseCar) {
+      c.classList.add('active');
+    } else {
+      c.classList.remove('active');
+    }
+  });
 
   let basePriceNum = (PRICING_MATRIX[baseCar] && PRICING_MATRIX[baseCar][planCount]) || 66000;
   let basePriceStr = formatPriceKRW(basePriceNum);
@@ -645,6 +651,25 @@ function initPriceTableSelection() {
   const planRadios = document.querySelectorAll('input[name="experience"]');
   const optionCheckboxes = document.querySelectorAll('input[name="extraOption"]');
   const carModelInput = document.getElementById('carModel');
+  const carChips = document.querySelectorAll('.car-type-chip');
+  const selectedCarTypeInput = document.getElementById('selectedCarType');
+
+  // Manual Car Type Chip Click
+  carChips.forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      const chosenCar = chip.dataset.car;
+      if (!chosenCar) return;
+
+      carChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      if (selectedCarTypeInput) {
+        selectedCarTypeInput.value = chosenCar;
+      }
+      calculateCurrentPlanAndOptions(false);
+    });
+  });
 
   planRadios.forEach(radio => {
     radio.addEventListener('change', () => {
@@ -661,16 +686,16 @@ function initPriceTableSelection() {
 
   if (carModelInput) {
     carModelInput.addEventListener('input', () => {
-      calculateCurrentPlanAndOptions();
+      calculateCurrentPlanAndOptions(true);
     });
   }
 
   window.resetPriceTableSelection = function() {
-    calculateCurrentPlanAndOptions();
+    calculateCurrentPlanAndOptions(true);
   };
 
   // Initial calculation on load
-  calculateCurrentPlanAndOptions();
+  calculateCurrentPlanAndOptions(true);
 }
 
 function initFormValidationAndSubmit() {
