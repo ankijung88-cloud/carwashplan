@@ -517,16 +517,23 @@ const PRICING_MATRIX = {
 
 function detectCarTypeFromText(text) {
   if (!text) return '소형·중형';
-  const clean = String(text).toUpperCase();
-  if (/카니발|펠리세이드|팰리세이드|모하비|GV80|트래버스|타호|에스컬레이드|대형\s*SUV|대형SUV|카니발/i.test(clean)) {
+  const clean = String(text).toUpperCase().replace(/\s+/g, '');
+
+  // 1. 대형 SUV / 카니발
+  if (/카니발|팰리세이드|펠리세이드|모하비|GV80|EV9|트래버스|타호|에스컬레이드|익스플로러|X7|GLS|Q7|Q8|레인지로버|스타리아|스타렉스|대형SUV|하이리무진|시에나|오디세이/i.test(clean)) {
     return '대형 SUV / 카니발';
   }
-  if (/SUV|쏘렌토|싼타페|산타페|투싼|스포티지|스포티지R|QM6|GV70|토레스|셀토스|코나|티볼리|니로|트랙스|베뉴|XM3/i.test(clean)) {
+
+  // 2. SUV (중형·준중형·소형 SUV)
+  if (/SUV|쏘렌토|소렌토|싼타페|산타페|투싼|스포티지|QM6|GV70|토레스|액티언|셀토스|코나|티볼리|니로|트랙스|트레일블레이저|베뉴|XM3|EV6|아이오닉5|아이오닉6|GV60|X3|X4|X5|X6|GLC|GLE|GLA|GLB|Q3|Q5|마칸|카이엔|모델Y|MODELY|모델X|MODELX|XC60|XC90|XC40|푸조3008|푸조5008|체로키|랭글러/i.test(clean)) {
     return 'SUV';
   }
-  if (/G80|G90|K9|K8|그랜저|그랜져|K7|제네시스|대형\s*세단|대형세단|E클래스|E-CLASS|5시리즈|520D|520I|530I|A6|G70/i.test(clean)) {
+
+  // 3. 대형 세단
+  if (/G80|G90|EQ900|에쿠스|체어맨|K9|K8|그랜저|그랜져|K7|제네시스|GENESIS|E클래스|E-CLASS|ECLASS|S클래스|S-CLASS|SCLASS|5시리즈|7시리즈|520D|520I|530I|730D|740I|A6|A7|A8|파나메라|타이칸|모델S|MODELS|대형세단|준대형/i.test(clean)) {
     return '대형 세단';
   }
+
   return '소형·중형';
 }
 
@@ -537,6 +544,7 @@ function calculateCurrentPlanAndOptions() {
   const selectedOptionPriceInput = document.getElementById('selectedOptionPrice');
   const selectedTotalPriceInput = document.getElementById('selectedTotalPrice');
   const displayBox = document.getElementById('selectedPlanPriceDisplay');
+  const carTypeDetectedLabel = document.getElementById('carTypeDetectedLabel');
 
   // 1. Get plan from radio or default to '퍼펙트'
   const planRadio = document.querySelector('input[name="experience"]:checked')?.value || '퍼펙트 (월 4회 할인 특가)';
@@ -552,9 +560,16 @@ function calculateCurrentPlanAndOptions() {
 
   // 2. Detect car type from car model input if filled, otherwise use selectedCarTypeInput or '소형·중형'
   const modelVal = document.getElementById('carModel')?.value?.trim();
-  let baseCar = selectedCarTypeInput?.value || '소형·중형';
+  let baseCar = '소형·중형';
   if (modelVal) {
     baseCar = detectCarTypeFromText(modelVal);
+  } else if (selectedCarTypeInput?.value) {
+    baseCar = selectedCarTypeInput.value;
+  }
+
+  // Update detected car badge on UI
+  if (carTypeDetectedLabel) {
+    carTypeDetectedLabel.textContent = baseCar;
   }
 
   let basePriceNum = (PRICING_MATRIX[baseCar] && PRICING_MATRIX[baseCar][planCount]) || 66000;
@@ -590,16 +605,26 @@ function calculateCurrentPlanAndOptions() {
   if (displayBox) {
     if (optionTotalNum > 0) {
       displayBox.innerHTML = `
-        <div>
-          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;font-size:1.02rem;font-weight:800;">총 ${totalPriceFormatted}</span> <span style="font-size:0.84rem;color:#94A3B8;font-weight:500;">(기본 ${basePriceFormatted} + 옵션 ${optionPriceFormatted})</span>
+        <div style="font-size:1.05rem; font-weight:800; color:#38BDF8;">
+          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#F43F5E;">총 ${totalPriceFormatted}</span>
         </div>
-        <div style="margin-top:6px;font-size:0.84rem;color:#E0F2FE;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <span style="background:rgba(56,189,248,0.25);border:1px solid rgba(56,189,248,0.4);color:#38BDF8;padding:1px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;">선택한 옵션</span>
-          <span style="color:#F1F5F9;font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
+        <div style="font-size:0.82rem; color:#94A3B8; margin-top:4px;">
+          (플랜 기본 요금 ${basePriceFormatted} + 추가 옵션 ${optionPriceFormatted})
+        </div>
+        <div style="margin-top:6px; font-size:0.82rem; color:#E0F2FE; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="background:rgba(56,189,248,0.25); border:1px solid rgba(56,189,248,0.4); color:#38BDF8; padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">선택된 추가옵션</span>
+          <span style="color:#F1F5F9; font-weight:600;">${escapeHtml(optionList.join(', '))}</span>
         </div>
       `;
     } else {
-      displayBox.innerHTML = `${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;font-size:1.02rem;font-weight:800;">월 ${basePriceFormatted}</span>`;
+      displayBox.innerHTML = `
+        <div style="font-size:1.05rem; font-weight:800; color:#38BDF8;">
+          ${escapeHtml(baseCar)} / ${escapeHtml(basePlan)} — <span style="color:#38BDF8;">월 ${basePriceFormatted}</span>
+        </div>
+        <div style="font-size:0.8rem; color:#94A3B8; margin-top:2px;">
+          (추가 옵션 없음 / 정기 출장세차 기본 요금 적용)
+        </div>
+      `;
     }
   }
 

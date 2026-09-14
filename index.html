@@ -227,7 +227,11 @@
                 <label for="carModel">보유 차종 (모델명) <span class="req">*</span></label>
                 <div class="input-wrapper">
                   <i data-lucide="car" class="input-icon"></i>
-                  <input type="text" id="carModel" name="model" placeholder="예: 제네시스 G80, 쏘렌토" required>
+                  <input type="text" id="carModel" name="model" placeholder="예: 제네시스 G80, 쏘렌토, 카니발, 아반떼" required>
+                </div>
+                <div id="carTypeAutoBadge" style="font-size:0.78rem; color:#38BDF8; margin-top:5px; font-weight:600; display:flex; align-items:center; gap:4px;">
+                  <i data-lucide="sparkles" style="width:13px;height:13px;"></i>
+                  <span>차종 자동분류: <strong id="carTypeDetectedLabel" style="color:#FFF; background:rgba(14,165,233,0.25); border:1px solid rgba(14,165,233,0.4); padding:1px 6px; border-radius:4px;">소형·중형</strong></span>
                 </div>
                 <span class="error-msg" id="modelError">보유 차종을 입력해주세요.</span>
               </div>
@@ -285,6 +289,16 @@
                   <label class="chip-option"><input type="checkbox" name="extraOption" value="피톤치드 케어 (+10,000원)" data-price="10000"><span>피톤치드 케어 (+10,000원)</span></label>
                   <label class="chip-option"><input type="checkbox" name="extraOption" value="유막 제거 (+50,000원)" data-price="50000"><span>유막 제거 (+50,000원)</span></label>
                   <label class="chip-option"><input type="checkbox" name="extraOption" value="발수왁스 (+20,000원)" data-price="20000"><span>발수왁스 (+20,000원)</span></label>
+                </div>
+              </div>
+
+              <!-- Real-time Selected Plan & Calculated Total Price Badge Box -->
+              <div class="selected-plan-badge-box" id="selectedPlanBadgeBox" style="margin-top:16px;">
+                <div class="badge-content">
+                  <span class="badge-label"><i data-lucide="calculator" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 예상 월 이용 금액:</span>
+                  <div class="badge-value" id="selectedPlanPriceDisplay">
+                    <!-- Populated dynamically in real-time -->
+                  </div>
                 </div>
               </div>
             </div>
