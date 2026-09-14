@@ -800,16 +800,8 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
-    // 8. Digital Signature Validation
-    const sigContainer = document.querySelector('.signature-pad-container');
-    if (!isSignatureDrawn) {
-      if (sigErr) sigErr.style.display = 'block';
-      if (sigContainer) sigContainer.classList.add('invalid');
-      isValid = false;
-    }
-
     if (!isValid) {
-      showToast('입력 확인 필요', '필수 입력 항목, 약관 동의 및 자필 전자서명을 확인해 주세요.');
+      showToast('입력 확인 필요', '필수 입력 항목 및 약관 동의를 확인해 주세요.');
       return;
     }
 
@@ -838,10 +830,8 @@ function initFormValidationAndSubmit() {
       customReq ? `요청: ${customReq}` : ''
     ].filter(Boolean).join(' | ');
 
-    // 100% Guaranteed Signature Capture (Compact Vector Format or Official E-Sign Text)
-    const signatureCanvas = document.getElementById('signatureCanvas');
     const formattedNow = formatNowDate();
-    const signatureDataUrl = encodeStrokesToCompactString(window.currentSignatureStrokes || [], signatureCanvas) || ('서명완료 (' + formattedNow + ')');
+    const signatureDataUrl = '동의완료 (' + formattedNow + ')';
 
     // Build New Customer Registration Record with Terms & Signature
     const newRecord = {
