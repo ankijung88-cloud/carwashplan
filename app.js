@@ -946,7 +946,7 @@ function initFormValidationAndSubmit() {
       if (window.lucide) lucide.createIcons();
     }
 
-    showToast('신청완료 되었습니다.', '관리자가 신속히 연락드리겠습니다.');
+    showToast('신청완료되었습니다.', '담당자가 신속히 연락드리겠습니다.');
 
     // Refresh Admin Table View if open
     renderAdminTable();
