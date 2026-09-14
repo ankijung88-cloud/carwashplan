@@ -916,50 +916,87 @@ function initFormValidationAndSubmit() {
       status: 'PENDING'
     };
 
-    // Save to LocalStorage
-    const currentList = getSubmissions();
-    currentList.unshift(newRecord);
-    saveSubmissions(currentList);
-
-    // Sync to Google Sheets & Telegram Notification in Real-time
-    syncSubmissionToCloud(newRecord);
-
-    // Form & Signature Reset
-    form.reset();
-    if (typeof window.resetPriceTableSelection === 'function') {
-      window.resetPriceTableSelection();
-    }
-    if (checkAll) checkAll.checked = false;
-    if (signatureCanvas) {
-      const ctx = signatureCanvas.getContext('2d');
-      ctx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
-      isSignatureDrawn = false;
-      const placeholder = document.getElementById('signaturePlaceholder');
-      if (placeholder) placeholder.style.display = 'block';
-      if (sigContainer) sigContainer.classList.remove('active');
+    // Save to LocalStorage & Cloud in try-catch to prevent any runtime error blocking modal display
+    try {
+      const currentList = getSubmissions();
+      currentList.unshift(newRecord);
+      saveSubmissions(currentList);
+    } catch (e) {
+      console.error('LocalStorage Save Error:', e);
     }
 
-    // Show Application Complete Success Modal (신청 완료 모달 팝업)
-    const successModal = document.getElementById('submissionSuccessModal');
-    if (successModal) {
-      successModal.classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+    try {
+      syncSubmissionToCloud(newRecord);
+    } catch (e) {
+      console.error('Cloud Sync Error:', e);
     }
+
+    // Form Reset
+    try {
+      form.reset();
+      if (typeof window.resetPriceTableSelection === 'function') {
+        window.resetPriceTableSelection();
+      }
+      if (checkAll) checkAll.checked = false;
+    } catch (e) {
+      console.error('Form Reset Error:', e);
+    }
+
+    // Show Application Complete Success Modal (신청 완료 모달 팝업 강제 노출)
+    openSubmissionSuccessModal();
 
     showToast('신청완료되었습니다.', '담당자가 신속히 연락드리겠습니다.');
 
     // Refresh Admin Table View if open
-    renderAdminTable();
+    try {
+      renderAdminTable();
+    } catch (e) {}
   });
 
-  // Close Success Modal & Scroll to Top (종료하기 버튼 클릭 시 최상단 이동)
+  // Setup Success Modal Close Handlers
+  initSubmissionSuccessModalEvents();
+}
+
+function openSubmissionSuccessModal() {
+  const successModal = document.getElementById('submissionSuccessModal');
+  if (successModal) {
+    successModal.classList.remove('hidden');
+    successModal.style.display = 'flex';
+    successModal.style.opacity = '1';
+    successModal.style.pointerEvents = 'auto';
+    successModal.style.zIndex = '99999';
+    if (window.lucide) lucide.createIcons();
+  }
+}
+
+function closeSubmissionSuccessModal() {
+  const successModal = document.getElementById('submissionSuccessModal');
+  if (successModal) {
+    successModal.classList.add('hidden');
+    successModal.style.display = 'none';
+    successModal.style.opacity = '0';
+    successModal.style.pointerEvents = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function initSubmissionSuccessModalEvents() {
+  const successModal = document.getElementById('submissionSuccessModal');
   const closeSuccessBtn = document.getElementById('closeSuccessModalBtn');
+
   if (closeSuccessBtn) {
-    closeSuccessBtn.addEventListener('click', () => {
-      const successModal = document.getElementById('submissionSuccessModal');
-      if (successModal) successModal.classList.add('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    closeSuccessBtn.onclick = (e) => {
+      e.preventDefault();
+      closeSubmissionSuccessModal();
+    };
+  }
+
+  if (successModal) {
+    successModal.onclick = (e) => {
+      if (e.target === successModal) {
+        closeSubmissionSuccessModal();
+      }
+    };
   }
 }
 
