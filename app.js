@@ -788,13 +788,9 @@ function initFormValidationAndSubmit() {
       isValid = false;
     }
 
-    // 3. Email Check (선택 입력: 입력된 경우에만 형식 검사)
-    const emailVal = document.getElementById('memberEmail').value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailVal && !emailRegex.test(emailVal)) {
-      setError('memberEmail');
-      isValid = false;
-    }
+    // 3. Expected Entry Time (선택 입력)
+    const entryTimeInput = document.getElementById('memberEntryTime') || document.getElementById('memberEmail');
+    const entryTimeVal = entryTimeInput ? entryTimeInput.value.trim() : '';
 
     // 4. Region Check
     const regionVal = document.getElementById('serviceRegion').value.trim();
@@ -879,8 +875,8 @@ function initFormValidationAndSubmit() {
       id: 'CUST-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 900 + 100)),
       createdAt: formattedNow,
       name: nameVal,
-      phone: phoneVal,
-      email: emailVal,
+      email: entryTimeVal,
+      entryTime: entryTimeVal,
       region: regionVal,
       plate: plateVal,
       model: modelVal,
@@ -1485,7 +1481,7 @@ function renderAdminTable(filter = 'ALL') {
         <td>
           <div class="member-name">${escapeHtml(item.name)}</div>
           <div class="member-phone">${escapeHtml(item.phone)}</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.email)}</div>
+          ${(item.entryTime || item.email) ? `<div style="font-size:0.75rem; color:var(--text-muted);"><i data-lucide="clock" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:2px;"></i>입차: ${escapeHtml(item.entryTime || item.email)}</div>` : ''}
         </td>
         <td>
           <div style="font-weight: 600;">${escapeHtml(item.region)}</div>
@@ -2056,7 +2052,7 @@ function exportToCsv() {
   }
 
   let csvContent = "\uFEFF";
-  csvContent += "신청ID,신청일시,고객성명,연락처,이메일,세차희망주소,차종및차량번호,이용플랜,희망요일,결제방식,승인상태\n";
+  csvContent += "신청ID,신청일시,고객성명,연락처,예상입차시간,세차희망주소,차종및차량번호,이용플랜,희망요일,결제방식,승인상태\n";
 
   data.forEach(item => {
     const row = [
@@ -2064,7 +2060,7 @@ function exportToCsv() {
       item.createdAt,
       `"${item.name}"`,
       `"${item.phone}"`,
-      `"${item.email}"`,
+      `"${item.entryTime || item.email || '-'}"`,
       `"${item.region}"`,
       `"${item.car}"`,
       `"${item.experience}"`,
@@ -2306,7 +2302,7 @@ async function syncSubmissionToCloud(record) {
       const msg = `🔔 [세차 플랜] 신규 고객 가입 신청 접수!\n\n` +
         `👤 고객명: ${record.name}\n` +
         `📞 연락처: ${record.phone}\n` +
-        `📧 이메일: ${record.email}\n` +
+        (record.entryTime || record.email ? `⏰ 예상입차: ${record.entryTime || record.email}\n` : '') +
         `📍 세차장소: ${record.region}\n` +
         `🚗 차종(색상): ${record.car}\n` +
         `💎 신청플랜: ${record.experience}\n` +

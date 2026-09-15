@@ -127,7 +127,7 @@ function doPost(e) {
       dateStr,                                                                                      // B: 신청일시
       data.name || "",                                                                              // C: 고객명
       data.phone || "",                                                                             // D: 연락처
-      data.email || "",                                                                             // E: 이메일
+      data.entryTime || data.email || "",                                                           // E: 예상입차시간 (또는 이메일)
       data.region || "",                                                                            // F: 세차희망주소
       modelAndColor,                                                                                // G: 차종 및 색상
       plate,                                                                                        // H: 차량번호
