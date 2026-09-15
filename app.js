@@ -762,6 +762,42 @@ function initFormValidationAndSubmit() {
     });
   }
 
+  // Payment Method Change Handler (카드 선택 시 증빙요청 비활성화, 계좌/자동이체 시 활성화)
+  function updateProofRequestState() {
+    const payMethodRadio = document.querySelector('input[name="paymentMethod"]:checked');
+    const payMethod = payMethodRadio ? payMethodRadio.value : '카드';
+    const proofInputs = document.querySelectorAll('input[name="proofRequest"]');
+    const proofRow = document.getElementById('proofRequestRow') || document.querySelector('.notes-row:has(input[name="proofRequest"])');
+    const noticeEl = document.getElementById('proofDisabledNotice');
+
+    const isCard = (payMethod === '카드');
+
+    proofInputs.forEach(input => {
+      input.disabled = isCard;
+      if (isCard) {
+        input.checked = false;
+      }
+    });
+
+    if (proofRow) {
+      if (isCard) {
+        proofRow.classList.add('disabled');
+      } else {
+        proofRow.classList.remove('disabled');
+      }
+    }
+
+    if (noticeEl) {
+      noticeEl.style.display = isCard ? 'inline-block' : 'none';
+    }
+  }
+
+  const paymentMethodRadios = document.querySelectorAll('input[name="paymentMethod"]');
+  paymentMethodRadios.forEach(radio => {
+    radio.addEventListener('change', updateProofRequestState);
+  });
+  updateProofRequestState();
+
   // Form Submit Handler
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -855,7 +891,9 @@ function initFormValidationAndSubmit() {
     const interiorList = Array.from(document.querySelectorAll('input[name="interiorEnv"]:checked')).map(cb => cb.value);
     const usageList = Array.from(document.querySelectorAll('input[name="usagePattern"]:checked')).map(cb => cb.value);
     const featureList = Array.from(document.querySelectorAll('input[name="carFeatures"]:checked')).map(cb => cb.value);
-    const proofList = Array.from(document.querySelectorAll('input[name="proofRequest"]:checked')).map(cb => cb.value);
+    const proofList = (paymentMethodVal === '카드')
+      ? []
+      : Array.from(document.querySelectorAll('input[name="proofRequest"]:checked')).map(cb => cb.value);
     const customReq = document.getElementById('specialRequest')?.value?.trim() || '';
 
     const specialNotesList = [

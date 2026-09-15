@@ -1698,6 +1698,29 @@ a:hover {
   font-weight: 800;
 }
 
+.chip-option input:disabled + span {
+  opacity: 0.35;
+  cursor: not-allowed !important;
+  background: rgba(15, 23, 42, 0.4);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.notes-row.disabled {
+  opacity: 0.38;
+  pointer-events: none;
+  cursor: not-allowed;
+  transition: all 0.25s ease;
+}
+
+.notes-row.disabled .notes-label {
+  color: var(--text-muted) !important;
+}
+
+.notes-row.disabled .chip-option {
+  cursor: not-allowed;
+}
+
 /* Bank Account Notice */
 .account-notice {
   display: flex;

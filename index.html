@@ -393,13 +393,14 @@
             <div class="input-group special-notes-group">
               <label><i data-lucide="clipboard-list" style="width:16px;height:16px;display:inline-block;vertical-align:sub;margin-right:4px;"></i> 특이사항 및 증빙 요청 (선택 항목)</label>
               <div class="special-notes-card">
-                <!-- 5. 증빙요청 -->
-                <div class="notes-row">
+                <!-- 5. 증빙요청 (카드 결제 시 비활성화, 계좌/자동이체 시 활성화) -->
+                <div class="notes-row" id="proofRequestRow">
                   <span class="notes-label">증빙요청:</span>
                   <div class="notes-options">
                     <label class="chip-option"><input type="checkbox" name="proofRequest" value="현금영수증"><span>현금영수증</span></label>
                     <label class="chip-option"><input type="checkbox" name="proofRequest" value="세금계산서"><span>세금계산서</span></label>
                   </div>
+                  <span id="proofDisabledNotice" class="proof-disabled-notice" style="font-size:0.75rem; color:var(--text-muted); margin-left:8px; display:none;">(카드 결제 시 영수증 자동 발급)</span>
                 </div>
 
                 <!-- 6. 요청사항 -->
@@ -943,6 +944,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=121"></script>
+  <script src="app.js?v=122"></script>
 </body>
 </html>
