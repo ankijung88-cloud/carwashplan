@@ -1718,14 +1718,38 @@ function initCustomerDetailModal() {
    Official Paper Registration Form Builder (정기세차 회원가입서 양식 생성기)
    ========================================================================== */
 function generateRegistrationFormHTML(item) {
-  // 날짜 파싱 (예: 2026-08-31 03:00 -> 2026, 08, 31)
-  let year = '2026', month = '08', day = '31';
-  if (item.createdAt) {
-    const dMatch = item.createdAt.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+  // 실제 고객 신청/작성일(날짜) 정밀 추출 및 파싱
+  const now = new Date();
+  let year = String(now.getFullYear());
+  let month = String(now.getMonth() + 1).padStart(2, '0');
+  let day = String(now.getDate()).padStart(2, '0');
+
+  const rawDateCandidates = [
+    item.createdAt,
+    item.created_at,
+    item.date,
+    item.timestamp,
+    item.signature,
+    item.id
+  ].filter(Boolean);
+
+  for (const rawDate of rawDateCandidates) {
+    const str = String(rawDate);
+    // 1) 2026-09-15, 2026.09.15, 2026/09/15, 2026. 9. 15., 2026년 09월 15일 등
+    const dMatch = str.match(/(\d{4})[-./년\s]+(\d{1,2})[-./월\s]+(\d{1,2})/);
     if (dMatch) {
       year = dMatch[1];
       month = dMatch[2].padStart(2, '0');
       day = dMatch[3].padStart(2, '0');
+      break;
+    }
+    // 2) ISO 날짜 또는 Date.parse 가능한 형식
+    const parsed = new Date(str);
+    if (!isNaN(parsed.getTime()) && parsed.getFullYear() >= 2020) {
+      year = String(parsed.getFullYear());
+      month = String(parsed.getMonth() + 1).padStart(2, '0');
+      day = String(parsed.getDate()).padStart(2, '0');
+      break;
     }
   }
 
