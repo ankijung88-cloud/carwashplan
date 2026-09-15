@@ -419,26 +419,39 @@
           <div class="form-block terms-block">
             <h3 class="block-title"><i data-lucide="file-text"></i> 2. 이용 약관 동의</h3>
             
-            <!-- Service & Policy Notice Document Box -->
-            <div class="terms-policy-box">
-              <div class="policy-section">
-                <h4 class="policy-title">● 서비스안내 <span class="sub">[월 구독형 방문세차]</span></h4>
-                <ul class="policy-list">
-                  <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
-                  <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
-                  <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
-                </ul>
-              </div>
+            <!-- Service & Policy Notice Collapsible Accordion Box -->
+            <div class="terms-policy-accordion" id="termsPolicyAccordion">
+              <button type="button" class="terms-policy-toggle-btn" id="togglePolicyBtn" aria-expanded="false">
+                <div class="policy-toggle-title">
+                  <i data-lucide="info" style="color: var(--accent); width: 18px; height: 18px;"></i>
+                  <span><strong>서비스 안내 및 유의사항</strong> <span style="font-size:0.8rem; color:var(--text-muted); font-weight:normal;">(클릭하여 내용 확인)</span></span>
+                </div>
+                <div class="policy-toggle-arrow">
+                  <span class="toggle-text" id="togglePolicyText">내용 보기</span>
+                  <i data-lucide="chevron-down" class="toggle-icon"></i>
+                </div>
+              </button>
+              
+              <div class="terms-policy-collapse-body" id="policyCollapseBody" style="display: none;">
+                <div class="policy-section">
+                  <h4 class="policy-title">● 서비스안내 <span class="sub">[월 구독형 방문세차]</span></h4>
+                  <ul class="policy-list">
+                    <li>정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라, 안정적인 차량 상태를 유지해드립니다.</li>
+                    <li>차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
+                    <li>세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
+                  </ul>
+                </div>
 
-              <div class="policy-section">
-                <h4 class="policy-title">● 유의사항</h4>
-                <ul class="policy-list notice-list">
-                  <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장,여행 등)</strong>에 한해 가능합니다.</li>
-                  <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
-                  <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
-                  <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
-                  <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
-                </ul>
+                <div class="policy-section">
+                  <h4 class="policy-title">● 유의사항</h4>
+                  <ul class="policy-list notice-list">
+                    <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장,여행 등)</strong>에 한해 가능합니다.</li>
+                    <li>※ 우천, 폭염, 한파 등 작업 불가 시 일정이 조정될 수 있습니다.</li>
+                    <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
+                    <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
+                    <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -454,19 +467,19 @@
               <label class="checkbox-label">
                 <input type="checkbox" class="req-term" id="termService" required>
                 <span class="custom-checkbox"></span>
-                <span>(필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의</span>
+                <span>(필수) 월 구독형 방문세차 서비스 안내 및 유의사항 확인 동의 <button type="button" class="view-term-link" data-term="service">[내용보기]</button></span>
               </label>
 
               <label class="checkbox-label">
                 <input type="checkbox" class="req-term" id="termPrivacy" required>
                 <span class="custom-checkbox"></span>
-                <span>(필수) 출장세차 서비스 개인정보 수집 및 이용 동의 <a href="#" class="view-term-link">[보기]</a></span>
+                <span>(필수) 출장세차 서비스 개인정보 수집 및 이용 동의 <button type="button" class="view-term-link" data-term="privacy">[내용보기]</button></span>
               </label>
 
               <label class="checkbox-label">
                 <input type="checkbox" class="req-term" id="termFinancial" required>
                 <span class="custom-checkbox"></span>
-                <span>(필수) 세차 이용료 결제 정보 처리 동의 <a href="#" class="view-term-link">[보기]</a></span>
+                <span>(필수) 세차 이용료 결제 정보 처리 동의 <button type="button" class="view-term-link" data-term="payment">[내용보기]</button></span>
               </label>
 
               <label class="checkbox-label">
@@ -925,6 +938,26 @@
     </div>
   </div>
 
+  <!-- Terms Detail View Modal (약관 및 서비스안내 상세 확인 모달) -->
+  <div id="termsViewModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="file-text" style="color: var(--accent); width: 22px; height: 22px;"></i>
+          <h3 class="modal-title" id="termsModalTitle">서비스 안내 및 유의사항</h3>
+        </div>
+        <button id="closeTermsModalBtn" class="close-btn" aria-label="닫기"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" id="termsModalContent" style="padding: 20px; max-height: 65vh; overflow-y: auto; line-height: 1.6; font-size: 0.9rem; color: #E2E8F0;">
+        <!-- Populated via JS -->
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px;">
+        <button type="button" id="closeTermsModalFooterBtn" class="btn btn-secondary btn-sm">닫기</button>
+        <button type="button" id="agreeTermsModalBtn" class="btn btn-primary btn-sm glow-btn"><i data-lucide="check"></i> 확인 및 동의하기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Success Notification Toast -->
   <div id="toastNotification" class="toast hidden">
     <i data-lucide="check-circle" class="toast-icon"></i>
@@ -944,6 +977,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=122"></script>
+  <script src="app.js?v=123"></script>
 </body>
 </html>

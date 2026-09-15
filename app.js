@@ -798,6 +798,146 @@ function initFormValidationAndSubmit() {
   });
   updateProofRequestState();
 
+  // Terms & Policy Accordion and View Modal Handler
+  const togglePolicyBtn = document.getElementById('togglePolicyBtn');
+  const policyCollapseBody = document.getElementById('policyCollapseBody');
+  const termsPolicyAccordion = document.getElementById('termsPolicyAccordion');
+  const togglePolicyText = document.getElementById('togglePolicyText');
+
+  if (togglePolicyBtn && policyCollapseBody) {
+    togglePolicyBtn.addEventListener('click', () => {
+      const isHidden = policyCollapseBody.style.display === 'none' || !policyCollapseBody.style.display;
+      if (isHidden) {
+        policyCollapseBody.style.display = 'block';
+        termsPolicyAccordion?.classList.add('open');
+        togglePolicyBtn.setAttribute('aria-expanded', 'true');
+        if (togglePolicyText) togglePolicyText.textContent = '내용 접기';
+      } else {
+        policyCollapseBody.style.display = 'none';
+        termsPolicyAccordion?.classList.remove('open');
+        togglePolicyBtn.setAttribute('aria-expanded', 'false');
+        if (togglePolicyText) togglePolicyText.textContent = '내용 보기';
+      }
+    });
+  }
+
+  // Terms Modal Interaction
+  const termsViewModal = document.getElementById('termsViewModal');
+  const termsModalTitle = document.getElementById('termsModalTitle');
+  const termsModalContent = document.getElementById('termsModalContent');
+  const closeTermsModalBtn = document.getElementById('closeTermsModalBtn');
+  const closeTermsModalFooterBtn = document.getElementById('closeTermsModalFooterBtn');
+  const agreeTermsModalBtn = document.getElementById('agreeTermsModalBtn');
+  let currentActiveTermId = null;
+
+  const TERMS_DATA = {
+    service: {
+      title: '월 구독형 방문세차 서비스 안내 및 유의사항',
+      checkboxId: 'termService',
+      html: `
+        <div style="background: rgba(14, 165, 233, 0.08); padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border-glow); margin-bottom: 16px;">
+          <h4 style="color: var(--accent); font-weight: 800; font-size: 1rem; margin-bottom: 8px;">● 서비스안내 [월 구독형 방문세차]</h4>
+          <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; line-height: 1.6;">
+            <li>🔹 정기세차는 차량을 주기적으로 관리해 외부 컨디션을 꾸준히 유지하는 <strong>유지관리형 서비스</strong> 입니다. 정해진 주기에 따라 안정적인 차량 상태를 유지해드립니다.</li>
+            <li>🔹 차량 색상, 재질에 맞춰 전용 케미컬을 사용하여 표면을 안전하게 관리하며, 방문마다 코팅 효과를 유지 보강해드립니다.</li>
+            <li>🔹 세차 방문 시간은 작업 동선에 따라 변동되며, 정확한 시간 안내가 어려울 수 있습니다. 작업은 차량이 주차된 상태에서 진행되며, 주차공간이 좁거나 위험한 경우 일정이 조정될 수 있습니다.</li>
+          </ul>
+        </div>
+        <div style="background: rgba(245, 158, 11, 0.08); padding: 14px 16px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);">
+          <h4 style="color: #F59E0B; font-weight: 800; font-size: 1rem; margin-bottom: 8px;">● 유의사항</h4>
+          <ul style="list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; line-height: 1.6;">
+            <li>※ 지정된 세차 요일 변경 및 연기는 <strong>부득이한 사유(출장, 여행 등)</strong>에 한해 가능합니다.</li>
+            <li>※ 우천, 폭염, 한파 등 기상 악화로 작업 불가 시 일정이 조정될 수 있습니다.</li>
+            <li>※ 자동이체는 매월 지정 결제일에 청구되며, 취소 및 변경은 결제일 전일까지 요청해 주셔야 정상 처리됩니다.</li>
+            <li>※ 미사용 횟수는 결제일 기준 50일 이내 사용 가능하며, 기한 이후에는 자동 소멸됩니다.</li>
+            <li>※ 차량에 원래 있던 손상(기스, 스크래치, 도장, 랩핑 등)은 세차 후 더 도드라질 수 있으며, 이러한 기존 외관 하자는 보상 대상이 아닙니다.</li>
+          </ul>
+        </div>
+      `
+    },
+    privacy: {
+      title: '개인정보 수집 및 이용 동의',
+      checkboxId: 'termPrivacy',
+      html: `
+        <div style="font-size: 0.88rem; line-height: 1.7;">
+          <p style="margin-bottom: 12px;"><strong>주식회사 세차 플랜</strong>(이하 "회사")은 출장세차 회원가입 및 정기케어 서비스 제공을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 0.84rem; border: 1px solid var(--border-color);">
+            <tr style="background: rgba(255,255,255,0.05);">
+              <th style="padding: 8px; border: 1px solid var(--border-color); text-align: left; width: 28%;">항목</th>
+              <th style="padding: 8px; border: 1px solid var(--border-color); text-align: left;">수집 및 이용 목적</th>
+              <th style="padding: 8px; border: 1px solid var(--border-color); text-align: left; width: 24%;">보유 기간</th>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid var(--border-color);">성명, 연락처, 주소, 차량번호, 차종, 색상, 예상입차시간</td>
+              <td style="padding: 8px; border: 1px solid var(--border-color);">회원 식별, 출장세차 방문 위치 확인 및 서비스 수행, 상담 및 알림 발송</td>
+              <td style="padding: 8px; border: 1px solid var(--border-color);"><strong>서비스 이용 종료 시 또는 법정 의무 보유기간</strong></td>
+            </tr>
+          </table>
+          <p style="color: var(--text-muted); font-size: 0.8rem;">※ 귀하는 위 개인정보 수집 및 이용 동의를 거부할 권리가 있으나, 미동의 시 출장세차 서비스 제공이 제한될 수 있습니다.</p>
+        </div>
+      `
+    },
+    payment: {
+      title: '세차 이용료 결제 정보 처리 동의',
+      checkboxId: 'termFinancial',
+      html: `
+        <div style="font-size: 0.88rem; line-height: 1.7;">
+          <p style="margin-bottom: 12px;">월 정기 출장세차 이용료 정산 및 결제 관리를 위해 결제 수단 정보 처리에 동의합니다.</p>
+          <ul style="list-style: disc; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 0.86rem;">
+            <li><strong>처리 목적:</strong> 세차 구독료 정산, 자동이체 출금, 카드결제 링크 발송 및 거래 내역 관리</li>
+            <li><strong>처리 항목:</strong> 결제방식 선택 정보, 신청 플랜 및 결제 금액</li>
+            <li><strong>보유 및 이용 기간:</strong> 전자상거래 등에서의 소비자보호에 관한 법률 등 관련 법령에 따른 의무 보존 기간 (최대 5년)</li>
+          </ul>
+        </div>
+      `
+    }
+  };
+
+  function openTermsModal(termKey) {
+    const data = TERMS_DATA[termKey] || TERMS_DATA.service;
+    currentActiveTermId = data.checkboxId;
+    if (termsModalTitle) termsModalTitle.textContent = data.title;
+    if (termsModalContent) termsModalContent.innerHTML = data.html;
+    if (termsViewModal) termsViewModal.classList.remove('hidden');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function closeTermsModal() {
+    if (termsViewModal) termsViewModal.classList.add('hidden');
+    currentActiveTermId = null;
+  }
+
+  document.querySelectorAll('.view-term-link').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const termKey = btn.dataset.term || 'service';
+      openTermsModal(termKey);
+    });
+  });
+
+  if (closeTermsModalBtn) closeTermsModalBtn.addEventListener('click', closeTermsModal);
+  if (closeTermsModalFooterBtn) closeTermsModalFooterBtn.addEventListener('click', closeTermsModal);
+  if (termsViewModal) {
+    termsViewModal.addEventListener('click', (e) => {
+      if (e.target === termsViewModal) closeTermsModal();
+    });
+  }
+
+  if (agreeTermsModalBtn) {
+    agreeTermsModalBtn.addEventListener('click', () => {
+      if (currentActiveTermId) {
+        const targetCb = document.getElementById(currentActiveTermId);
+        if (targetCb) {
+          targetCb.checked = true;
+          targetCb.dispatchEvent(new Event('change'));
+        }
+      }
+      closeTermsModal();
+      showToast('약관 동의 완료', '선택하신 약관에 정상 동의되었습니다.');
+    });
+  }
+
   // Form Submit Handler
   form.addEventListener('submit', (e) => {
     e.preventDefault();

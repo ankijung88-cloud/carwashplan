@@ -1742,7 +1742,73 @@ a:hover {
   margin-top: 2px;
 }
 
-/* Terms & Policy Document Box */
+/* Terms & Policy Collapsible Accordion Box */
+.terms-policy-accordion {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.terms-policy-accordion.open {
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.terms-policy-toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  background: rgba(14, 165, 233, 0.08);
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.terms-policy-toggle-btn:hover {
+  background: rgba(14, 165, 233, 0.16);
+}
+
+.policy-toggle-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.policy-toggle-arrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.policy-toggle-arrow .toggle-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.terms-policy-accordion.open .policy-toggle-arrow .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.terms-policy-collapse-body {
+  padding: 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
 .terms-policy-box {
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid var(--border-color);
@@ -1859,9 +1925,23 @@ a:hover {
 }
 
 .view-term-link {
+  display: inline-block;
+  background: transparent;
+  border: none;
+  color: var(--accent);
   font-size: 0.78rem;
-  color: var(--text-muted);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 4px;
   margin-left: 4px;
+  vertical-align: baseline;
+  transition: all 0.15s ease;
+}
+
+.view-term-link:hover {
+  color: #38BDF8;
+  transform: translateY(-1px);
 }
 
 /* --------------------------------------------------------------------------
